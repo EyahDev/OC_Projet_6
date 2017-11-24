@@ -1,0 +1,33 @@
+security:
+    # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\User: bcrypt
+
+    providers:
+        app_user:
+            entity: { class: App\Entity\User, property: username }
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            anonymous: true
+
+            form_login:
+                login_path: login_page
+                check_path: login_page
+                require_previous_session: false
+                default_target_path: test_page
+
+            logout:
+                # The route name the user can go to in order to logout
+                path: logout
+                # The name of the route to redirect to after logging out
+                target: test_page
+
+    access_control:
+        - { path: ^/administration, roles: ROLE_ADMIN }
+        - { path: ^/mon-compte, roles: ROLE_USER }
