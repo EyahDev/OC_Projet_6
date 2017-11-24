@@ -12,3 +12,4 @@ framework:
     fragments: { enabled: true }
     php_errors:
         log: true
+

@@ -19,7 +19,7 @@ class LoginController extends Controller
         $error = $authUtils->getLastAuthenticationError();
 
         $lastUserName = $authUtils->getLastUsername();
-        return $this->render('login/login.html.twig', array(
+        return $this->render('security/login.html.twig', array(
             'last_username' => $lastUserName,
             'error' => $error
         ));
@@ -31,7 +31,7 @@ class LoginController extends Controller
      * @Route(path="/administration", name="admin_page")
      */
     public function administration() {
-        return $this->render('login/after.html.twig');
+        return $this->render('after.html.twig');
     }
 
     /**
@@ -40,7 +40,7 @@ class LoginController extends Controller
      * @Route(path="/mon-compte", name="user_page")
      */
     public function userDashboard() {
-        return $this->render('login/after.html.twig');
+        return $this->render('after.html.twig');
     }
 
     /**

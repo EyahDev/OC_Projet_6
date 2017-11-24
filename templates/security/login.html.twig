@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style>
+        @font-face {
+            font-family: 'manoNegra';
+            src: url(../public/build/fonts/WCManoNegraBta-webfont.eot);
+            src: url(WCManoNegraBta-webfont.eot?#iefix) format('embedded-opentype'),
+            url(../public/build/fonts/WCManoNegraBta-webfont.woff2) format('woff2'),
+            url(../public/build/fonts/WCManoNegraBta-webfont.woff) format('woff'),
+            url(../public/build/fonts/WCManoNegraBta-webfont.ttf) format('truetype'),
+            url(../public/build/fonts/WCManoNegraBta-webfont.svg#wc_mano_negra_btaregular) format('svg');
+            font-weight: normal;
+            font-style: normal;
+
+        }
+
+        /* Unique */
+        body {
+            margin: 0;
+            height: 100vh;
+            background: url(../public/build/img/img-login.jpg);
+            background-attachment: fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        h1 {
+            font-family: manoNegra, Arial, Helvetica, sans-serif;
+            font-weight: 400;
+            font-size: 36px;
+        }
+
+        .login-block {
+            background-color: white;
+            height: 100vh;
+            border: 3px solid green;
+        }
+
+        .text-center {
+            margin-top: 20%;
+        }
+        .container-fluid{
+            margin: 0;
+        }
+
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 offset-md-7 offset-lg-7 offset-xl-7 login-block">
+
+                <div class="text-center">
+                    <img class="responsive-img center-align" src="{{ absolute_url('../public/build/img/logo.png') }}" alt="logo">
+                    <h1>Ecurie Fief Malzais</h1>
+                </div>
+
+
+                {% if error %}
+                    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <form action="{{ path('login_page') }}" method="post">
+                    <label for="username">Email</label>
+                    <input type="email" id="username" name="_username" value="{{ last_username }}">
+
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="_password">
+
+                    <button type="submit">Connexion</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
