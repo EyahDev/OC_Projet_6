@@ -1,0 +1,27 @@
+/* -------------- Couleurs des formulaires -------------- */
+
+/* label focus color */
+.input-field input:focus + label {
+    color: #83d622 !important;
+}
+/* label underline focus color */
+.input-field input:focus {
+    border-bottom: 1px solid #83d622 !important;
+    box-shadow: 0 1px 0 0 #000;
+}
+
+input[type="checkbox"].filled-in:checked + label:after{
+    border: 2px solid #83d622;
+    background-color: #83d622;
+}
+
+.btn {
+    width: 100% !important;
+    margin-top: 15px;
+    background-color: #83d622;
+}
+.btn:hover {
+    width: 100% !important;
+    margin-top: 15px;
+    background-color: #00b1bc;
+}

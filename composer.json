@@ -7,6 +7,7 @@
         "sensio/framework-extra-bundle": "^5.0",
         "symfony/asset": "^4.0@RC",
         "symfony/console": "^4.0",
+        "symfony/debug-bundle": "^4.0@RC",
         "symfony/debug-pack": "^1.0",
         "symfony/flex": "^1.0",
         "symfony/form": "^4.0@RC",
@@ -15,8 +16,10 @@
         "symfony/orm-pack": "^1.0",
         "symfony/security-bundle": "^4.0@RC",
         "symfony/security-csrf": "^4.0@RC",
+        "symfony/swiftmailer-bundle": "^3.1",
         "symfony/twig-bridge": "^4.0@RC",
         "symfony/twig-bundle": "^4.0@RC",
+        "symfony/var-dumper": "^4.0@RC",
         "symfony/web-server-bundle": "^4.0@RC",
         "symfony/yaml": "^4.0",
         "twig/extensions": "^1.5"

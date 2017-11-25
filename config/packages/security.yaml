@@ -22,6 +22,11 @@ security:
                 require_previous_session: false
                 default_target_path: test_page
 
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+
             logout:
                 # The route name the user can go to in order to logout
                 path: logout

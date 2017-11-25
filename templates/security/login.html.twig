@@ -1,80 +1,107 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <style>
-        @font-face {
-            font-family: 'manoNegra';
-            src: url(../public/build/fonts/WCManoNegraBta-webfont.eot);
-            src: url(WCManoNegraBta-webfont.eot?#iefix) format('embedded-opentype'),
-            url(../public/build/fonts/WCManoNegraBta-webfont.woff2) format('woff2'),
-            url(../public/build/fonts/WCManoNegraBta-webfont.woff) format('woff'),
-            url(../public/build/fonts/WCManoNegraBta-webfont.ttf) format('truetype'),
-            url(../public/build/fonts/WCManoNegraBta-webfont.svg#wc_mano_negra_btaregular) format('svg');
-            font-weight: normal;
-            font-style: normal;
-
-        }
-
-        /* Unique */
-        body {
-            margin: 0;
-            height: 100vh;
-            background: url(../public/build/img/img-login.jpg);
-            background-attachment: fixed;
-            -webkit-background-size: cover;
-            -moz-background-size: cover;
-            -o-background-size: cover;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        h1 {
-            font-family: manoNegra, Arial, Helvetica, sans-serif;
-            font-weight: 400;
-            font-size: 36px;
-        }
-
-        .login-block {
-            background-color: white;
-            height: 100vh;
-            border: 3px solid green;
-        }
-
-        .text-center {
-            margin-top: 20%;
-        }
-        .container-fluid{
-            margin: 0;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{{ asset('../public/build/css/login.css') }}">
 {% endblock %}
 {% block body %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 offset-md-7 offset-lg-7 offset-xl-7 login-block">
-
-                <div class="text-center">
-                    <img class="responsive-img center-align" src="{{ absolute_url('../public/build/img/logo.png') }}" alt="logo">
-                    <h1>Ecurie Fief Malzais</h1>
-                </div>
-
-
-                {% if error %}
+    <div class="row">
+        <div class="col s12 m6 l6 xl4 offset-l3 offset-xl4 ">
+            <div class="card">
+                <div class="card-content">
+                    <div class="center-align">
+                        <img class="responsive-img " src="{{ asset('../public/build/img/logo.png') }}" alt="logo">
+                        <h1>Ecurie Fief Malzais</h1>
+                    </div>
+                    {% if error %}
                     <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                {% endif %}
+                    {% endif %}
 
-                <form action="{{ path('login_page') }}" method="post">
-                    <label for="username">Email</label>
-                    <input type="email" id="username" name="_username" value="{{ last_username }}">
+                    <form action="{{ path('login_page') }}" method="post">
+                        <div class="input-field">
+                            <input type="email" id="username" name="_username" value="{{ last_username }}">
+                            <label for="username">Email</label>
+                        </div>
 
-                    <label for="password">Mot de passe</label>
-                    <input type="password" id="password" name="_password">
 
-                    <button type="submit">Connexion</button>
-                </form>
+                        <div class="input-field">
+                            <input type="password" id="password" name="_password">
+                            <label for="password">Mot de passe</label>
+                        </div>
+
+                        <input type="checkbox" class="filled-in" id="remember_me" name="_remember_me" />
+                        <label for="remember_me">Se souvenir de moi</label><br/>
+
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Se connecter
+                        </button>
+                    </form>
+                </div>
+                <div class="card-action">
+                    <div class="right-align"><a class="activator forgot-password ">Mot de passe oublié ?</a></div>
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Mot de passe oublié<i class="material-icons right">close</i></span>
+                    <p>Si vous avez oublié votre mot de passe veuillez saisir votre email de votre compte.</p><br/>
+
+                    <div id="flashMessages"></div>
+
+                    <form action="{{ path('reset_password') }}" method="post" name="reset_password">
+                        <div class="input-field">
+                            <input type="email" id="username" name="_email_reset">
+                            <label for="username">Email</label>
+                        </div>
+                        <button data-url="{{ path('reset_password') }}" id="resetPassword" class="btn waves-effect waves-light" type="submit">
+                            Réinitialisation
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        resetPassword();
+
+        // Soumission du formulaire de reset de mot de passe en ajax
+        function resetPassword() {
+            // Récupération du formulaire
+            $('form[name="reset_password"]').on('submit', function(e) {
+
+                // Bloquage de l'action initial
+                e.preventDefault();
+
+                // Récupération du formulaire
+                var $form = $(this);
+
+                // Récupération de l'url de soumission
+                var url = $('#resetPassword').attr('data-url');
+
+                // Fonction ajax
+                $.ajax({
+                    type:'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        // Construction du html pour le message flash
+                        var success = '<div class="card-panel green accent-4">'+ data +'</div>';
+                        // Ajout du message flash
+                        $('#flashMessages').html(success);
+                    },
+                    error: function (jqxhr) {
+                        // Construction du html pour le message flash
+                        var error = '<div class="card-panel deep-orange accent-4">'+ jqxhr.responseText +'</div>';
+                        // ajoute le message flash dans la div dédiée
+                        $('#flashMessages').html(error);
+
+                            // Efface le message après 5 secondes
+                            function removeFlashMsg(){
+                                $('.card-panel').replaceWith("");
+                            }
+                            setTimeout(removeFlashMsg, 5000);
+                    }
+                })
+            });
+        }
+    </script>
+{%endblock %}
