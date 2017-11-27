@@ -25,3 +25,9 @@ input[type="checkbox"].filled-in:checked + label:after{
     margin-top: 15px;
     background-color: #00b1bc;
 }
+
+.btn:focus {
+    width: 100% !important;
+    margin-top: 15px;
+    background-color: #83d622;
+}

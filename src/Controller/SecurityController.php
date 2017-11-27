@@ -13,12 +13,11 @@ class SecurityController extends Controller
 {
     /**
      * @param AuthenticationUtils $authUtils
-     * @param SecurityManager $security
      * @return Response
      *
      * @Route(path="/", name="login_page")
      */
-    public function login(AuthenticationUtils $authUtils, SecurityManager $security) {
+    public function login(AuthenticationUtils $authUtils) {
         //Gestion des erreurs liés à la connexion
         $error = $authUtils->getLastAuthenticationError();
 
@@ -38,18 +37,18 @@ class SecurityController extends Controller
      * @return Response
      * @throws \Exception
      *
-     * @Route(path="/reset_password", name="reset_password")
+     * @Route(path="/lost_password", name="lost_password")
      */
-    public function resetPassword(SecurityManager $security, Request $request) {
+    public function lostPassword(SecurityManager $security, Request $request) {
         if ($request->isXmlHttpRequest()) {
-            $reset = $security->resetPassword($request->get('_email_reset'));
+                $reset = $security->lostPassword($request->get('_email_reset'));
             if ($reset) {
                 return new Response('Un email de réinitialisation vient de vous être envoyé.');
             } else {
                 return new Response("Ce compte n'existe pas.", 500);
             }
         } else {
-            throw new \Exception("Cette page n'existe pas", 404);
+            throw $this->createNotFoundException("Cette page n'existe pas.");
         }
 
     }
@@ -57,19 +56,47 @@ class SecurityController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Route(path="/administration", name="admin_page")
+     * @Route(path="/reinitialisation/{token}", name="reset_password")
      */
-    public function administration() {
-        return $this->render('after.html.twig');
+    public function resetPassword(SecurityManager $security, $token, Request $request) {
+        // Vérification si le token existe ou est toujours valable
+        $tokenVerification = $security->tokenVerification($token);
+
+        if ($tokenVerification) {
+            // Récupération du formulaire de reset de mot de passe
+            $resetPasswordForm = $security->getResetPassordForm();
+
+            // Hydratation des valeurs du formulaire
+            $resetPasswordForm->handleRequest($request);
+
+            // Vérification si le formulaire est soumis
+            if ($resetPasswordForm->isSubmitted() && $resetPasswordForm->isValid()) {
+                // Récupération des donneés
+                $newPassword = $resetPasswordForm->getData()['newPassword'];
+
+                // Création du nouveau mot de passe
+                $security->resetPassword($newPassword, $token);
+
+                return $this->redirectToRoute('reset_confirmation');
+            }
+
+            return $this->render('/security/reset.html.twig', array(
+                'resetPasswordForm' => $resetPasswordForm->createView()
+            ));
+
+        } elseif ($tokenVerification === false) {
+           throw $this->createNotFoundException("Ce lien n'est plus valable, veuillez refaire une demande réinitialisation de mot de passe.");
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Route(path="/mon-compte", name="user_page")
+     * @Route(path="/mot-de-passe/confirmation", name="reset_confirmation")
      */
-    public function userDashboard() {
-        return $this->render('after.html.twig');
+    public function reset_confirmation() {
+        return $this->render('security/resetConfirmation.html.twig');
     }
 
     /**

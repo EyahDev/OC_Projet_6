@@ -6,6 +6,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -116,6 +117,9 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
+     * @Assert\NotBlank(message="Le mot de passe ne peut pas être vide")
+     * @Assert\Length(min="6", minMessage="Votre mot de passe doit contenir au moins {{ limit }} caractères")
+     * @Assert\Regex(pattern="/^(?=.*[a-zA-Z])(?=.*[0-9])/", match=true, message="Votre mot de passe doit contenir au moins une lettre et un chiffre.")
      */
     private $password;
 

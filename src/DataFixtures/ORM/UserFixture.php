@@ -28,7 +28,7 @@ class UserFixture extends Fixture
         // Création des informations de l'admin
         $admin->setFirstName('Agnès')
             ->setLastName('Y Alcover')
-            ->setEmail('calcifer.hauru@gmail.com')
+            ->setUsername('calcifer.hauru@gmail.com')
             ->setPassword($passwordAdmin)
             ->setRoles(array('ROLE_ADMIN'))
             ->setFirstConnexion(false);
@@ -45,7 +45,7 @@ class UserFixture extends Fixture
         // Création des informations de l'admin
         $user->setFirstName('Sophia')
             ->setLastName('Blithikiotis')
-            ->setEmail('adrien.desmet@hotmail.fr')
+            ->setUsername('adrien.desmet@hotmail.fr')
             ->setPassword($passwordUser)
             ->setRoles(array('ROLE_USER'))
             ->setFirstConnexion(false);

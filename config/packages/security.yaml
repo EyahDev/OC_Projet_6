@@ -15,8 +15,10 @@ security:
         main:
             pattern: ^/
             anonymous: true
+            access_denied_url: /dashboard
 
             form_login:
+
                 login_path: login_page
                 check_path: login_page
                 require_previous_session: false
@@ -33,6 +35,7 @@ security:
                 # The name of the route to redirect to after logging out
                 target: test_page
 
-    access_control:
-        - { path: ^/administration, roles: ROLE_ADMIN }
-        - { path: ^/mon-compte, roles: ROLE_USER }
+#    access_control:
+#        - { path: ^/administration, roles: ROLE_ADMIN }
+#        - { path: ^/mon-compte, roles: ROLE_USER }
+#        - { path: ^/reinitialisation/{token}, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -1,3 +1,5 @@
 swiftmailer:
     url: '%env(MAILER_URL)%'
+    username: noreply@adriendesmet.com
+    password: THynn*?1]H?{
     spool: { type: 'memory' }

@@ -12,7 +12,7 @@
                         <h1>Ecurie Fief Malzais</h1>
                     </div>
                     {% if error %}
-                    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        <div class="card-panel deep-orange accent-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {% endif %}
 
                     <form action="{{ path('login_page') }}" method="post">
@@ -44,15 +44,16 @@
 
                     <div id="flashMessages"></div>
 
-                    <form action="{{ path('reset_password') }}" method="post" name="reset_password">
+                    <form action="{{ path('lost_password') }}" method="post" name="reset_password">
                         <div class="input-field">
                             <input type="email" id="username" name="_email_reset">
                             <label for="username">Email</label>
                         </div>
-                        <button data-url="{{ path('reset_password') }}" id="resetPassword" class="btn waves-effect waves-light" type="submit">
-                            Réinitialisation
-                        </button>
+                        <button data-url="{{ path('lost_password') }}" id="resetPassword" class="btn waves-effect waves-light" type="submit">Réinitialisation</button>
                     </form>
+                    <div class="progress">
+                        <div class="indeterminate"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -71,6 +72,9 @@
                 // Bloquage de l'action initial
                 e.preventDefault();
 
+                // Affichage de la barre de chargement
+                $('.progress').show();
+
                 // Récupération du formulaire
                 var $form = $(this);
 
@@ -87,6 +91,9 @@
                         var success = '<div class="card-panel green accent-4">'+ data +'</div>';
                         // Ajout du message flash
                         $('#flashMessages').html(success);
+
+                        // Retrait de la barre de chargement
+                        $('.progress').hide();
                     },
                     error: function (jqxhr) {
                         // Construction du html pour le message flash
@@ -94,11 +101,14 @@
                         // ajoute le message flash dans la div dédiée
                         $('#flashMessages').html(error);
 
-                            // Efface le message après 5 secondes
-                            function removeFlashMsg(){
-                                $('.card-panel').replaceWith("");
-                            }
-                            setTimeout(removeFlashMsg, 5000);
+                        // Retrait de la barre de chargement
+                        $('.progress').hide();
+
+                        // Efface le message après 5 secondes
+                        function removeFlashMsg(){
+                            $('.card-panel').replaceWith("");
+                        }
+                        setTimeout(removeFlashMsg, 5000);
                     }
                 })
             });
