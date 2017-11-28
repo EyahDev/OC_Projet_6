@@ -19,7 +19,8 @@ class User implements UserInterface, \Serializable
     /* -------------- Relations -------------- */
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Horse", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Horse", mappedBy="user")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $horse;
 
@@ -68,6 +69,8 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=255)
+     * @Assert\Length(min="2", minMessage="Le prénom doit contenir au moins {{limit}} caractères.")
+     * @Assert\NotBlank(message="Veuillez saisir un prénom valide.")
      */
     private $firstName;
 
@@ -75,13 +78,24 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=255)
+     * @Assert\Length(min="2", minMessage="Le nom doit contenir au moins {{limit}} caractères.")
+     * @Assert\NotBlank(message="Veuillez saisir un nom valide.")
      */
     private $lastName;
 
     /**
      * @var string
      *
+     * @ORM\Column(name="complete_name", type="string", length=255)
+     */
+    private $completeName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="address", type="string", length=255, nullable=true)
+     * @Assert\Length(min="2", minMessage="L'adresse doit contenir au moins {{limit}} caractères.")
+     * @Assert\NotBlank(message="Veuillez saisir une adresse valide.")
      */
     private $address;
 
@@ -89,13 +103,17 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=255, nullable=true)
+     * @Assert\Length(min="2", minMessage="La ville doit contenir au moins {{limit}} caractères.")
+     * @Assert\NotBlank(message="Veuillez saisir une ville valide.")
      */
     private $country;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="zip_code", type="string", length=255, nullable=true)
+     * @ORM\Column(name="zip_code", type="integer", length=255, nullable=true)
+     * @Assert\Length(max="5", maxMessage="Le code postal doit contenir au maximun {{ limit }} chiffres.")
+     * @Assert\NotBlank(message="Veuillez saisir un code postal valide.")
      */
     private $zipCode;
 
@@ -103,6 +121,8 @@ class User implements UserInterface, \Serializable
      * @var int
      *
      * @ORM\Column(name="phone", type="integer", nullable=true)
+     * @Assert\Length(max="10", maxMessage="Le numéro de téléphone doit contenir au maximun {{ limit }} chiffres.")
+     * @Assert\NotBlank(message="Veuillez saisir un numéro de téléphone valide valide.")
      */
     private $phone;
 
@@ -110,6 +130,8 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, unique=true)
+     * @Assert\Email(checkMX=true, message="Veuillez saisir une adresse email valide.")
+     * @Assert\NotBlank(message="Veuillez saisir une adresse email valide valide.")
      */
     private $username;
 
@@ -209,6 +231,22 @@ class User implements UserInterface, \Serializable
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompleteName()
+    {
+        return $this->completeName;
+    }
+
+    /**
+     * @param string $completeName
+     */
+    public function setCompleteName($completeName)
+    {
+        $this->completeName = $completeName;
     }
 
     /**
@@ -433,6 +471,7 @@ class User implements UserInterface, \Serializable
      */
     public function __construct()
     {
+        $this->horse = new ArrayCollection();
         $this->alerts = new ArrayCollection();
         $this->bills = new ArrayCollection();
         $this->courses = new ArrayCollection();
@@ -446,7 +485,7 @@ class User implements UserInterface, \Serializable
      *
      * @return User
      */
-    public function setHorse(\App\Entity\Horse $horse = null)
+    public function setHorse(Horse $horse = null)
     {
         $this->horse = $horse;
 
@@ -464,13 +503,37 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * Add horse
+     *
+     * @param \App\Entity\Horse $horse
+     *
+     * @return User
+     */
+    public function addHorse(\App\Entity\Horse $horse)
+    {
+        $this->horse[] = $horse;
+
+        return $this;
+    }
+
+    /**
+     * Remove horse
+     *
+     * @param \App\Entity\Horse $horse
+     */
+    public function removeHorse(\App\Entity\Horse $horse)
+    {
+        $this->horse->removeElement($horse);
+    }
+
+    /**
      * Add alert
      *
      * @param \App\Entity\Alert $alert
      *
      * @return User
      */
-    public function addAlert(\App\Entity\Alert $alert)
+    public function addAlert(Alert $alert)
     {
         $this->alerts[] = $alert;
 
@@ -482,7 +545,7 @@ class User implements UserInterface, \Serializable
      *
      * @param \App\Entity\Alert $alert
      */
-    public function removeAlert(\App\Entity\Alert $alert)
+    public function removeAlert(Alert $alert)
     {
         $this->alerts->removeElement($alert);
     }
@@ -504,7 +567,7 @@ class User implements UserInterface, \Serializable
      *
      * @return User
      */
-    public function addBill(\App\Entity\Bill $bill)
+    public function addBill(Bill $bill)
     {
         $this->bills[] = $bill;
 
@@ -516,7 +579,7 @@ class User implements UserInterface, \Serializable
      *
      * @param \App\Entity\Bill $bill
      */
-    public function removeBill(\App\Entity\Bill $bill)
+    public function removeBill(Bill $bill)
     {
         $this->bills->removeElement($bill);
     }
@@ -596,7 +659,7 @@ class User implements UserInterface, \Serializable
      *
      * @return User
      */
-    public function addCourseCardHistory(\App\Entity\CourseCardHistory $courseCardHistory)
+    public function addCourseCardHistory(CourseCardHistory $courseCardHistory)
     {
         $this->courseCardHistory[] = $courseCardHistory;
 
@@ -608,7 +671,7 @@ class User implements UserInterface, \Serializable
      *
      * @param \App\Entity\CourseCardHistory $courseCardHistory
      */
-    public function removeCourseCardHistory(\App\Entity\CourseCardHistory $courseCardHistory)
+    public function removeCourseCardHistory(CourseCardHistory $courseCardHistory)
     {
         $this->courseCardHistory->removeElement($courseCardHistory);
     }
@@ -625,10 +688,16 @@ class User implements UserInterface, \Serializable
 
     /* -------------- Implements declarations -------------- */
 
+    /**
+     *
+     */
     public function eraseCredentials()
     {
     }
 
+    /**
+     * @return string
+     */
     public function serialize()
     {
         return serialize(array(
@@ -638,30 +707,40 @@ class User implements UserInterface, \Serializable
         ));
     }
 
+    /**
+     * @param string $serialized
+     */
     public function unserialize($serialized)
     {
         list (
             $this->id,
             $this->username,
             $this->password,
-        ) = unserialize($serialized);
+            ) = unserialize($serialized);
     }
 
+    /**
+     * @return string
+     */
     public function getUsername()
     {
         return $this->username;
     }
 
+    /**
+     * @return null
+     */
     public function getSalt()
     {
         return null;
     }
 
     /**
-     * @param string $username
+     * @param $username
      */
     public function setUsername($username)
     {
         $this->username = $username;
     }
+
 }

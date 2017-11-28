@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Horse
@@ -15,7 +16,7 @@ class Horse
     /* -------------- Relations -------------- */
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="horse")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="horse")
      */
     private $user;
 
@@ -35,34 +36,32 @@ class Horse
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\Length(min="2", minMessage="Le nom doit contenir au moins {{limit}} caractères.")
+     * @Assert\NotBlank(message="Veuillez saisir un nom valide.")
      */
     private $name;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="birthDate", type="date")
+     * @ORM\Column(name="birthDate", type="date", nullable=true)
+     * @Assert\Date(message="Veuillez saisir une date de naissance valide.")
      */
     private $birthDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="shoeingDate", type="date")
-     */
-    private $shoeingDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="vaccinationDate", type="date")
+     * @ORM\Column(name="vaccinationDate", type="date", nullable=true)
+     * @Assert\Date(message="Veuillez saisir une date de naissance valide.")
      */
     private $vaccinationDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="dewormingDate", type="date")
+     * @ORM\Column(name="dewormingDate", type="date", nullable=true)
+     * @Assert\Date(message="Veuillez saisir une date de naissance valide.")
      */
     private $dewormingDate;
 
@@ -131,30 +130,6 @@ class Horse
     public function getBirthDate()
     {
         return $this->birthDate;
-    }
-
-    /**
-     * Set shoeingDate
-     *
-     * @param \DateTime $shoeingDate
-     *
-     * @return Horse
-     */
-    public function setShoeingDate($shoeingDate)
-    {
-        $this->shoeingDate = $shoeingDate;
-
-        return $this;
-    }
-
-    /**
-     * Get shoeingDate
-     *
-     * @return \DateTime
-     */
-    public function getShoeingDate()
-    {
-        return $this->shoeingDate;
     }
 
     /**
@@ -236,7 +211,7 @@ class Horse
      *
      * @return Horse
      */
-    public function setUser(\App\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 

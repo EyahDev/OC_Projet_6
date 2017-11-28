@@ -131,7 +131,12 @@ class SecurityManager
         return $this->formFactory->create(ResetPasswordType::class);
     }
 
-
+    /**
+     * Modification du mot de passe
+     *
+     * @param $password
+     * @param $token
+     */
     public function resetPassword($password, $token) {
         // Récupération de l'utilisateur
         $user = $this->getUserByToken($token);
@@ -139,8 +144,10 @@ class SecurityManager
         // Création du nouveau mot de passe
         $newPassword = $this->encoder->encodePassword($user, $password);
 
-        // Enregistrement du nouveau mot de passe
+        // Enregistrement du nouveau mot de passe et passage à null du token et de sa date
         $user->setPassword($newPassword);
+        $user->setTokenExpirationDate(null);
+        $user->setTokenReset(null);
         $this->em->persist($user);
         $this->em->flush();
     }

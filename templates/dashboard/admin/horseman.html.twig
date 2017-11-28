@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('../public/build/css/table.css') }}">
+    <style>
+        body {
+            background-image: url(../public/build/img/background-dashboard-light.png);
+        }
+
+        .btn-dashboard {
+            justify-content: center;
+            height: 55px;
+        }
+
+        .icon-dashboard {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <a href="http://ecuriefiefmalzais.fr/"><div class="col xl1 card-panel valign-wrapper btn-dashboard"><i class="icon-dashboard fa fa-arrow-left" aria-hidden="true"></i> Retour au site</div></a>
+        <div class="col xl1 offset-xl3 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-tachometer" aria-hidden="true"></i> Dashboard</div>
+        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-calendar" aria-hidden="true"></i> Cours</div>
+        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-address-book-o" aria-hidden="true"></i> Contact utiles</div>
+        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-sign-out" aria-hidden="true"></i> Déconnexion</div>
+    </div>
+
+    <div class="row">
+        <div class="col xl6 offset-xl3">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="center-align">Notifications</h3>
+                    <div class="divider"></div>
+                    <p>Aucune notifications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+    </div>
+{% endblock %}

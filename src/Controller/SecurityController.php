@@ -18,6 +18,9 @@ class SecurityController extends Controller
      * @Route(path="/", name="login_page")
      */
     public function login(AuthenticationUtils $authUtils) {
+        if ($this->getUser()) {
+           return $this->redirectToRoute('dashboard');
+        }
         //Gestion des erreurs liés à la connexion
         $error = $authUtils->getLastAuthenticationError();
 
@@ -54,7 +57,10 @@ class SecurityController extends Controller
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param SecurityManager $security
+     * @param $token
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      *
      * @Route(path="/reinitialisation/{token}", name="reset_password")
      */
@@ -93,27 +99,9 @@ class SecurityController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Route(path="/mot-de-passe/confirmation", name="reset_confirmation")
+     * @Route(path="/confirmation", name="reset_confirmation")
      */
     public function reset_confirmation() {
-        return $this->render('security/resetConfirmation.html.twig');
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @Route(path="/pagetest", name="test_page")
-     */
-    public function test() {
-        return $this->render('login/aftereee.html.twig');
-    }
-
-    /**
-     * @throws \Exception
-     *
-     * @Route(path="/logout", name="logout")
-     */
-    public function logout() {
-        throw new \Exception('This should never be reached!');
+        return $this->render('security/confirmation.html.twig');
     }
 }

@@ -10,4 +10,19 @@ namespace App\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Récupération des utilisateurs sans l'administrateur
+     *
+     * @return array
+     */
+    public function getUsersExceptAdmin() {
+        // Création de l'alias
+        $qb = $this->createQueryBuilder('u');
+
+        // Création de la requête personnalisée
+        $qb->where('u.roles LIKE :roles')->setParameter('roles', '%ROLE_USER%');
+
+        // Récupération du résultat
+        return $qb->getQuery()->getResult();
+    }
 }

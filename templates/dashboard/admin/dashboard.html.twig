@@ -1,0 +1,269 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('../public/build/css/table.css') }}">
+    <style>
+        body {
+            background-image: url(../public/build/img/background-dashboard-light.png);
+        }
+
+        .btn-dashboard {
+            justify-content: center;
+            height: 55px;
+        }
+
+        .icon-dashboard {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .absolute-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #83d622 !important;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <a href="http://ecuriefiefmalzais.fr/"><div class="col xl1 card-panel valign-wrapper btn-dashboard"><i class="icon-dashboard fa fa-arrow-left" aria-hidden="true"></i> Retour au site</div></a>
+        <div class="col xl1 offset-xl3 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-tachometer" aria-hidden="true"></i> Dashboard</div>
+        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-calendar" aria-hidden="true"></i> Cours</div>
+        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-address-book-o" aria-hidden="true"></i> Contact utiles</div>
+        <a href="{{ path('logout_page') }}"><div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-sign-out" aria-hidden="true"></i> Déconnexion</div></a>
+    </div>
+
+    <div class="row">
+        <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="center-align">Notifications</h3>
+                    <div class="divider"></div>
+                    <p>Aucune notifications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="row">
+            <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+                <div class="card relative">
+                    <div class="card-content">
+                        <h3 class="center-align">Cavaliers</h3> <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
+                        <div class="divider"></div>
+                        <div class="table-responsive-vertical">
+
+                            <!-- Table starts here -->
+                            <table id="table" class="table table-hover table-mc-light-green">
+                                <thead>
+                                <tr>
+                                    <th>Prénom</th>
+                                    <th>Nom</th>
+                                    <th>Cheval</th>
+                                    <th>Contact</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in users  %}
+                                    <tr data-href="{{ path('horseman-details', {'id': user.id}) }}">
+                                        <td data-title="Prénom">{{ user.firstName }}</td>
+                                        <td data-title="Nom">{{ user.lastName }}</td>
+                                        <td data-title="Cheval">
+                                            {% for horse in user.horse  %}
+                                                {{ horse.name }}
+                                            {% endfor %}
+                                        </td>
+                                        <td data-title="Contact">0{{ user.phone }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Ajout d'un cavalier<i class="material-icons right">close</i></span>
+                        <div class="row">
+                            <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+                                {{form_start(addHorsemanForm)}}
+                                {% if not addHorsemanForm.vars.valid %}
+                                    <div class="card-panel deep-orange accent-4">
+                                        {{ form_errors(addHorsemanForm) }}
+                                        {{ form_errors(addHorsemanForm.firstName) }}
+                                        {{ form_errors(addHorsemanForm.lastName) }}
+                                        {{ form_errors(addHorsemanForm.address) }}
+                                        {{ form_errors(addHorsemanForm.zip_code) }}
+                                        {{ form_errors(addHorsemanForm.country) }}
+                                        {{ form_errors(addHorsemanForm.username) }}
+                                        {{ form_errors(addHorsemanForm.phone) }}
+                                        {{ form_errors(addHorsemanForm.horse) }}
+                                    </div>
+                                {% endif %}
+
+
+                                <div class="row">
+                                    <div class="input-field col xl6 l6 m12 s12">
+                                        {{form_widget(addHorsemanForm.firstName)}}
+                                        {{form_label(addHorsemanForm.firstName)}}
+                                    </div>
+
+                                    <div class="input-field col xl6 l6 m12 s12">
+                                        {{form_widget(addHorsemanForm.lastName)}}
+                                        {{form_label(addHorsemanForm.lastName)}}
+                                    </div>
+
+                                    <div class="input-field col xl12 l12 m12 s12">
+                                        {{form_widget(addHorsemanForm.address)}}
+                                        {{form_label(addHorsemanForm.address)}}
+                                    </div>
+
+                                    <div class="input-field col xl6 l6 m12 s12">
+                                        {{form_widget(addHorsemanForm.zip_code)}}
+                                        {{form_label(addHorsemanForm.zip_code)}}
+                                    </div>
+
+                                    <div class="input-field col xl6 l6 m12 s12">
+                                        {{form_widget(addHorsemanForm.country)}}
+                                        {{form_label(addHorsemanForm.country)}}
+                                    </div>
+
+                                    <div class="input-field col xl6 l6 m12 s12">
+                                        {{form_widget(addHorsemanForm.username)}}
+                                        {{form_label(addHorsemanForm.username)}}
+                                    </div>
+
+                                    <div class="input-field col xl6 l6 m12 s12">
+                                        {{form_widget(addHorsemanForm.phone)}}
+                                        {{form_label(addHorsemanForm.phone)}}
+                                    </div>
+
+                                    <div class="input-field col xl12 l12 m12 s12">
+                                        {{form_widget(addHorsemanForm.horse)}}
+                                        {{form_label(addHorsemanForm.horse)}}
+                                    </div>
+
+                                    <div class="input-field col xl12 l12 m12 s12">
+                                        {{form_widget(addHorsemanForm.submit)}}
+                                        {{form_label(addHorsemanForm.submit)}}
+                                    </div>
+
+                                    {{form_end(addHorsemanForm)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card relative">
+                    <div class="card-content">
+                        <h3 class="center-align">Chevaux</h3> <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
+                        <div class="divider"></div>
+
+                        <div class="table-responsive-vertical">
+                            <!-- Table starts here -->
+                            <table id="table" class="table table-hover table-mc-light-green">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Vaccination</th>
+                                    <th>Vermifigation</th>
+                                    <th>Couvertures</th>
+                                    <th>Propriétaire</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for horse in horses  %}
+                                    <tr data-href="{{ path('horseman-details', {'id': horse.id}) }}">
+                                        <td data-title="Nom">{{ horse.name }}</td>
+                                        <td data-title="Vaccination">{{ horse.vaccinationDate|date('d/m/Y') }}</td>
+                                        <td data-title="Vermifugation">{{ horse.dewormingDate|date('d/m/Y') }}</td>
+                                        <td data-title="Couvertures">{{ horse.blanketsOption }} Oui</td>
+                                        <td data-title="Propriétaire">{{ horse.user.completeName }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Ajout d'un cheval<i class="material-icons right">close</i></span>
+                        <div class="row">
+                            <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+                                {{form_start(addHorseForm)}}
+                                {% if not addHorsemanForm.vars.valid %}
+                                    <div class="card-panel deep-orange accent-4">
+                                        {{ form_errors(addHorseForm) }}
+                                        {{ form_errors(addHorseForm.user) }}
+                                        {{ form_errors(addHorseForm.name) }}
+                                        {{ form_errors(addHorseForm.bithDate) }}
+                                        {{ form_errors(addHorseForm.vaccinationDate) }}
+                                        {{ form_errors(addHorseForm.dewormingDate) }}
+                                        {{ form_errors(addHorseForm.blanketsOption) }}
+                                    </div>
+                                {% endif %}
+
+
+                                <div class="row">
+                                    <div class="input-field col xl12 l12 m12 s12">
+                                        {{form_widget(addHorseForm.user)}}
+                                        {{form_label(addHorseForm.user)}}
+                                    </div>
+
+                                    <div class="input-field col xl12 l12 m12 s12">
+                                        {{form_widget(addHorseForm.name)}}
+                                        {{form_label(addHorseForm.name)}}
+                                    </div>
+
+                                    <div class="input-field col xl4 l12 m12 s12">
+                                        {{form_widget(addHorseForm.birthDate)}}
+                                        {{form_label(addHorseForm.birthDate)}}
+                                    </div>
+
+                                    <div class="input-field col xl4 l12 m12 s12">
+                                        {{form_widget(addHorseForm.vaccinationDate)}}
+                                        {{form_label(addHorseForm.vaccinationDate)}}
+                                    </div>
+
+                                    <div class="input-field col xl4 l12 m12 s12">
+                                        {{form_widget(addHorseForm.dewormingDate)}}
+                                        {{form_label(addHorseForm.dewormingDate)}}
+                                    </div>
+
+                                    <div class=" col xl12 l12 m12 s12">
+                                        {{form_widget(addHorseForm.blanketsOption)}}
+                                        {{form_label(addHorseForm.blanketsOption)}}
+                                    </div>
+
+                                    <div class="input-field col xl12 l12 m12 s12">
+                                        {{form_widget(addHorseForm.submit)}}
+                                        {{form_label(addHorseForm.submit)}}
+                                    </div>
+
+                                    {{form_end(addHorseForm)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            $('select').material_select();
+
+            $('table tr').click(function(){
+                window.location = $(this).data('href');
+                return false;
+            });
+        });
+    </script>
+{% endblock %}
+
+

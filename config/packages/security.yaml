@@ -15,14 +15,12 @@ security:
         main:
             pattern: ^/
             anonymous: true
-            access_denied_url: /dashboard
 
             form_login:
-
                 login_path: login_page
                 check_path: login_page
                 require_previous_session: false
-                default_target_path: test_page
+                default_target_path: dashboard
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -31,11 +29,10 @@ security:
 
             logout:
                 # The route name the user can go to in order to logout
-                path: logout
+                path: logout_page
                 # The name of the route to redirect to after logging out
-                target: test_page
+                target: login_page
 
-#    access_control:
-#        - { path: ^/administration, roles: ROLE_ADMIN }
-#        - { path: ^/mon-compte, roles: ROLE_USER }
-#        - { path: ^/reinitialisation/{token}, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    access_control:
+        - { path: ^/dashboard, roles: [ROLE_ADMIN, ROLE_USER]}
+
