@@ -2351,16 +2351,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.0.41",
+            "version": "v1.0.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "f3ac6de242d0dd7f0a36abfcc413e6cee1442702"
+                "reference": "a1117ae366eae895a449db63eda58035b112dda9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/f3ac6de242d0dd7f0a36abfcc413e6cee1442702",
-                "reference": "f3ac6de242d0dd7f0a36abfcc413e6cee1442702",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/a1117ae366eae895a449db63eda58035b112dda9",
+                "reference": "a1117ae366eae895a449db63eda58035b112dda9",
                 "shasum": ""
             },
             "require": {
@@ -2393,7 +2393,7 @@
                     "email": "fabien.potencier@gmail.com"
                 }
             ],
-            "time": "2017-11-09T19:21:33+00:00"
+            "time": "2017-11-29T02:36:07+00:00"
         },
         {
             "name": "symfony/form",

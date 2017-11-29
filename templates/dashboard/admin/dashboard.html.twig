@@ -56,35 +56,11 @@
                     <div class="card-content">
                         <h3 class="center-align">Cavaliers</h3> <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
                         <div class="divider"></div>
-                        <div class="table-responsive-vertical">
 
-                            <!-- Table starts here -->
-                            <table id="table" class="table table-hover table-mc-light-green">
-                                <thead>
-                                <tr>
-                                    <th>Prénom</th>
-                                    <th>Nom</th>
-                                    <th>Cheval</th>
-                                    <th>Contact</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for user in users  %}
-                                    <tr data-href="{{ path('horseman-details', {'id': user.id}) }}">
-                                        <td data-title="Prénom">{{ user.firstName }}</td>
-                                        <td data-title="Nom">{{ user.lastName }}</td>
-                                        <td data-title="Cheval">
-                                            {% for horse in user.horse  %}
-                                                {{ horse.name }}
-                                            {% endfor %}
-                                        </td>
-                                        <td data-title="Contact">0{{ user.phone }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                        {{ include('dashboard/admin/users.html.twig') }}
+
                     </div>
+
                     <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4">Ajout d'un cavalier<i class="material-icons right">close</i></span>
                         <div class="row">
@@ -163,31 +139,8 @@
                         <h3 class="center-align">Chevaux</h3> <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
                         <div class="divider"></div>
 
-                        <div class="table-responsive-vertical">
-                            <!-- Table starts here -->
-                            <table id="table" class="table table-hover table-mc-light-green">
-                                <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Vaccination</th>
-                                    <th>Vermifigation</th>
-                                    <th>Couvertures</th>
-                                    <th>Propriétaire</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for horse in horses  %}
-                                    <tr data-href="{{ path('horseman-details', {'id': horse.id}) }}">
-                                        <td data-title="Nom">{{ horse.name }}</td>
-                                        <td data-title="Vaccination">{{ horse.vaccinationDate|date('d/m/Y') }}</td>
-                                        <td data-title="Vermifugation">{{ horse.dewormingDate|date('d/m/Y') }}</td>
-                                        <td data-title="Couvertures">{{ horse.blanketsOption }} Oui</td>
-                                        <td data-title="Propriétaire">{{ horse.user.completeName }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                        {{ include('dashboard/admin/horses.html.twig') }}
+
                     </div>
                     <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4">Ajout d'un cheval<i class="material-icons right">close</i></span>
@@ -255,14 +208,76 @@
 
 {% block javascripts %}
     <script>
-        $(document).ready(function(){
-            $('select').material_select();
+        // Fonction de pagination des utilisateurs
+        function paginateUsers() {
+            $('#paginateUsers').find('a').on('click', function (e) {
+                e.preventDefault();
+                var $a = $(this);
+                var url = $a.attr('href');
 
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        // Recharge le tableau
+                        $('#table-users').replaceWith(data);
+
+                        TRlink();
+                        paginateUsers();
+
+                    }, error: function () {
+//                        addFlashMsgUserManagement('danger', 'Une erreur est survenue')
+                    }
+                })
+            });
+        }
+
+        // Fonction de pagination des utilisateurs
+        function paginateHorses() {
+            $('#paginateHorses').find('a').on('click', function (e) {
+                e.preventDefault();
+                var $a = $(this);
+                var url = $a.attr('href');
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        // Recharge le tableau
+                        $('#table-horses').replaceWith(data);
+
+                        TRlink();
+                        paginateHorses();
+
+                    }, error: function () {
+//                        addFlashMsgUserManagement('danger', 'Une erreur est survenue')
+                    }
+                })
+            });
+        }
+
+        // Liens sur chaque TR
+        function TRlink() {
             $('table tr').click(function(){
                 window.location = $(this).data('href');
                 return false;
             });
+        }
+
+        $(document).ready(function(){
+            // Initialisation des inputs select
+            $('select').material_select();
+
+            // Liens des TR
+            TRlink();
+
+            // Pagination des utilisateurs
+            paginateUsers();
+
+            // Pagination des chevaux
+            paginateHorses();
         });
+
     </script>
 {% endblock %}
 

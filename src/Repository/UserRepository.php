@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * UserRepository
@@ -13,16 +14,18 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Récupération des utilisateurs sans l'administrateur
      *
-     * @return array
+     * @return Paginator
      */
-    public function getUsersExceptAdmin() {
+    public function getUsersExceptAdmin($firstResult, $perPage) {
         // Création de l'alias
         $qb = $this->createQueryBuilder('u');
 
         // Création de la requête personnalisée
-        $qb->where('u.roles LIKE :roles')->setParameter('roles', '%ROLE_USER%');
+        $query = $qb->where('u.roles LIKE :roles')->setParameter('roles', '%ROLE_USER%')->setFirstResult($firstResult)->setMaxResults($perPage);
+
+        $paginator = new Paginator($query);
 
         // Récupération du résultat
-        return $qb->getQuery()->getResult();
+        return $paginator;
     }
 }

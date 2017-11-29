@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 /**
  * HorseRepository
  *
@@ -10,4 +12,16 @@ namespace App\Repository;
  */
 class HorseRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getHorses($firstResult, $perPage) {
+        // Création de l'alias
+        $qb = $this->createQueryBuilder('h');
+
+        // Création de la requête personnalisée
+        $query = $qb->select('h')->setFirstResult($firstResult)->setMaxResults($perPage);
+
+        $paginator = new Paginator($query);
+
+        // Récupération du résultat
+        return $paginator;
+    }
 }

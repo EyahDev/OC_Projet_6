@@ -42,8 +42,8 @@ class DashboardManager
      *
      * @return User[]|array
      */
-    public function getUsers() {
-        return $this->em->getRepository(User::class)->getUsersExceptAdmin();
+    public function getUsers($firstResult, $perPage) {
+        return $this->em->getRepository(User::class)->getUsersExceptAdmin($firstResult, $perPage);
     }
 
     /**
@@ -51,8 +51,8 @@ class DashboardManager
      *
      * @return Horse[]|array
      */
-    public function getHorses() {
-        return $this->em->getRepository(Horse::class)->findAll();
+    public function getHorses($firstResult, $perPage) {
+        return $this->em->getRepository(Horse::class)->getHorses($firstResult, $perPage);
     }
 
     /**
@@ -81,7 +81,11 @@ class DashboardManager
         return $this->formFactory->create(AddHorseType::class ,$horse);
     }
 
-
+    /**
+     * Création d'un nouvel utilisateur
+     *
+     * @param User $data
+     */
     public function setNewHorseman(User $data) {
         // Ajout d'un boolean de première connexion
         $data->setFirstConnexion(true);
@@ -98,9 +102,66 @@ class DashboardManager
         $this->em->flush();
     }
 
+    /**
+     * Création d'un nouveau cheval
+     *
+     * @param Horse $data
+     */
     public function setNewHorse(Horse $data) {
         // Enregistrement en base de données
         $this->em->persist($data);
         $this->em->flush();
+    }
+
+    /**
+     * Gestion de la pagination du tableau des utilisateurs (admin seulement)
+     *
+     * @param $currentPage
+     * @return array
+     */
+    public function getPaginatedUsers($currentPage) {
+        // Définition du nombres d'affichage par page
+        $perPage = 10;
+
+        // Calcul du premier résultat à afficher
+        $firstResult = ($currentPage-1) * $perPage;
+
+        // Récupération de tous les utilisateurs existant
+        $users = $this->getUsers($firstResult, $perPage);
+
+        // Calcul du nombre de page neécessaire
+        $nbPage = ceil(count($users) / $perPage);
+
+        return array(
+            'users' => $users,
+            'nbPage' => $nbPage,
+            'currentPage' => $currentPage
+        );
+    }
+
+    /**
+     * Gestion de la pagination du tableau des utilisateurs (admin seulement)
+     *
+     * @param $currentPage
+     * @return array
+     */
+    public function getPaginatedHorse($currentPage) {
+        // Définition du nombres d'affichage par page
+        $perPage = 10;
+
+        // Calcul du premier résultat à afficher
+        $firstResult = ($currentPage-1) * $perPage;
+
+        // Récupération de tous les utilisateurs existant
+        $horses = $this->getHorses($firstResult, $perPage);
+
+        // Calcul du nombre de page neécessaire
+        $nbPage = ceil(count($horses) / $perPage);
+
+        return array(
+            'horses' => $horses,
+            'nbPage' => $nbPage,
+            'currentPage' => $currentPage
+        );
     }
 }

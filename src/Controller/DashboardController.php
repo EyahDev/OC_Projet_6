@@ -19,11 +19,11 @@ class DashboardController extends Controller
         /*--------- ADMINISTRATEUR ----------*/
 
         if ($user->getRoles()[0] === 'ROLE_ADMIN') {
-            // Récupération de tous les utilisateurs existant
-            $users = $dashboardManager->getUsers();
+            // Récupération de tous les chevaux existant
+            $paginationUsers = $dashboardManager->getPaginatedUsers(1);
 
             // Récupération de tous les chevaux existant
-            $horses = $dashboardManager->getHorses();
+            $paginationHorses = $dashboardManager->getPaginatedHorse(1);
 
             // Récupérations des formulaires d'ajout d'un cheval et d'un cavalier
             $addHorsemanForm = $dashboardManager->getAddHorsemanForm();
@@ -58,8 +58,8 @@ class DashboardController extends Controller
             }
 
             return $this->render('dashboard/admin/dashboard.html.twig', array(
-                'users' => $users,
-                'horses' => $horses,
+                'paginationUsers' => $paginationUsers,
+                'paginationHorses' => $paginationHorses,
                 'addHorsemanForm' => $addHorsemanForm->createView(),
                 'addHorseForm' => $addHorseForm->createView()
             ));
@@ -77,5 +77,47 @@ class DashboardController extends Controller
      */
     public function horsemanDetails($id) {
         return $this->render('dashboard/admin/horseman.html.twig');
+    }
+
+    /*--------- Pagination ----------*/
+
+    /**
+     * @param DashboardManager $dashboardManager
+     * @param $currentPage
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route(path="paginate-user/{currentPage}", name="paginate-user")
+     */
+    public function paginationUsers(DashboardManager $dashboardManager, $currentPage, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $paginationUsers = $dashboardManager->getPaginatedUsers($currentPage);
+
+            return $this->render('dashboard/admin/users.html.twig', array(
+                'paginationUsers' => $paginationUsers
+            ));
+        }
+
+        throw $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * @param DashboardManager $dashboardManager
+     * @param $currentPage
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route(path="paginate-horse/{currentPage}", name="paginate-horse")
+     */
+    public function paginationHorses(DashboardManager $dashboardManager, $currentPage, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $paginationHorses = $dashboardManager->getPaginatedHorse($currentPage);
+
+            return $this->render('dashboard/admin/horses.html.twig', array(
+                'paginationHorses' => $paginationHorses
+            ));
+        }
+
+        throw $this->createNotFoundException("Cette page n'existe pas.");
     }
 }
