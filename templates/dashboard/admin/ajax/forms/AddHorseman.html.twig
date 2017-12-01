@@ -1,0 +1,54 @@
+<div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1">
+    {{form_start(addHorsemanForm)}}
+
+    <div id="flashMessagesHorseman"></div>
+
+    <div class="row">
+        <div class="input-field col xl6 l6 m12 s12">
+            {{form_widget(addHorsemanForm.firstName)}}
+            {{form_label(addHorsemanForm.firstName)}}
+        </div>
+
+        <div class="input-field col xl6 l6 m12 s12">
+            {{form_widget(addHorsemanForm.lastName)}}
+            {{form_label(addHorsemanForm.lastName)}}
+        </div>
+
+        <div class="input-field col xl12 l12 m12 s12">
+            {{form_widget(addHorsemanForm.address)}}
+            {{form_label(addHorsemanForm.address)}}
+        </div>
+
+        <div class="input-field col xl6 l6 m12 s12">
+            {{form_widget(addHorsemanForm.zip_code)}}
+            {{form_label(addHorsemanForm.zip_code)}}
+        </div>
+
+        <div class="input-field col xl6 l6 m12 s12">
+            {{form_widget(addHorsemanForm.country)}}
+            {{form_label(addHorsemanForm.country)}}
+        </div>
+
+        <div class="input-field col xl6 l6 m12 s12">
+            {{form_widget(addHorsemanForm.username)}}
+            {{form_label(addHorsemanForm.username)}}
+        </div>
+
+        <div class="input-field col xl6 l6 m12 s12">
+            {{form_widget(addHorsemanForm.phone)}}
+            {{form_label(addHorsemanForm.phone)}}
+        </div>
+
+        <div class="input-field col xl12 l12 m12 s12">
+            {{form_widget(addHorsemanForm.submit, {'attr': {'data-url': path('add-horseman') }})}}
+        </div>
+
+        <div class="col xl12 l12 m12 s12">
+            <div class="progress progress-horseman">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        {{form_end(addHorsemanForm)}}
+    </div>
+</div>

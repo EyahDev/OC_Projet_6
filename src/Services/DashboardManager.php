@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Entity\Horse;
 use App\Entity\User;
 use App\Form\Type\Administration\AddHorsemanType;
@@ -10,6 +9,7 @@ use App\Form\Type\Administration\AddHorseType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DashboardManager
 {
@@ -28,11 +28,17 @@ class DashboardManager
      */
     private $encoder;
 
-    public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, UserPasswordEncoderInterface $encoder)
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
     {
         $this->em = $entityManager;
         $this->formFactory = $formFactory;
         $this->encoder = $encoder;
+        $this->validator = $validator;
     }
 
     /* ---------- ADMINISTRATEUR ----------- */
@@ -65,7 +71,7 @@ class DashboardManager
         $user = new User();
 
         // Récupération du formulaire
-        return $this->formFactory->create(AddHorsemanType::class ,$user);
+        return $this->formFactory->create(AddHorsemanType::class, $user);
     }
 
     /**
@@ -97,6 +103,9 @@ class DashboardManager
         // Association pour le nom complet
         $data->setCompleteName($data->getFirstName().' '.$data->getLastName());
 
+        // Ajout du role
+        $data->setRoles(array('ROLE_USER'));
+
         // Enregistrement en base de données
         $this->em->persist($data);
         $this->em->flush();
@@ -111,57 +120,5 @@ class DashboardManager
         // Enregistrement en base de données
         $this->em->persist($data);
         $this->em->flush();
-    }
-
-    /**
-     * Gestion de la pagination du tableau des utilisateurs (admin seulement)
-     *
-     * @param $currentPage
-     * @return array
-     */
-    public function getPaginatedUsers($currentPage) {
-        // Définition du nombres d'affichage par page
-        $perPage = 10;
-
-        // Calcul du premier résultat à afficher
-        $firstResult = ($currentPage-1) * $perPage;
-
-        // Récupération de tous les utilisateurs existant
-        $users = $this->getUsers($firstResult, $perPage);
-
-        // Calcul du nombre de page neécessaire
-        $nbPage = ceil(count($users) / $perPage);
-
-        return array(
-            'users' => $users,
-            'nbPage' => $nbPage,
-            'currentPage' => $currentPage
-        );
-    }
-
-    /**
-     * Gestion de la pagination du tableau des utilisateurs (admin seulement)
-     *
-     * @param $currentPage
-     * @return array
-     */
-    public function getPaginatedHorse($currentPage) {
-        // Définition du nombres d'affichage par page
-        $perPage = 10;
-
-        // Calcul du premier résultat à afficher
-        $firstResult = ($currentPage-1) * $perPage;
-
-        // Récupération de tous les utilisateurs existant
-        $horses = $this->getHorses($firstResult, $perPage);
-
-        // Calcul du nombre de page neécessaire
-        $nbPage = ceil(count($horses) / $perPage);
-
-        return array(
-            'horses' => $horses,
-            'nbPage' => $nbPage,
-            'currentPage' => $currentPage
-        );
     }
 }

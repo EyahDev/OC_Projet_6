@@ -17,7 +17,8 @@ class HorseRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('h');
 
         // Création de la requête personnalisée
-        $query = $qb->select('h')->setFirstResult($firstResult)->setMaxResults($perPage);
+        $query = $qb->select('h')->orderBy('h.name', 'ASC')
+            ->setFirstResult($firstResult)->setMaxResults($perPage);
 
         $paginator = new Paginator($query);
 

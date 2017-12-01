@@ -21,7 +21,9 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('u');
 
         // Création de la requête personnalisée
-        $query = $qb->where('u.roles LIKE :roles')->setParameter('roles', '%ROLE_USER%')->setFirstResult($firstResult)->setMaxResults($perPage);
+        $query = $qb->where('u.roles LIKE :roles')->orderBy('u.lastName', 'ASC')
+            ->setParameter('roles', '%ROLE_USER%')
+            ->setFirstResult($firstResult)->setMaxResults($perPage);
 
         $paginator = new Paginator($query);
 

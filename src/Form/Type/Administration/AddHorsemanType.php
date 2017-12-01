@@ -3,6 +3,7 @@
 namespace App\Form\Type\Administration;
 
 use App\Entity\Horse;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -10,15 +11,21 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class AddHorsemanType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('firstName', TextType::class, array(
                 'invalid_message' => 'Veuillez saisir un prénom valide.',
-                'label' => 'Prénom'
+                'label' => 'Prénom',
             ))
             ->add('lastName', TextType::class, array(
                 'invalid_message' => 'Veuillez saisir un nom valide.',
@@ -40,23 +47,13 @@ class AddHorsemanType extends AbstractType
                 'required' => false
             ))
             ->add('username', EmailType::class, array(
-                'invalid_message' => 'Veuillez saisir un prénom valide.',
+                'invalid_message' => 'Veuillez saisir un email valide.',
                 'label' => 'Email'
             ))
             ->add('phone', NumberType::class, array(
-                'invalid_message' => 'Veuillez saisir un prénom valide.',
+                'invalid_message' => 'Veuillez saisir un numéro de téléphone valide.',
                 'label' => 'Téléphone',
                 'required' => false
-            ))
-            ->add('horse', EntityType::class, array(
-                'class' => Horse::class,
-                'choice_label' => 'name',
-                'label' => 'Cheval',
-                'placeholder' => 'Selectionnez un cheval',
-                'required' => false,
-                'expanded' => false,
-                'multiple' => false,
-                'invalid_message' => 'Veuillez saisir un cheval valide.'
             ))
             ->add('submit', SubmitType::class, array(
                 'label' => 'Ajouter',
@@ -65,5 +62,13 @@ class AddHorsemanType extends AbstractType
                 )
             )
         );
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => User::class,
+            'validation_groups' => array('newhorseman')
+        ));
     }
 }

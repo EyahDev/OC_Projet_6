@@ -361,5 +361,8 @@
     },
     "symfony/validator": {
         "version": "v4.0.0-rc2"
+    },
+    "symfony/expression-language": {
+        "version": "v4.0.0-rc2"
     }
 }

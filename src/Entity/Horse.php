@@ -36,8 +36,8 @@ class Horse
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @Assert\Length(min="2", minMessage="Le nom doit contenir au moins {{limit}} caractères.")
-     * @Assert\NotBlank(message="Veuillez saisir un nom valide.")
+     * @Assert\Length(min="2", minMessage="Le nom doit contenir au moins {{limit}} caractères.", groups={"newhorse"})
+     * @Assert\NotBlank(message="Veuillez saisir un nom valide.", groups={"newhorse"})
      */
     private $name;
 
@@ -45,7 +45,7 @@ class Horse
      * @var \DateTime
      *
      * @ORM\Column(name="birthDate", type="date", nullable=true)
-     * @Assert\Date(message="Veuillez saisir une date de naissance valide.")
+     * @Assert\Date(message="Veuillez saisir une date de naissance valide.", groups={"newhorse"})
      */
     private $birthDate;
 
@@ -53,7 +53,7 @@ class Horse
      * @var \DateTime
      *
      * @ORM\Column(name="vaccinationDate", type="date", nullable=true)
-     * @Assert\Date(message="Veuillez saisir une date de naissance valide.")
+     * @Assert\Date(message="Veuillez saisir une date de naissance valide.", groups={"newhorse"})
      */
     private $vaccinationDate;
 
@@ -61,7 +61,7 @@ class Horse
      * @var \DateTime
      *
      * @ORM\Column(name="dewormingDate", type="date", nullable=true)
-     * @Assert\Date(message="Veuillez saisir une date de naissance valide.")
+     * @Assert\Date(message="Veuillez saisir une date de naissance valide.", groups={"newhorse"})
      */
     private $dewormingDate;
 

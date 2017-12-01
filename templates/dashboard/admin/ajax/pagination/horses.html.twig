@@ -7,7 +7,7 @@
 
     {% for i in 1..paginationHorses['nbPage'] %}
         {% if i == paginationHorses['currentPage'] %}
-            <li class="active"><a href="{{ path('paginate-horse',{'currentPage': i}) }}">{{ i }}</a></li>
+            <li class="active"><a href="{{ path('paginate-horse',{'currentPage': i}) }}" data-current="{{ paginationHorses['currentPage'] }}">{{ i }}</a></li>
         {% else %}
             <li><a href="{{ path('paginate-horse',{'currentPage': i}) }}">{{ i }}</a></li>
         {% endif %}

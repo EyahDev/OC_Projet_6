@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('../public/build/css/table.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
     <style>
         body {
             background-image: url(../public/build/img/background-dashboard-light.png);
@@ -25,6 +25,18 @@
             top: 15px;
             right: 15px;
             background-color: #83d622 !important;
+        }
+
+        .pagination li.active {
+            background: #83d622 ;
+        }
+
+        .progress-horseman {
+            display: none;
+        }
+
+        .progress-horse {
+            display: none;
         }
 
     </style>
@@ -54,82 +66,22 @@
             <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
                 <div class="card relative">
                     <div class="card-content">
-                        <h3 class="center-align">Cavaliers</h3> <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
+                        <h3 class="center-align" id="cavaliers">Cavaliers</h3> <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
                         <div class="divider"></div>
 
-                        {{ include('dashboard/admin/users.html.twig') }}
+                        {{ include('dashboard/admin/tables/users.html.twig') }}
 
                     </div>
 
                     <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Ajout d'un cavalier<i class="material-icons right">close</i></span>
+                        <i class="material-icons right card-title">close</i>
+                        <div class="center-align row">
+                            <h3 class="col xl12 l12 m12 s12">Ajout d'un cavalier</h3>
+                        </div>
                         <div class="row">
-                            <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
-                                {{form_start(addHorsemanForm)}}
-                                {% if not addHorsemanForm.vars.valid %}
-                                    <div class="card-panel deep-orange accent-4">
-                                        {{ form_errors(addHorsemanForm) }}
-                                        {{ form_errors(addHorsemanForm.firstName) }}
-                                        {{ form_errors(addHorsemanForm.lastName) }}
-                                        {{ form_errors(addHorsemanForm.address) }}
-                                        {{ form_errors(addHorsemanForm.zip_code) }}
-                                        {{ form_errors(addHorsemanForm.country) }}
-                                        {{ form_errors(addHorsemanForm.username) }}
-                                        {{ form_errors(addHorsemanForm.phone) }}
-                                        {{ form_errors(addHorsemanForm.horse) }}
-                                    </div>
-                                {% endif %}
 
+                            {{ include('dashboard/admin/ajax/forms/addHorseman.html.twig') }}
 
-                                <div class="row">
-                                    <div class="input-field col xl6 l6 m12 s12">
-                                        {{form_widget(addHorsemanForm.firstName)}}
-                                        {{form_label(addHorsemanForm.firstName)}}
-                                    </div>
-
-                                    <div class="input-field col xl6 l6 m12 s12">
-                                        {{form_widget(addHorsemanForm.lastName)}}
-                                        {{form_label(addHorsemanForm.lastName)}}
-                                    </div>
-
-                                    <div class="input-field col xl12 l12 m12 s12">
-                                        {{form_widget(addHorsemanForm.address)}}
-                                        {{form_label(addHorsemanForm.address)}}
-                                    </div>
-
-                                    <div class="input-field col xl6 l6 m12 s12">
-                                        {{form_widget(addHorsemanForm.zip_code)}}
-                                        {{form_label(addHorsemanForm.zip_code)}}
-                                    </div>
-
-                                    <div class="input-field col xl6 l6 m12 s12">
-                                        {{form_widget(addHorsemanForm.country)}}
-                                        {{form_label(addHorsemanForm.country)}}
-                                    </div>
-
-                                    <div class="input-field col xl6 l6 m12 s12">
-                                        {{form_widget(addHorsemanForm.username)}}
-                                        {{form_label(addHorsemanForm.username)}}
-                                    </div>
-
-                                    <div class="input-field col xl6 l6 m12 s12">
-                                        {{form_widget(addHorsemanForm.phone)}}
-                                        {{form_label(addHorsemanForm.phone)}}
-                                    </div>
-
-                                    <div class="input-field col xl12 l12 m12 s12">
-                                        {{form_widget(addHorsemanForm.horse)}}
-                                        {{form_label(addHorsemanForm.horse)}}
-                                    </div>
-
-                                    <div class="input-field col xl12 l12 m12 s12">
-                                        {{form_widget(addHorsemanForm.submit)}}
-                                        {{form_label(addHorsemanForm.submit)}}
-                                    </div>
-
-                                    {{form_end(addHorsemanForm)}}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -139,66 +91,18 @@
                         <h3 class="center-align">Chevaux</h3> <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
                         <div class="divider"></div>
 
-                        {{ include('dashboard/admin/horses.html.twig') }}
+                        {{ include('dashboard/admin/tables/horses.html.twig') }}
 
                     </div>
                     <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Ajout d'un cheval<i class="material-icons right">close</i></span>
+                        <i class="material-icons right card-title">close</i>
+                        <div class="center-align row">
+                            <h3 class="col xl12 l12 m12 s12">Ajout d'un cheval</h3>
+                        </div>
                         <div class="row">
-                            <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
-                                {{form_start(addHorseForm)}}
-                                {% if not addHorsemanForm.vars.valid %}
-                                    <div class="card-panel deep-orange accent-4">
-                                        {{ form_errors(addHorseForm) }}
-                                        {{ form_errors(addHorseForm.user) }}
-                                        {{ form_errors(addHorseForm.name) }}
-                                        {{ form_errors(addHorseForm.bithDate) }}
-                                        {{ form_errors(addHorseForm.vaccinationDate) }}
-                                        {{ form_errors(addHorseForm.dewormingDate) }}
-                                        {{ form_errors(addHorseForm.blanketsOption) }}
-                                    </div>
-                                {% endif %}
 
+                            {{ include('dashboard/admin/ajax/forms/addHorse.html.twig') }}
 
-                                <div class="row">
-                                    <div class="input-field col xl12 l12 m12 s12">
-                                        {{form_widget(addHorseForm.user)}}
-                                        {{form_label(addHorseForm.user)}}
-                                    </div>
-
-                                    <div class="input-field col xl12 l12 m12 s12">
-                                        {{form_widget(addHorseForm.name)}}
-                                        {{form_label(addHorseForm.name)}}
-                                    </div>
-
-                                    <div class="input-field col xl4 l12 m12 s12">
-                                        {{form_widget(addHorseForm.birthDate)}}
-                                        {{form_label(addHorseForm.birthDate)}}
-                                    </div>
-
-                                    <div class="input-field col xl4 l12 m12 s12">
-                                        {{form_widget(addHorseForm.vaccinationDate)}}
-                                        {{form_label(addHorseForm.vaccinationDate)}}
-                                    </div>
-
-                                    <div class="input-field col xl4 l12 m12 s12">
-                                        {{form_widget(addHorseForm.dewormingDate)}}
-                                        {{form_label(addHorseForm.dewormingDate)}}
-                                    </div>
-
-                                    <div class=" col xl12 l12 m12 s12">
-                                        {{form_widget(addHorseForm.blanketsOption)}}
-                                        {{form_label(addHorseForm.blanketsOption)}}
-                                    </div>
-
-                                    <div class="input-field col xl12 l12 m12 s12">
-                                        {{form_widget(addHorseForm.submit)}}
-                                        {{form_label(addHorseForm.submit)}}
-                                    </div>
-
-                                    {{form_end(addHorseForm)}}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -208,6 +112,11 @@
 
 {% block javascripts %}
     <script>
+        // Fonction pour le chargement des select (Materialize)
+        function materializeSelect() {
+            $('select').material_select();
+        }
+        
         // Fonction de pagination des utilisateurs
         function paginateUsers() {
             $('#paginateUsers').find('a').on('click', function (e) {
@@ -257,25 +166,220 @@
         }
 
         // Liens sur chaque TR
-        function TRlink() {
+        function trLink() {
             $('table tr').click(function(){
                 window.location = $(this).data('href');
                 return false;
             });
         }
 
+        function reloadHorsemanTable() {
+            // Récupération du numéro de la page courante
+            var currentPageNb = $('#paginateUsers').find('a').attr('data-current');
+            if (currentPageNb === '') {
+                currentPageNb = '1';
+            }
+            // Création de l'argument pour la requete Get
+            var argGet = '?page='+currentPageNb;
+
+            // Récupération de la pour la pagination
+            var urlNewRoute = $('#paginateUsers').find('a').attr('href');
+
+            // Concaténation de la route et de l'argument get
+            var newUrl = urlNewRoute+argGet;
+            $.ajax({
+                type: 'GET',
+                url: newUrl,
+                success: function (data) {
+                    // actualise le tableau
+                    $('#table-users').replaceWith(data);
+
+                    // Relance de l'écouteur d'ajout de cavalier
+                    addHorseman();
+                }
+            })
+        }
+
+        function reloadHorseTable() {
+            // Récupération du numéro de la page courante
+            var currentPageNb = $('#paginateHorses').find('a').attr('data-current');
+            if (currentPageNb === '') {
+                currentPageNb = '1';
+            }
+            // Création de l'argument pour la requete Get
+            var argGet = '?page='+currentPageNb;
+
+            // Récupération de la pour la pagination
+            var urlNewRoute = $('#paginateHorses').find('a').attr('href');
+
+            // Concaténation de la route et de l'argument get
+            var newUrl = urlNewRoute+argGet;
+            $.ajax({
+                type: 'GET',
+                url: newUrl,
+                success: function (data) {
+                    // actualise le tableau
+                    $('#table-horses').replaceWith(data);
+
+                    // Relance de l'écouteur d'ajout de cavalier
+                    addHorse();
+                }
+            })
+        }
+
+        function reloadHorseForm() {
+            // Récupération de la route
+            var url = $('#horseForm').attr('data-url');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    // Actualisation du formulaire d'ajout de cheval
+                    $('#horseForm').replaceWith(data);
+
+                    // Initialisation des select Materialize
+                    materializeSelect();
+                }
+            })
+        }
+
+        // Soumission du formulaire d'ajout d'un cavalier en ajax
+        function addHorseman() {
+            // Récupération du formulaire
+            $('form[name="add_horseman"]').on('submit', function (e) {
+
+                // Bloquage de l'action initial
+                e.preventDefault();
+
+                // Affichage de la barre de chargement
+                $('.progress-horseman').show();
+
+                // Récupération du formulaire
+                var $form = $(this);
+
+                // Récupération de l'url de soumission
+                var url = $('#add_horseman_submit').attr('data-url');
+
+                // Fonction ajax
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        // Construction du html pour le message flash
+                        var success = '<div class="card-panel green accent-4" id="confirmationHorseman">' + data + '</div>';
+
+                        // Ajout du message flash
+                        $('#flashMessagesHorseman').html(success);
+
+                        // Retrait de la barre de chargement
+                        $('.progress-horseman').hide();
+
+                        // Efface le message après 5 secondes
+                        function removeFlashMsg() {
+                            $('#confirmationHorseman').replaceWith('');
+                        }
+                        setTimeout(removeFlashMsg, 5000);
+
+                        // Purge des inputs
+                        $('input[type=text]').val('');
+                        $('input[type=email]').val('');
+
+                        // Rechargement du tableau des utilisateurs et du formulaire d'ajout de cheval
+                        reloadHorsemanTable();
+                        reloadHorseForm();
+                    },
+                    error: function (jqxhr) {
+                        // Construction du html pour le message flash
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        // ajoute le message flash dans la div dédiée
+                        $('#flashMessagesHorseman').html(error);
+
+                        // Retrait de la barre de chargement
+                        $('.progress-horseman').hide();
+                    }
+                })
+            });
+        }
+
+        // Soumission du formulaire d'ajout d'un cheval en ajax
+        function addHorse() {
+            // Récupération du formulaire
+            $('form[name="add_horse"]').on('submit', function (e) {
+
+                // Bloquage de l'action initial
+                e.preventDefault();
+
+                // Affichage de la barre de chargement
+                $('.progress-horse').show();
+
+                // Récupération du formulaire
+                var $form = $(this);
+
+                // Récupération de l'url de soumission
+                var url = $('#add_horse_submit').attr('data-url');
+
+                // Fonction ajax
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        // Construction du html pour le message flash
+                        var success = '<div class="card-panel green accent-4" id="confirmationHorse">' + data + '</div>';
+
+                        // Ajout du message flash
+                        $('#flashMessagesHorse').html(success);
+
+                        // Retrait de la barre de chargement
+                        $('.progress-horse').hide();
+
+                        // Efface le message après 5 secondes
+                        function removeFlashMsg() {
+                            $('#confirmationHorse').replaceWith('');
+                        }
+
+                        setTimeout(removeFlashMsg, 5000);
+
+                        // Purge des inputs
+                        $('input[type=text]').val('');
+                        $('input[type=checkbox]').val('0');
+                        $('select').val('Selectionnez un propriétaire');
+
+                        // Rechargement du tableau des utilisateurs et du formulaire d'ajout de cheval
+                        reloadHorseTable();
+                    },
+                    error: function (jqxhr) {
+                        // Construction du html pour le message flash
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        // ajoute le message flash dans la div dédiée
+                        $('#flashMessages').html(error);
+
+                        // Retrait de la barre de chargement
+                        $('.progress-horse').hide();
+                    }
+                })
+            });
+        }
+
         $(document).ready(function(){
             // Initialisation des inputs select
-            $('select').material_select();
+            materializeSelect();
 
             // Liens des TR
-            TRlink();
+            trLink();
 
             // Pagination des utilisateurs
             paginateUsers();
 
             // Pagination des chevaux
             paginateHorses();
+
+            // Ajout d'un cavalier
+            addHorseman();
+
+            // Ajout d'un cheval
+            addHorse();
         });
 
     </script>

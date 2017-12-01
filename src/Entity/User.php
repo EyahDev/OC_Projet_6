@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields="username", message="Cette adresse email existe déjà.", groups={"newhorseman"})
  */
 class User implements UserInterface, \Serializable
 {
@@ -69,8 +70,16 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=255)
-     * @Assert\Length(min="2", minMessage="Le prénom doit contenir au moins {{limit}} caractères.")
-     * @Assert\NotBlank(message="Veuillez saisir un prénom valide.")
+     * @Assert\Type(type="string", message="Le prénom ne peux contenir que des lettres.", groups={"newhorseman"})
+     * @Assert\Length(
+     *     min="2",
+     *     minMessage="Le prénom doit contenir au moins {{ limit }} caractères.",
+     *     groups={"newhorseman"}
+     * )
+     * @Assert\NotBlank(
+     *     message="Veuillez saisir un prénom valide.",
+     *     groups={"newhorseman"}
+     * )
      */
     private $firstName;
 
@@ -78,8 +87,16 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=255)
-     * @Assert\Length(min="2", minMessage="Le nom doit contenir au moins {{limit}} caractères.")
-     * @Assert\NotBlank(message="Veuillez saisir un nom valide.")
+     * @Assert\Type(type="string", message="Le nom ne peux contenir que des lettres.", groups={"newhorseman"})
+     * @Assert\Length(
+     *     min="2",
+     *     minMessage="Le nom doit contenir au moins {{ limit }} caractères.",
+     *     groups={"newhorseman"}
+     * )
+     * @Assert\NotBlank(
+     *     message="Veuillez saisir un nom valide.",
+     *     groups={"newhorseman"}
+     * )
      */
     private $lastName;
 
@@ -94,8 +111,15 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=255, nullable=true)
-     * @Assert\Length(min="2", minMessage="L'adresse doit contenir au moins {{limit}} caractères.")
-     * @Assert\NotBlank(message="Veuillez saisir une adresse valide.")
+     * @Assert\Length(
+     *     min="2",
+     *     minMessage="L'adresse doit contenir au moins {{ limit }} caractères.",
+     *     groups={"newhorseman"}
+     * )
+     * @Assert\NotBlank(
+     *     message="Veuillez saisir une adresse valide.",
+     *     groups={"newhorseman"}
+     * )
      */
     private $address;
 
@@ -103,8 +127,15 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=255, nullable=true)
-     * @Assert\Length(min="2", minMessage="La ville doit contenir au moins {{limit}} caractères.")
-     * @Assert\NotBlank(message="Veuillez saisir une ville valide.")
+     * @Assert\Length(
+     *     min="2",
+     *     minMessage="La ville doit contenir au moins {{ limit }} caractères.",
+     *     groups={"newhorseman"}
+     * )
+     * @Assert\NotBlank(
+     *     message="Veuillez saisir une ville valide.",
+     *     groups={"newhorseman"}
+     * )
      */
     private $country;
 
@@ -112,8 +143,16 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="zip_code", type="integer", length=255, nullable=true)
-     * @Assert\Length(max="5", maxMessage="Le code postal doit contenir au maximun {{ limit }} chiffres.")
-     * @Assert\NotBlank(message="Veuillez saisir un code postal valide.")
+     * @Assert\Type(type="numeric", message="Le code postal ne peut contenir que des chiffres", groups={"newhorseman"})
+     * @Assert\Length(
+     *     max="5",
+     *     maxMessage="Le code postal doit contenir au maximun {{ limit }} chiffres.",
+     *     groups={"newhorseman"}
+     * )
+     * @Assert\NotBlank(
+     *     message="Veuillez saisir un code postal valide.",
+     *     groups={"newhorseman"}
+     * )
      */
     private $zipCode;
 
@@ -121,8 +160,16 @@ class User implements UserInterface, \Serializable
      * @var int
      *
      * @ORM\Column(name="phone", type="integer", nullable=true)
-     * @Assert\Length(max="10", maxMessage="Le numéro de téléphone doit contenir au maximun {{ limit }} chiffres.")
-     * @Assert\NotBlank(message="Veuillez saisir un numéro de téléphone valide valide.")
+     * @Assert\Type(type="numeric", message="Le numéro de téléphone ne peut contenir que des chiffres", groups={"newhorseman"})
+     * @Assert\Length(
+     *     max="10",
+     *     maxMessage="Le numéro de téléphone doit contenir au maximun {{ limit }} chiffres.",
+     *     groups={"newhorseman"}
+     * )
+     * @Assert\NotBlank(
+     *     message="Veuillez saisir un numéro de téléphone valide valide.",
+     *     groups={"newhorseman"}
+     * )
      */
     private $phone;
 
@@ -130,8 +177,15 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, unique=true)
-     * @Assert\Email(checkMX=true, message="Veuillez saisir une adresse email valide.")
-     * @Assert\NotBlank(message="Veuillez saisir une adresse email valide valide.")
+     * @Assert\Email(
+     *     checkMX=true,
+     *     message="Veuillez saisir une adresse email valide.",
+     *     groups={"newhorseman"}
+     * )
+     * @Assert\NotBlank(
+     *     message="Veuillez saisir une adresse email valide valide.",
+     *     groups={"newhorseman"}
+     * )
      */
     private $username;
 
