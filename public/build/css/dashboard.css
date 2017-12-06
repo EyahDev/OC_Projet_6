@@ -1,0 +1,18 @@
+.relative {
+    position: relative;
+}
+
+.absolute-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #83d622 !important;
+}
+
+.progress-horseman {
+    display: none;
+}
+
+.progress-horse {
+    display: none;
+}

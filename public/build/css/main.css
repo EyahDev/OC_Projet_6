@@ -1,3 +1,9 @@
+/* -------------- Global -------------- */
+
+body {
+    background-image: url(../img/background-dashboard-light.png);
+}
+
 /* -------------- Couleurs des formulaires -------------- */
 
 /* label focus color */
@@ -30,4 +36,22 @@ input[type="checkbox"].filled-in:checked + label:after{
     width: 100% !important;
     margin-top: 15px;
     background-color: #83d622;
+}
+
+
+
+.btn-dashboard {
+    justify-content: center;
+    height: 55px;
+}
+
+.icon-dashboard {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+/* -------------- Navigation -------------- */
+
+.pagination li.active {
+    background: #83d622 ;
 }

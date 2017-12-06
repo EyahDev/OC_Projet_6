@@ -31,7 +31,6 @@ class AjaxController extends Controller
                 'paginationUsers' => $paginationUsers
             ));
         }
-
         throw $this->createNotFoundException("Cette page n'existe pas.");
     }
 
@@ -53,13 +52,35 @@ class AjaxController extends Controller
                 'paginationHorses' => $paginationHorses
             ));
         }
+        throw $this->createNotFoundException("Cette page n'existe pas.");
+    }
 
+    /**
+     * Gestion de la pagination des propriétaires
+     *
+     * @param DashboardManager $dashboardManager
+     * @param $currentPage
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route(path="dashboard/paginate-owners/{currentPage}", name="paginate-owners")
+     */
+    public function paginationOwners(AjaxManager $ajaxManager, $currentPage, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $paginationOwners = $ajaxManager->getPaginatedOwners($currentPage);
+
+            return $this->render('dashboard/admin/tables/owners.html.twig', array(
+                'paginationOwners' => $paginationOwners
+            ));
+        }
         throw $this->createNotFoundException("Cette page n'existe pas.");
     }
 
     /* --------- Formulaire ---------- */
 
     /**
+     * Ajout d'un cavalier
+     *
      * @param DashboardManager $dashboard
      * @param Request $request
      * @return Response
@@ -68,28 +89,17 @@ class AjaxController extends Controller
      */
     public function addHorseman(DashboardManager $dashboard, AjaxManager $ajaxManager, Request $request) {
         if ($request->isXmlHttpRequest()) {
-
-            // Récupération du formulaire d'ajout de cavalier
             $addhorsemanForm = $dashboard->getAddHorsemanForm();
-
-            // Hydratation des valeurs du formulaire
             $addhorsemanForm->handleRequest($request);
 
-            // Vérification si le formulaire est soumis
             if ($addhorsemanForm->isSubmitted()) {
-                // Récupération des donneés
                 $newHorseman = $addhorsemanForm->getData();
-
-                // Récupération des message d'erreurs
                 $errors = $ajaxManager->validateAjax($newHorseman, 'newhorseman');
 
                 if ($errors !== true) {
-                    return new Response($errors, 500);
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
                 }
-
-                // Création du nouveau cavalier
                 $dashboard->setNewHorseman($newHorseman);
-
                 return new Response('Un nouveau cavalier a été créé.');
             }
         }
@@ -97,6 +107,8 @@ class AjaxController extends Controller
     }
 
     /**
+     * Ajout d'un cheval
+     *
      * @param DashboardManager $dashboard
      * @param Request $request
      * @return Response
@@ -105,28 +117,19 @@ class AjaxController extends Controller
      */
     public function addHorse(DashboardManager $dashboard, AjaxManager $ajaxManager, Request $request) {
         if ($request->isXmlHttpRequest()) {
-
-            // Récupération du formulaire d'ajout de cavalier
             $addhorseForm = $dashboard->getAddHorseForm();
-
-            // Hydratation des valeurs du formulaire
             $addhorseForm->handleRequest($request);
 
-            // Vérification si le formulaire est soumis
             if ($addhorseForm->isSubmitted()) {
-                // Récupération des donneés
-                $addhorseForm = $addhorseForm->getData();
 
-                // Récupération des message d'erreurs
+                $addhorseForm = $addhorseForm->getData();
                 $errors = $ajaxManager->validateAjax($addhorseForm, 'newhorse');
 
                 if ($errors !== true) {
-                    return new Response($errors, 500);
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
                 }
 
-                // Création du nouveau cavalier
                 $dashboard->setNewHorse($addhorseForm);
-
                 return new Response('Un nouveau cheval a été créé.');
             }
         }
@@ -136,6 +139,8 @@ class AjaxController extends Controller
     /* --------- Rechargement ---------- */
 
     /**
+     * Rechargement du formulaire d'ajout d'un cavalier
+     *
      * @param DashboardManager $dashboard
      * @param Request $request
      * @return Response
@@ -144,11 +149,28 @@ class AjaxController extends Controller
      */
     public function reloadHorseForm(DashboardManager $dashboard, Request $request) {
         if ($request->isXmlHttpRequest()) {
-            // Récupération du formulaire d'ajout de cavalier
             $addHorseForm = $dashboard->getAddHorseForm();
-
             return $this->render('dashboard/admin/ajax/forms/addHorse.html.twig', array(
                 'addHorseForm' => $addHorseForm->createView()
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Rechargement du formulaire d'ajout d'un cavalier
+     *
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/reload-horseman-form", name="reload-horseman-form")
+     */
+    public function reloadHorsemanForm(DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $addHorsemanForm = $dashboard->getAddHorsemanForm();
+            return $this->render('dashboard/admin/ajax/forms/AddHorseman.html.twig', array(
+                'addHorsemanForm' => $addHorsemanForm->createView()
             ));
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");

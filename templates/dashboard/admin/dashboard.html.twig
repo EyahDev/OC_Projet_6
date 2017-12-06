@@ -1,55 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
-    <style>
-        body {
-            background-image: url(../public/build/img/background-dashboard-light.png);
-        }
-
-        .btn-dashboard {
-            justify-content: center;
-            height: 55px;
-        }
-
-        .icon-dashboard {
-            font-size: 20px;
-            margin-right: 10px;
-        }
-
-        .relative {
-            position: relative;
-        }
-
-        .absolute-icon {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #83d622 !important;
-        }
-
-        .pagination li.active {
-            background: #83d622 ;
-        }
-
-        .progress-horseman {
-            display: none;
-        }
-
-        .progress-horse {
-            display: none;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{{ asset('build/css/dashboard.css') }}">
 {% endblock %}
 
 {% block body %}
-    <div class="row">
-        <a href="http://ecuriefiefmalzais.fr/"><div class="col xl1 card-panel valign-wrapper btn-dashboard"><i class="icon-dashboard fa fa-arrow-left" aria-hidden="true"></i> Retour au site</div></a>
-        <div class="col xl1 offset-xl3 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-tachometer" aria-hidden="true"></i> Dashboard</div>
-        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-calendar" aria-hidden="true"></i> Cours</div>
-        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-address-book-o" aria-hidden="true"></i> Contact utiles</div>
-        <a href="{{ path('logout_page') }}"><div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-sign-out" aria-hidden="true"></i> Déconnexion</div></a>
-    </div>
+
+    {{ include('common/nav.html.twig') }}
 
     <div class="row">
         <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
@@ -80,6 +37,8 @@
                         </div>
                         <div class="row">
 
+                            <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="flashMessagesHorseman"></div>
+
                             {{ include('dashboard/admin/ajax/forms/addHorseman.html.twig') }}
 
                         </div>
@@ -101,6 +60,8 @@
                         </div>
                         <div class="row">
 
+                            <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="flashMessagesHorse"></div>
+
                             {{ include('dashboard/admin/ajax/forms/addHorse.html.twig') }}
 
                         </div>
@@ -111,278 +72,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        // Fonction pour le chargement des select (Materialize)
-        function materializeSelect() {
-            $('select').material_select();
-        }
-        
-        // Fonction de pagination des utilisateurs
-        function paginateUsers() {
-            $('#paginateUsers').find('a').on('click', function (e) {
-                e.preventDefault();
-                var $a = $(this);
-                var url = $a.attr('href');
-
-                $.ajax({
-                    type: 'GET',
-                    url: url,
-                    success: function (data) {
-                        // Recharge le tableau
-                        $('#table-users').replaceWith(data);
-
-                        TRlink();
-                        paginateUsers();
-
-                    }, error: function () {
-//                        addFlashMsgUserManagement('danger', 'Une erreur est survenue')
-                    }
-                })
-            });
-        }
-
-        // Fonction de pagination des utilisateurs
-        function paginateHorses() {
-            $('#paginateHorses').find('a').on('click', function (e) {
-                e.preventDefault();
-                var $a = $(this);
-                var url = $a.attr('href');
-
-                $.ajax({
-                    type: 'GET',
-                    url: url,
-                    success: function (data) {
-                        // Recharge le tableau
-                        $('#table-horses').replaceWith(data);
-
-                        TRlink();
-                        paginateHorses();
-
-                    }, error: function () {
-//                        addFlashMsgUserManagement('danger', 'Une erreur est survenue')
-                    }
-                })
-            });
-        }
-
-        // Liens sur chaque TR
-        function trLink() {
-            $('table tr').click(function(){
-                window.location = $(this).data('href');
-                return false;
-            });
-        }
-
-        function reloadHorsemanTable() {
-            // Récupération du numéro de la page courante
-            var currentPageNb = $('#paginateUsers').find('a').attr('data-current');
-            if (currentPageNb === '') {
-                currentPageNb = '1';
-            }
-            // Création de l'argument pour la requete Get
-            var argGet = '?page='+currentPageNb;
-
-            // Récupération de la pour la pagination
-            var urlNewRoute = $('#paginateUsers').find('a').attr('href');
-
-            // Concaténation de la route et de l'argument get
-            var newUrl = urlNewRoute+argGet;
-            $.ajax({
-                type: 'GET',
-                url: newUrl,
-                success: function (data) {
-                    // actualise le tableau
-                    $('#table-users').replaceWith(data);
-
-                    // Relance de l'écouteur d'ajout de cavalier
-                    addHorseman();
-                }
-            })
-        }
-
-        function reloadHorseTable() {
-            // Récupération du numéro de la page courante
-            var currentPageNb = $('#paginateHorses').find('a').attr('data-current');
-            if (currentPageNb === '') {
-                currentPageNb = '1';
-            }
-            // Création de l'argument pour la requete Get
-            var argGet = '?page='+currentPageNb;
-
-            // Récupération de la pour la pagination
-            var urlNewRoute = $('#paginateHorses').find('a').attr('href');
-
-            // Concaténation de la route et de l'argument get
-            var newUrl = urlNewRoute+argGet;
-            $.ajax({
-                type: 'GET',
-                url: newUrl,
-                success: function (data) {
-                    // actualise le tableau
-                    $('#table-horses').replaceWith(data);
-
-                    // Relance de l'écouteur d'ajout de cavalier
-                    addHorse();
-                }
-            })
-        }
-
-        function reloadHorseForm() {
-            // Récupération de la route
-            var url = $('#horseForm').attr('data-url');
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function (data) {
-                    // Actualisation du formulaire d'ajout de cheval
-                    $('#horseForm').replaceWith(data);
-
-                    // Initialisation des select Materialize
-                    materializeSelect();
-                }
-            })
-        }
-
-        // Soumission du formulaire d'ajout d'un cavalier en ajax
-        function addHorseman() {
-            // Récupération du formulaire
-            $('form[name="add_horseman"]').on('submit', function (e) {
-
-                // Bloquage de l'action initial
-                e.preventDefault();
-
-                // Affichage de la barre de chargement
-                $('.progress-horseman').show();
-
-                // Récupération du formulaire
-                var $form = $(this);
-
-                // Récupération de l'url de soumission
-                var url = $('#add_horseman_submit').attr('data-url');
-
-                // Fonction ajax
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: $form.serialize(),
-                    success: function (data) {
-                        // Construction du html pour le message flash
-                        var success = '<div class="card-panel green accent-4" id="confirmationHorseman">' + data + '</div>';
-
-                        // Ajout du message flash
-                        $('#flashMessagesHorseman').html(success);
-
-                        // Retrait de la barre de chargement
-                        $('.progress-horseman').hide();
-
-                        // Efface le message après 5 secondes
-                        function removeFlashMsg() {
-                            $('#confirmationHorseman').replaceWith('');
-                        }
-                        setTimeout(removeFlashMsg, 5000);
-
-                        // Purge des inputs
-                        $('input[type=text]').val('');
-                        $('input[type=email]').val('');
-
-                        // Rechargement du tableau des utilisateurs et du formulaire d'ajout de cheval
-                        reloadHorsemanTable();
-                        reloadHorseForm();
-                    },
-                    error: function (jqxhr) {
-                        // Construction du html pour le message flash
-                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
-                        // ajoute le message flash dans la div dédiée
-                        $('#flashMessagesHorseman').html(error);
-
-                        // Retrait de la barre de chargement
-                        $('.progress-horseman').hide();
-                    }
-                })
-            });
-        }
-
-        // Soumission du formulaire d'ajout d'un cheval en ajax
-        function addHorse() {
-            // Récupération du formulaire
-            $('form[name="add_horse"]').on('submit', function (e) {
-
-                // Bloquage de l'action initial
-                e.preventDefault();
-
-                // Affichage de la barre de chargement
-                $('.progress-horse').show();
-
-                // Récupération du formulaire
-                var $form = $(this);
-
-                // Récupération de l'url de soumission
-                var url = $('#add_horse_submit').attr('data-url');
-
-                // Fonction ajax
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: $form.serialize(),
-                    success: function (data) {
-                        // Construction du html pour le message flash
-                        var success = '<div class="card-panel green accent-4" id="confirmationHorse">' + data + '</div>';
-
-                        // Ajout du message flash
-                        $('#flashMessagesHorse').html(success);
-
-                        // Retrait de la barre de chargement
-                        $('.progress-horse').hide();
-
-                        // Efface le message après 5 secondes
-                        function removeFlashMsg() {
-                            $('#confirmationHorse').replaceWith('');
-                        }
-
-                        setTimeout(removeFlashMsg, 5000);
-
-                        // Purge des inputs
-                        $('input[type=text]').val('');
-                        $('input[type=checkbox]').val('0');
-                        $('select').val('Selectionnez un propriétaire');
-
-                        // Rechargement du tableau des utilisateurs et du formulaire d'ajout de cheval
-                        reloadHorseTable();
-                    },
-                    error: function (jqxhr) {
-                        // Construction du html pour le message flash
-                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
-                        // ajoute le message flash dans la div dédiée
-                        $('#flashMessages').html(error);
-
-                        // Retrait de la barre de chargement
-                        $('.progress-horse').hide();
-                    }
-                })
-            });
-        }
-
-        $(document).ready(function(){
-            // Initialisation des inputs select
-            materializeSelect();
-
-            // Liens des TR
-            trLink();
-
-            // Pagination des utilisateurs
-            paginateUsers();
-
-            // Pagination des chevaux
-            paginateHorses();
-
-            // Ajout d'un cavalier
-            addHorseman();
-
-            // Ajout d'un cheval
-            addHorse();
-        });
-
-    </script>
+    <script type="text/javascript" src="{{ asset('build/js/dashboard/admin.js') }}"></script>
 {% endblock %}
 
 

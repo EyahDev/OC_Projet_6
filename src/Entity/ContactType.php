@@ -5,20 +5,19 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Contact
+ * ContactType
  *
- * @ORM\Table(name="contact")
- * @ORM\Entity(repositoryClass="App\Repository\ContactRepository")
+ * @ORM\Table(name="contact_type")
+ * @ORM\Entity(repositoryClass="App\Repository\ContactTypeRepository")
  */
-class Contact
+class ContactType
 {
 
-
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\ContactType", inversedBy="contacts")
+     * @ORM\OneToMany(targetEntity="App\Entity\Contact", mappedBy="type")
      */
-    private $type;
-    
+    private $contacts;
+
     /**
      * @var int
      *
@@ -34,13 +33,6 @@ class Contact
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="phone", type="integer")
-     */
-    private $phone;
 
 
     /**
@@ -58,7 +50,7 @@ class Contact
      *
      * @param string $name
      *
-     * @return Contact
+     * @return ContactType
      */
     public function setName($name)
     {
@@ -76,52 +68,45 @@ class Contact
     {
         return $this->name;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
-     * Set phone
+     * Add contact
      *
-     * @param integer $phone
+     * @param \App\Entity\Contact $contact
      *
-     * @return Contact
+     * @return ContactType
      */
-    public function setPhone($phone)
+    public function addContact(Contact $contact)
     {
-        $this->phone = $phone;
+        $this->contacts[] = $contact;
 
         return $this;
     }
 
     /**
-     * Get phone
+     * Remove contact
      *
-     * @return int
+     * @param \App\Entity\Contact $contact
      */
-    public function getPhone()
+    public function removeContact(Contact $contact)
     {
-        return $this->phone;
+        $this->contacts->removeElement($contact);
     }
 
     /**
-     * Set type
+     * Get contacts
      *
-     * @param \App\Entity\ContactType $type
-     *
-     * @return Contact
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function setType(ContactType $type = null)
+    public function getContacts()
     {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return \App\Entity\ContactType
-     */
-    public function getType()
-    {
-        return $this->type;
+        return $this->contacts;
     }
 }

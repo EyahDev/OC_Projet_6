@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\ContactType;
 use App\Entity\Horse;
 use App\Entity\User;
 use App\Form\Type\Administration\AddHorsemanType;
@@ -50,6 +51,15 @@ class DashboardManager
      */
     public function getUsers($firstResult, $perPage) {
         return $this->em->getRepository(User::class)->getUsersExceptAdmin($firstResult, $perPage);
+    }
+
+    /**
+     * Récupération des numéros de téléphones de chaque utilisateurs
+     *
+     * @return array
+     */
+    public function getUsersPhone($firstResult, $perPage) {
+        return $this->em->getRepository(User::class)->getUsersPhone($firstResult, $perPage);
     }
 
     /**
@@ -120,5 +130,18 @@ class DashboardManager
         // Enregistrement en base de données
         $this->em->persist($data);
         $this->em->flush();
+    }
+
+    /**
+     * Récupération de tous les contacts utiles
+     *
+     * @return ContactType[]|array
+     */
+    public function getUsefullContacts() {
+        return $this->em->getRepository(ContactType::class)->findAll();
+    }
+
+    public function getUsefullContactsForm() {
+
     }
 }

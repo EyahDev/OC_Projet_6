@@ -16,7 +16,14 @@
                     <td data-title="Nom">{{ user.lastName }}</td>
                     <td data-title="Cheval">
                         {% for horse in user.horse  %}
-                            {{ horse.name }}
+                            {% if user.horse|length > 1 %}
+                                {{ horse.name }}
+                                {% if not loop.last %}
+                                    /
+                                {% endif %}
+                            {% else %}
+                                {{ horse.name }}
+                            {% endif %}
                         {% endfor %}
                     </td>
                     <td data-title="Contact">0{{ user.phone }}</td>

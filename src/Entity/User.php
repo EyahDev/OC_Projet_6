@@ -549,7 +549,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get horse
      *
-     * @return \App\Entity\Horse
+     * @return ArrayCollection
      */
     public function getHorse()
     {
@@ -563,7 +563,7 @@ class User implements UserInterface, \Serializable
      *
      * @return User
      */
-    public function addHorse(\App\Entity\Horse $horse)
+    public function addHorse(Horse $horse)
     {
         $this->horse[] = $horse;
 
@@ -575,7 +575,7 @@ class User implements UserInterface, \Serializable
      *
      * @param \App\Entity\Horse $horse
      */
-    public function removeHorse(\App\Entity\Horse $horse)
+    public function removeHorse(Horse $horse)
     {
         $this->horse->removeElement($horse);
     }

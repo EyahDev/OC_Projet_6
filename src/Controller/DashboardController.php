@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 class DashboardController extends Controller
 {
     /**
+     * @param DashboardManager $dashboardManager
+     * @param AjaxManager $ajaxManager
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     *
      * @Route(path="/dashboard", name="dashboard")
      */
     public function dashboard(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request) {
@@ -19,48 +24,33 @@ class DashboardController extends Controller
 
         /*--------- ADMINISTRATEUR ----------*/
 
-        if ($user->getRoles()[0] === 'ROLE_ADMIN') {
-            // Récupération de tous les chevaux existant
-            $paginationUsers = $ajaxManager->getPaginatedUsers(1);
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $paginationUsers = $ajaxManager->getPaginatedUsers();
+            $paginationHorses = $ajaxManager->getPaginatedHorse();
 
-            // Récupération de tous les chevaux existant
-            $paginationHorses = $ajaxManager->getPaginatedHorse(1);
-
-            // Récupérations des formulaires d'ajout d'un cheval et d'un cavalier
             $addHorsemanForm = $dashboardManager->getAddHorsemanForm();
             $addHorseForm = $dashboardManager->getAddHorseForm();
 
-            // Hydratation des valeurs
             $addHorsemanForm->handleRequest($request);
             $addHorseForm->handleRequest($request);
 
-            // Soumission du formulaire d'un nouvel utilisateur
             if ($addHorsemanForm->isSubmitted() && $addHorsemanForm->isValid()) {
-                // Récupération des données
                 $data = $addHorsemanForm->getData();
 
-                // Ajout du nouvel utilisateur
                 $dashboardManager->setNewHorseman($data);
 
-                // Ajout d'un message flash de confirmation
                 $this->addFlash('confirmation', 'Un nouveau cavalier a été ajouté');
 
-                // Redirection vers le dashboard
                 return $this->redirectToRoute('dashboard');
             }
 
-            // Soumission du formulaire d'un nouveau cheval
             if ($addHorseForm->isSubmitted() && $addHorseForm->isValid()) {
-                // Récupération des données
                 $data = $addHorseForm->getData();
 
-                // Ajout du nouvel utilisateur
                 $dashboardManager->setNewHorse($data);
 
-                // Ajout d'un message flash de confirmation
                 $this->addFlash('confirmation', 'Un nouveau cheval a été ajouté');
 
-                // Redirection vers le dashboard
                 return $this->redirectToRoute('dashboard');
             }
 
@@ -74,7 +64,7 @@ class DashboardController extends Controller
 
         /* --------- UTILISATEUR ---------- */
 
-        if ($user->getRoles()[0] === 'ROLE_USER') {
+        if ($this->isGranted('ROLE_USER')) {
             return $this->render('dashboard/user/dashboard.html.twig');
         }
     }
@@ -84,5 +74,18 @@ class DashboardController extends Controller
      */
     public function horsemanDetails($id) {
         return $this->render('dashboard/admin/horseman.html.twig');
+    }
+
+    /**
+     * @Route(path="/dashboard/contacts", name="usefull-contacts")
+     */
+    public function contacts(DashboardManager $dashboardManager, AjaxManager $ajaxManager) {
+        $contacts = $dashboardManager->getUsefullContacts();
+        $ownersPhone = $ajaxManager->getPaginatedOwners();
+
+        return $this->render('dashboard/admin/contacts.html.twig', array(
+            'contacts' => $contacts,
+            'paginationOwners' => $ownersPhone
+        ));
     }
 }

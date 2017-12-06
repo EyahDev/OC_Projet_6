@@ -30,4 +30,23 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         // Récupération du résultat
         return $paginator;
     }
+
+    /**
+     * Récupération du noms complets de chaques utilisateurs et leurs numéros de téléphones
+     *
+     * @return Paginator
+     */
+    public function getUsersPhone($firstResult, $perPage) {
+        $qb = $this->createQueryBuilder('u');
+
+        $query = $qb->leftJoin('u.horse', 'h')
+            ->select('h.name')->addSelect('u.completeName')->addSelect('u.phone')
+            ->where('u.roles LIKE :roles')->orderBy('u.lastName', 'ASC')
+            ->setParameter('roles', '%ROLE_USER%')
+            ->setFirstResult($firstResult)->setMaxResults($perPage);
+
+        $paginator = new Paginator($query);
+
+        return $paginator->setUseOutputWalkers(false);
+    }
 }

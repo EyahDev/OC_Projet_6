@@ -48,7 +48,7 @@ class AjaxManager
      * @param $currentPage
      * @return array
      */
-    public function getPaginatedHorse($currentPage) {
+    public function getPaginatedHorse($currentPage = 1) {
         // Définition du nombres d'affichage par page
         $perPage = 10;
 
@@ -74,7 +74,7 @@ class AjaxManager
      * @param $currentPage
      * @return array
      */
-    public function getPaginatedUsers($currentPage) {
+    public function getPaginatedUsers($currentPage = 1) {
         // Définition du nombres d'affichage par page
         $perPage = 10;
 
@@ -89,6 +89,32 @@ class AjaxManager
 
         return array(
             'users' => $users,
+            'nbPage' => $nbPage,
+            'currentPage' => $currentPage
+        );
+    }
+
+    /**
+     * Gestion de la pagination du tableau des Propriétaires (contacts utiles)
+     *
+     * @param $currentPage
+     * @return array
+     */
+    public function getPaginatedOwners($currentPage = 1) {
+        // Définition du nombres d'affichage par page
+        $perPage = 10;
+
+        // Calcul du premier résultat à afficher
+        $firstResult = ($currentPage-1) * $perPage;
+
+        // Récupération de tous les utilisateurs existant
+        $owners = $this->dashbordManager->getUsersPhone($firstResult, $perPage);
+
+        // Calcul du nombre de page neécessaire
+        $nbPage = ceil(count($owners) / $perPage);
+
+        return array(
+            'owners' => $owners,
             'nbPage' => $nbPage,
             'currentPage' => $currentPage
         );
