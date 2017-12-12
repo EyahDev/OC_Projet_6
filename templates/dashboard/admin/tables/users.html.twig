@@ -1,5 +1,5 @@
 <div id="table-users">
-    <div class="table-responsive-vertical">
+    <div class="table-responsive-vertical" id="usersTR">
         <table id="table" class="table table-hover table-mc-light-green">
             <thead>
                 <tr>
@@ -26,7 +26,7 @@
                             {% endif %}
                         {% endfor %}
                     </td>
-                    <td data-title="Contact">0{{ user.phone }}</td>
+                    <td data-title="Contact">{{ user.phone }}</td>
                 </tr>
             {% endfor %}
             </tbody>

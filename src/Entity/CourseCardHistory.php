@@ -20,7 +20,7 @@ class CourseCardHistory
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\CountType")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CountType")
      */
     private $countType;
 

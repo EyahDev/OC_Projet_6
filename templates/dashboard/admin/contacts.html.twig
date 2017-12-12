@@ -1,6 +1,25 @@
 {% extends 'base.html.twig' %}
 
+
+{#{% form_theme contactsForm _self %}#}
+
+{#{% block _edit_usefull_contacts_contacts_entry_row %}#}
+    {#<h3>mon contact</h3>#}
+    {#{{ form_widget(form.phone) }}#}
+    {#{{ form_widget(form.name) }}#}
+    {#{{ form_widget(form.type) }}#}
+{#{% endblock %}#}
+
 {% block stylesheets %}
+<style>
+    .owners {
+        min-height: 506.2px !important;
+    }
+
+    .progress-new-contact {
+        display: none;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
@@ -11,22 +30,26 @@
             <div class="card">
                 <div class="card-content">
                     <h3 class="center-align">Contacts utiles</h3>
+                    <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
+
                     <div class="row">
-                        {% for contactType in contacts %}
-                            <ul class="collection with-header col xl12 l12 m12 s12">
-                                <li class="collection-header"><h5>{{ contactType.name }}</h5></li>
-                                {% for contact in contactType.contacts  %}
-                                    <li class="collection-item">{{ contact.name }}
-                                        <span class="secondary-content">
-                                            <a style="color: #00b1bc;" href="tel:+33{{ contact.phone }}">0{{ contact.phone|phone }}</a>
-                                        </span></li>
-                                {% endfor %}
-                            </ul>
-                        {% endfor %}
+                        {{ include('dashboard/admin/tables/usefullContacts.html.twig') }}
+                    </div>
+
+                    <div class="row">
+                        {{ include('dashboard/admin/tables/owners.html.twig') }}
+                    </div>
+                </div>
+                <div class="card-reveal">
+                    <i class="material-icons right card-title">close</i>
+                    <div class="center-align row">
+                        <h3 class="col xl12 l12 m12 s12">Ajouter un contact</h3>
                     </div>
                     <div class="row">
 
-                        {{ include('dashboard/admin/tables/owners.html.twig') }}
+                        <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="flashMessagesNewContact"></div>
+
+                        {{ include('dashboard/admin/ajax/forms/addContact.html.twig') }}
 
                     </div>
                 </div>
@@ -38,7 +61,12 @@
 
 {% block javascripts %}
     <script>
-        // Fonction de pagination des utilisateurs
+        // Initialisation des select
+        function materializeSelect() {
+            $('select').material_select();
+        }
+
+        // Fonction de pagination des propriétaire
         function paginateOwners() {
             $('body').on('click','#paginateOwners a', function (e) {
                 e.preventDefault();
@@ -58,9 +86,76 @@
             });
         }
 
+        // Soumission du formulaire d'ajout d'un nouveau contact
+        function addContact() {
+            $('body').on('submit', 'form[name="add_new_contact"]', function (e) {
+                e.preventDefault();
+                $('.progress-new-contact').show();
+                var $form = $(this);
+                var url = $('#add_new_contact_submit').attr('data-url');
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationAddContact">' + data + '</div>';
+
+                        $('#flashMessagesNewContact').html(success);
+
+                        $('.progress-new-contact').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationAddContact').replaceWith('');
+                        }
+                        setTimeout(removeFlashMsg, 5000);
+
+                        reloadAddContactForm();
+                        reloadUsefullContacts();
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+
+                        $('#flashMessagesNewContact').html(error);
+                        $('.progress-new-contact').hide();
+                    }
+                })
+            });
+        }
+
+        // REchargement du formulaire d'ajout d'un nouveau contact
+        function reloadAddContactForm() {
+            var url = $('#newContactForm').attr('data-url');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    $('#newContactForm').replaceWith(data);
+
+                    materializeSelect();
+                }
+            })
+        }
+
+        // Rechargement des contacts utiles
+        function reloadUsefullContacts() {
+            var url = $('#usefullContacts').attr('data-url');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    $('#usefullContacts').replaceWith(data);
+
+                    materializeSelect();
+                }
+            })
+        }
+
         $(document).ready(function(){
-            // Initialisation des inputs select
+            materializeSelect();
+            $('.modal').modal();
             paginateOwners();
+            addContact();
         });
     </script>
 {% endblock %}

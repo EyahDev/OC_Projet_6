@@ -45,7 +45,7 @@ function paginateHorses() {
 
 // Liens sur chaque TR
 function trLink() {
-    $('table tr').click(function(){
+    $('#usersTR').find('tr').click(function(){
         window.location = $(this).data('href');
         return false;
     });

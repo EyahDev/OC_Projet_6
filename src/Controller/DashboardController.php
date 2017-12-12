@@ -19,8 +19,6 @@ class DashboardController extends Controller
      * @Route(path="/dashboard", name="dashboard")
      */
     public function dashboard(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request) {
-        // Récupération des information de l'utilisateur connecté
-        $user = $this->getUser();
 
         /*--------- ADMINISTRATEUR ----------*/
 
@@ -30,29 +28,6 @@ class DashboardController extends Controller
 
             $addHorsemanForm = $dashboardManager->getAddHorsemanForm();
             $addHorseForm = $dashboardManager->getAddHorseForm();
-
-            $addHorsemanForm->handleRequest($request);
-            $addHorseForm->handleRequest($request);
-
-            if ($addHorsemanForm->isSubmitted() && $addHorsemanForm->isValid()) {
-                $data = $addHorsemanForm->getData();
-
-                $dashboardManager->setNewHorseman($data);
-
-                $this->addFlash('confirmation', 'Un nouveau cavalier a été ajouté');
-
-                return $this->redirectToRoute('dashboard');
-            }
-
-            if ($addHorseForm->isSubmitted() && $addHorseForm->isValid()) {
-                $data = $addHorseForm->getData();
-
-                $dashboardManager->setNewHorse($data);
-
-                $this->addFlash('confirmation', 'Un nouveau cheval a été ajouté');
-
-                return $this->redirectToRoute('dashboard');
-            }
 
             return $this->render('dashboard/admin/dashboard.html.twig', array(
                 'paginationUsers' => $paginationUsers,
@@ -72,20 +47,58 @@ class DashboardController extends Controller
     /**
      * @Route(path="/dashboard/cavalier/{id}", name="horseman-details")
      */
-    public function horsemanDetails($id) {
-        return $this->render('dashboard/admin/horseman.html.twig');
+    public function horsemanDetails(DashboardManager $dashboardManager, Request $request, $id) {
+        // Utilisateurs
+        $user = $dashboardManager->getUser($id);
+
+        // Formulaires
+        $addCourseCard = $dashboardManager->getAddCourseCardForm();
+
+        $addCourseCard->handleRequest($request);
+        if ($addCourseCard->isSubmitted() && $addCourseCard->isValid()) {
+            $data = $addCourseCard->getData();
+
+            $dashboardManager->setNewCourseCard($user, $data);
+
+            return $this->redirectToRoute('horseman-details', array('id' => $id));
+        }
+
+
+        return $this->render('dashboard/admin/horseman.html.twig', array(
+            'user' => $user,
+            'addCourseCardForm' => $addCourseCard->createView()
+        ));
     }
 
     /**
+     * Page de tous les contacts utiles
+     *
+     * @param DashboardManager $dashboardManager
+     * @param AjaxManager $ajaxManager
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @Route(path="/dashboard/contacts", name="usefull-contacts")
      */
-    public function contacts(DashboardManager $dashboardManager, AjaxManager $ajaxManager) {
+    public function contacts(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request) {
         $contacts = $dashboardManager->getUsefullContacts();
         $ownersPhone = $ajaxManager->getPaginatedOwners();
+//        $updateContactForm = $dashboardManager->getUpdateContactForm($id);
+
+        $addNewContactForm = $dashboardManager->getNewContactForm();
 
         return $this->render('dashboard/admin/contacts.html.twig', array(
             'contacts' => $contacts,
-            'paginationOwners' => $ownersPhone
+            'paginationOwners' => $ownersPhone,
+            'addNewContactForm' => $addNewContactForm->createView()
         ));
     }
+
+//    public function updateContact(DashboardManager $dashboardManager, $id) {
+//        $updateContactForm = $dashboardManager->getUpdateContactForm($id);
+//
+//        return $this->render('dashboard/admin/contacts.html.twig', array(
+//            'updateContactForm' => $updateContactForm->createView()
+//        ));
+//    }
 }

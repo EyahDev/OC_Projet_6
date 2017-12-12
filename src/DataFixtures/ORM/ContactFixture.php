@@ -19,15 +19,15 @@ class ContactFixture extends Fixture
     {
         // Contacts à ajouter
         $contacts = array(
-            array('David Delehelle', '682058195', 'Maréchal-ferrants'),
-            array('Benjamin Texier', '680426548', 'Maréchal-ferrants'),
-            array('Pierre Faivre', '674333755', 'Maréchal-ferrants'),
-            array('Jean Servantie', '608985143', 'Ostéopathes'),
-            array('Frédéric Lavaud', '607082039', 'Ostéopathes'),
-            array('Stéphane Tournier', '670221940', 'Dentistes équins'),
-            array('Pierre Maratier', '628283412', 'Dentistes équins'),
-            array('Clinique De Meyer', '251305049', 'Vétérinaires'),
-            array('Clinique Animéa', '251305049', 'Vétérinaires')
+            array('David Delehelle', '0682058195', 'Maréchal-ferrants'),
+            array('Benjamin Texier', '0680426548', 'Maréchal-ferrants'),
+            array('Pierre Faivre', '0674333755', 'Maréchal-ferrants'),
+            array('Jean Servantie', '0608985143', 'Ostéopathes'),
+            array('Frédéric Lavaud', '0607082039', 'Ostéopathes'),
+            array('Stéphane Tournier', '0670221940', 'Dentistes équins'),
+            array('Pierre Maratier', '0628283412', 'Dentistes équins'),
+            array('Clinique De Meyer', '0251305049', 'Vétérinaires'),
+            array('Clinique Animéa', '0251305049', 'Vétérinaires')
         );
 
         // Parcours des types de facture

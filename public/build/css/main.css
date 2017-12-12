@@ -6,11 +6,10 @@ body {
 
 /* -------------- Couleurs des formulaires -------------- */
 
-/* label focus color */
 .input-field input:focus + label {
     color: #83d622 !important;
 }
-/* label underline focus color */
+
 .input-field input:focus {
     border-bottom: 1px solid #83d622 !important;
     box-shadow: 0 1px 0 0 #000;
@@ -39,7 +38,6 @@ input[type="checkbox"].filled-in:checked + label:after{
 }
 
 
-
 .btn-dashboard {
     justify-content: center;
     height: 55px;
@@ -50,8 +48,28 @@ input[type="checkbox"].filled-in:checked + label:after{
     margin-right: 10px;
 }
 
-/* -------------- Navigation -------------- */
+
 
 .pagination li.active {
     background: #83d622 ;
+}
+
+/* -------------- Bouton ajout/modification/suppression -------------- */
+
+.absolute-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #83d622 !important;
+}
+
+/* -------------- Liens -------------- */
+
+.hypertext {
+    cursor: pointer;
+    color: #00b1bc ;
+}
+
+.hypertext:hover {
+    color: #83d622 ;
 }

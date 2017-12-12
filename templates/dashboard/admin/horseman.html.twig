@@ -1,45 +1,176 @@
 {% extends 'base.html.twig' %}
+
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('../public/build/css/table.css') }}">
     <style>
-        body {
-            background-image: url(../public/build/img/background-dashboard-light.png);
+        .horses-title {
+            font-size: 16px;
+            padding: 5px 5px 5px 0;
         }
 
-        .btn-dashboard {
-            justify-content: center;
-            height: 55px;
+        .courses-history-title {
+            padding-top: 10px;
         }
-
-        .icon-dashboard {
-            font-size: 20px;
-            margin-right: 10px;
-        }
-
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="row">
-        <a href="http://ecuriefiefmalzais.fr/"><div class="col xl1 card-panel valign-wrapper btn-dashboard"><i class="icon-dashboard fa fa-arrow-left" aria-hidden="true"></i> Retour au site</div></a>
-        <div class="col xl1 offset-xl3 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-tachometer" aria-hidden="true"></i> Dashboard</div>
-        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-calendar" aria-hidden="true"></i> Cours</div>
-        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-address-book-o" aria-hidden="true"></i> Contact utiles</div>
-        <div class="col xl1 card-panel valign-wrapper center-align btn-dashboard"><i class="icon-dashboard fa fa-sign-out" aria-hidden="true"></i> Déconnexion</div>
-    </div>
+    {{ include('common/nav.html.twig') }}
 
     <div class="row">
-        <div class="col xl6 offset-xl3">
+        <h3 class="col xl12 center-align">{{user.completeName}}</h3>
+        <div class="col xl4 offset-xl2">
             <div class="card">
                 <div class="card-content">
-                    <h3 class="center-align">Notifications</h3>
-                    <div class="divider"></div>
-                    <p>Aucune notifications.</p>
+                    <span class="card-title">Coordonnées</span>
+                    <p>
+                        {{user.completeName}}<br>
+
+                        {% if user.address == null %}
+                            <i>Adresse non renseignée</i><br>
+                        {% else %}
+                            {{ user.address }}<br>
+                            {{user.zipCode}} {{user.country}}<br>
+                        {% endif %}
+
+                        {% if user.username == null %}
+                            {{ user.username }}
+                        {% else %}
+                            {{user.username}} / 0{{user.phone|phone}}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Carte de cours</span>
+                    <a class="activator btn-floating btn-medium waves-effect waves-light absolute-icon"><i class="material-icons">mode_edit</i></a>
+
+                    {% if user.courseCard == null %}
+                        <p>{{ user.firstName }} n'a pas encore de carte de cours. <a class="hypertext modal-trigger" href="#addCourseCard">Ajouter une carte</a></p>
+
+                        <div id="addCourseCard" class="modal">
+                            <div class="modal-content">
+                                <h4>Ajout d'une carte de cours</h4>
+                                {{ form_start(addCourseCardForm) }}
+                                {{ form_errors(addCourseCardForm) }}
+                                {{ form_end(addCourseCardForm) }}
+                            </div>
+                        </div>
+
+                    {% else %}
+                        <p>
+                            Cours restant : {{ user.courseCard.remainingCourse }} / {{ user.courseCard.balance }}<br>
+                            Date de validité : {{ user.courseCard.validityDate|date('d/m/Y') }}
+                        </p>
+
+                        <span class="card-title courses-history-title">Historique des décomptes</span>
+
+                        <div class="table-responsive-vertical" id="usersTR">
+                            <table id="table" class="table table-hover table-mc-light-green">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Commentaires</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for history in user.courseCardHistory  %}
+                                    {% if history.countType.name == 'Ajout' %}
+                                        <tr class="green">
+                                            <td data-title="Date">{{ history.countDate|date('d/m/Y') }}</td>
+                                            <td data-title="Commentaires">{{ history.countType.name }} de {{ history.value }} cours</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr class="red">
+                                            <td data-title="Date">01/01/1970</td>
+                                            <td data-title="Type">Ajout</td>
+                                            <td data-title="Décompte">10</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Ajouter un décompte<i class="material-icons right">close</i></span>
+                    <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col xl4">
+            <div class="card">
+                <div class="card-content">
+                    {% if user.horse|length == 0 %}
+                        <span class="card-title">Cheval</span>
+                        <p>{{user.firstName}} n'est pas propriétaire d'un cheval</p>
+                    {% else %}
+                        {% if user.horse|length > 1 %}
+                            <span class="card-title">Chevaux</span>
+                        {% else %}
+                            <span class="card-title">Cheval</span>
+                        {% endif %}
+
+                        {% for horse in user.horse %}
+                        <p class="horses-title"><b>{{horse.name}}</b></p>
+                        <p>
+                            Date de naissance :
+                                {{ horse.birthDate|date('d/m/Y')|default('---') }}
+                                <br>
+
+                            Date de vaccination :
+
+                            {% if horse.vaccinationDate|date('d/m/Y') is same as(null) %}
+                                inconnue <br>
+                            {% else %}
+                                {{ horse.vaccinationDate|date('d/m/Y') }}<br>
+                            {% endif %}
+
+                            Date de vermifugation :
+
+                            {% if horse.dewormingDate|date('d/m/Y') is same as(null) %}
+                                inconnue <br>
+                            {% else %}
+                                {{ horse.dewormingDate|date('d/m/Y') }}<br>
+                            {% endif %}
+
+                            Gestion couvertures :
+
+                            {% if horse.blanketsOption is same as(false) %}
+                                Non <br>
+                            {% else %}
+                                Oui <br>
+                            {% endif %}
+                        </p>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
+
+        <div class="col xl4">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Factures</span>
+                    <p>Sophia Blithikiotis</p>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            // Initialisation des modals
+            $('.modal').modal();
+        });
+    </script>
+{% endblock %}
+

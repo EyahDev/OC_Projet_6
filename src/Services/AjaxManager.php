@@ -42,6 +42,8 @@ class AjaxManager
         $this->dashbordManager = $dashboardManager;
     }
 
+    /* ---------- Paginations ----------- */
+
     /**
      * Gestion de la pagination du tableau des utilisateurs (admin seulement)
      *
@@ -119,6 +121,8 @@ class AjaxManager
             'currentPage' => $currentPage
         );
     }
+
+    /* ---------- Validation forms ----------- */
 
     /**
      * Récupération des messages d'erreurs lié à la validation des formulaires

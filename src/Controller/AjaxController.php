@@ -136,6 +136,36 @@ class AjaxController extends Controller
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
 
+    /**
+     * Ajout d'un contact
+     *
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/add-contact", name="add-contact")
+     */
+    public function addContact(DashboardManager $dashboard, AjaxManager $ajaxManager, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $addContactForm = $dashboard->getNewContactForm();
+            $addContactForm->handleRequest($request);
+
+            if ($addContactForm->isSubmitted()) {
+                $addContactForm = $addContactForm->getData();
+                $errors = $ajaxManager->validateAjax($addContactForm);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $dashboard->setNewContact($addContactForm);
+                return new Response('Un nouveau contact a été créé.');
+            }
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
     /* --------- Rechargement ---------- */
 
     /**
@@ -171,6 +201,44 @@ class AjaxController extends Controller
             $addHorsemanForm = $dashboard->getAddHorsemanForm();
             return $this->render('dashboard/admin/ajax/forms/AddHorseman.html.twig', array(
                 'addHorsemanForm' => $addHorsemanForm->createView()
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Rechargement du formulaire d'ajout d'un nouveau contact
+     *
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/reload-add-contact-form", name="reload-add-contact-form")
+     */
+    public function reloadNewContactForm(DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $addNewContactForm = $dashboard->getNewContactForm();
+            return $this->render('dashboard/admin/ajax/forms/addContact.html.twig', array(
+                'addNewContactForm' => $addNewContactForm->createView()
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Rechargement des contacts utiles
+     *
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/reload-usefull-contacts", name="reload-usefull-contacts")
+     */
+    public function reloadUseFullContacts(DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $contacts = $dashboard->getUsefullContacts();
+            return $this->render('dashboard/admin/tables/usefullContacts.html.twig', array(
+                'contacts' => $contacts
             ));
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");

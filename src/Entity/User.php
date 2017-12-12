@@ -44,13 +44,13 @@ class User implements UserInterface, \Serializable
     private $courses;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\CourseCard", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="App\Entity\CourseCard", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $courseCard;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourseCardHistory", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\CourseCardHistory", mappedBy="user", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $courseCardHistory;
@@ -142,7 +142,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="zip_code", type="integer", length=255, nullable=true)
+     * @ORM\Column(name="zip_code", type="string", length=255, nullable=true)
      * @Assert\Type(type="numeric", message="Le code postal ne peut contenir que des chiffres", groups={"newhorseman"})
      * @Assert\Length(
      *     max="5",
@@ -159,7 +159,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var int
      *
-     * @ORM\Column(name="phone", type="integer", nullable=true)
+     * @ORM\Column(name="phone", type="string", nullable=true)
      * @Assert\Type(type="numeric", message="Le numéro de téléphone ne peut contenir que des chiffres", groups={"newhorseman"})
      * @Assert\Length(
      *     max="10",
@@ -716,6 +716,7 @@ class User implements UserInterface, \Serializable
     public function addCourseCardHistory(CourseCardHistory $courseCardHistory)
     {
         $this->courseCardHistory[] = $courseCardHistory;
+        $courseCardHistory->setUser(($this));
 
         return $this;
     }

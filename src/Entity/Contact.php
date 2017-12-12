@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Contact
@@ -32,13 +33,18 @@ class Contact
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\Length(min="2", minMessage="'Le nom du contact doit contenir au minimun {{ limit }} caractères.'")
+     * @Assert\NotBlank(message="Veuillez saisir un nom de contact valide.")
      */
     private $name;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="phone", type="integer")
+     * @ORM\Column(name="phone", type="string")
+     * @Assert\Type(type="numeric", message="Le numéro de téléphone ne peut contenir que des chiffres.")
+     * @Assert\Length(max="10", maxMessage="Le numéro de téléphone doit contenir au maximun {{ limit }} chiffres.")
+     * @Assert\NotBlank(message="Veuillez saisir numéro de téléphone valide")
      */
     private $phone;
 
