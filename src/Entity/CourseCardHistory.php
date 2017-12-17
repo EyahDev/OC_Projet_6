@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * CourseCardHistory
@@ -38,16 +39,23 @@ class CourseCardHistory
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="count_date", type="date")
+     * @ORM\Column(name="count_date", type="datetime")
      */
     private $countDate;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="value", type="integer")
+     * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="remaining_course", type="string", length=255)
+     */
+    private $remainingCourse;
 
     /* -------------- Setters and Getters -------------- */
 
@@ -155,5 +163,21 @@ class CourseCardHistory
     public function getCountType()
     {
         return $this->countType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRemainingCourse(): string
+    {
+        return $this->remainingCourse;
+    }
+
+    /**
+     * @param string $remainingCourse
+     */
+    public function setRemainingCourse(string $remainingCourse): void
+    {
+        $this->remainingCourse = $remainingCourse;
     }
 }

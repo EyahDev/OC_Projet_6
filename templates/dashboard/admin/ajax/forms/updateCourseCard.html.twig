@@ -1,0 +1,31 @@
+<div class="row" id="updateCourseCardForm" data-url="{{ path('reload-update-course-card-form', {'id': user.id }) }}">
+    {{ form_start(updateCourseCardHistory) }}
+    {{ form_errors(updateCourseCardHistory) }}
+
+    <div class="input-field col xl5 l12 m12 s12">
+        {{ form_label(updateCourseCardHistory.value) }}
+        {{ form_widget(updateCourseCardHistory.value) }}
+    </div>
+
+    <div class="input-field col xl7 l12 m12 s12">
+        {{ form_widget(updateCourseCardHistory.countType) }}
+        {{ form_label(updateCourseCardHistory.countType) }}
+    </div>
+
+    <div class="input-field col xl12 l12 m12 s12">
+        {{ form_widget(updateCourseCardHistory.validityDate) }}
+        {{ form_label(updateCourseCardHistory.validityDate) }}
+    </div>
+
+    <div class="input-field col xl12 l12 m12 s12">
+        {{ form_widget(updateCourseCardHistory.submit, {'attr': {'data-url': path('update-course-card', {'id': user.id }) }}) }}
+    </div>
+
+    <div class="col xl12 l12 m12 s12">
+        <div class="progress progress-update-history">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+
+    {{form_end(updateCourseCardHistory)}}
+</div>

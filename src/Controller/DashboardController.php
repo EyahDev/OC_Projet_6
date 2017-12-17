@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 class DashboardController extends Controller
 {
     /**
+     * Dashboard de l'utilisateur connecté
+     *
      * @param DashboardManager $dashboardManager
      * @param AjaxManager $ajaxManager
      * @param Request $request
@@ -45,14 +47,25 @@ class DashboardController extends Controller
     }
 
     /**
+     * Page des détails d'un cavalier
+     *
+     * @param DashboardManager $dashboardManager
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     *
      * @Route(path="/dashboard/cavalier/{id}", name="horseman-details")
      */
-    public function horsemanDetails(DashboardManager $dashboardManager, Request $request, $id) {
-        // Utilisateurs
+    public function horsemanDetails(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request, $id) {
+        // Utilisateur
         $user = $dashboardManager->getUser($id);
 
-        // Formulaires
+        // Pagination de l'historique de la carte de cours
+        $paginationCourseCardHistory = $ajaxManager->getPaginatedCourseCardHistory(1, $id);
+
+        // Formulaire
         $addCourseCard = $dashboardManager->getAddCourseCardForm();
+        $updateCourseCardHistory = $dashboardManager->getUpdateCourseCardHistory();
 
         $addCourseCard->handleRequest($request);
         if ($addCourseCard->isSubmitted() && $addCourseCard->isValid()) {
@@ -62,11 +75,11 @@ class DashboardController extends Controller
 
             return $this->redirectToRoute('horseman-details', array('id' => $id));
         }
-
-
         return $this->render('dashboard/admin/horseman.html.twig', array(
             'user' => $user,
-            'addCourseCardForm' => $addCourseCard->createView()
+            'paginationCourseCardHistory' => $paginationCourseCardHistory,
+            'addCourseCardForm' => $addCourseCard->createView(),
+            'updateCourseCardHistory' => $updateCourseCardHistory->createView()
         ));
     }
 
@@ -83,7 +96,6 @@ class DashboardController extends Controller
     public function contacts(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request) {
         $contacts = $dashboardManager->getUsefullContacts();
         $ownersPhone = $ajaxManager->getPaginatedOwners();
-//        $updateContactForm = $dashboardManager->getUpdateContactForm($id);
 
         $addNewContactForm = $dashboardManager->getNewContactForm();
 
@@ -93,12 +105,4 @@ class DashboardController extends Controller
             'addNewContactForm' => $addNewContactForm->createView()
         ));
     }
-
-//    public function updateContact(DashboardManager $dashboardManager, $id) {
-//        $updateContactForm = $dashboardManager->getUpdateContactForm($id);
-//
-//        return $this->render('dashboard/admin/contacts.html.twig', array(
-//            'updateContactForm' => $updateContactForm->createView()
-//        ));
-//    }
 }

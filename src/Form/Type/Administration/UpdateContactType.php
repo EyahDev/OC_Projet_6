@@ -55,7 +55,7 @@ class UpdateContactType extends AbstractType
                 'required' => false
             ))
             ->add('submit', SubmitType::class, array(
-                'label' => 'Ajouter',
+                'label' => 'Modifier',
                 'attr' => array(
                     'class' => 'btn waves-effect waves-light'
                 )

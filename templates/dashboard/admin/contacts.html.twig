@@ -16,7 +16,7 @@
         min-height: 506.2px !important;
     }
 
-    .progress-new-contact {
+    .progress-new-contact, .progress-update-contact {
         display: none;
     }
 </style>
@@ -30,6 +30,7 @@
             <div class="card">
                 <div class="card-content">
                     <h3 class="center-align">Contacts utiles</h3>
+
                     <a class="activator btn-floating btn-large waves-effect waves-light absolute-icon"><i class="material-icons">add</i></a>
 
                     <div class="row">
@@ -60,102 +61,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        // Initialisation des select
-        function materializeSelect() {
-            $('select').material_select();
-        }
-
-        // Fonction de pagination des propriétaire
-        function paginateOwners() {
-            $('body').on('click','#paginateOwners a', function (e) {
-                e.preventDefault();
-                var $a = $(this);
-                var url = $a.attr('href');
-
-                $.ajax({
-                    type: 'GET',
-                    url: url,
-                    success: function (data) {
-                        $('#table-owners').replaceWith(data);
-
-                        trLink();
-                    }, error: function () {
-                    }
-                })
-            });
-        }
-
-        // Soumission du formulaire d'ajout d'un nouveau contact
-        function addContact() {
-            $('body').on('submit', 'form[name="add_new_contact"]', function (e) {
-                e.preventDefault();
-                $('.progress-new-contact').show();
-                var $form = $(this);
-                var url = $('#add_new_contact_submit').attr('data-url');
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: $form.serialize(),
-                    success: function (data) {
-                        var success = '<div class="card-panel green accent-4" id="confirmationAddContact">' + data + '</div>';
-
-                        $('#flashMessagesNewContact').html(success);
-
-                        $('.progress-new-contact').hide();
-
-                        function removeFlashMsg() {
-                            $('#confirmationAddContact').replaceWith('');
-                        }
-                        setTimeout(removeFlashMsg, 5000);
-
-                        reloadAddContactForm();
-                        reloadUsefullContacts();
-                    },
-                    error: function (jqxhr) {
-                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
-
-                        $('#flashMessagesNewContact').html(error);
-                        $('.progress-new-contact').hide();
-                    }
-                })
-            });
-        }
-
-        // REchargement du formulaire d'ajout d'un nouveau contact
-        function reloadAddContactForm() {
-            var url = $('#newContactForm').attr('data-url');
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function (data) {
-                    $('#newContactForm').replaceWith(data);
-
-                    materializeSelect();
-                }
-            })
-        }
-
-        // Rechargement des contacts utiles
-        function reloadUsefullContacts() {
-            var url = $('#usefullContacts').attr('data-url');
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function (data) {
-                    $('#usefullContacts').replaceWith(data);
-
-                    materializeSelect();
-                }
-            })
-        }
-
-        $(document).ready(function(){
-            materializeSelect();
-            $('.modal').modal();
-            paginateOwners();
-            addContact();
-        });
-    </script>
+    <script src="{{ asset('build/js/dashboard/contacts.js') }}" type="text/javascript"></script>
 {% endblock %}

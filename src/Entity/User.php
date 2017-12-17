@@ -716,7 +716,7 @@ class User implements UserInterface, \Serializable
     public function addCourseCardHistory(CourseCardHistory $courseCardHistory)
     {
         $this->courseCardHistory[] = $courseCardHistory;
-        $courseCardHistory->setUser(($this));
+        $courseCardHistory->setUser($this);
 
         return $this;
     }

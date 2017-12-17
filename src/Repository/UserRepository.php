@@ -39,9 +39,11 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
     public function getUsersPhone($firstResult, $perPage) {
         $qb = $this->createQueryBuilder('u');
 
-        $query = $qb->leftJoin('u.horse', 'h')
-            ->select('h.name')->addSelect('u.completeName')->addSelect('u.phone')
-            ->where('u.roles LIKE :roles')->orderBy('u.lastName', 'ASC')
+        $query =
+            $qb->select('u')
+            ->where('u.roles LIKE :roles')
+            ->andWhere('u.phone IS NOT NULL')
+            ->orderBy('u.lastName', 'ASC')
             ->setParameter('roles', '%ROLE_USER%')
             ->setFirstResult($firstResult)->setMaxResults($perPage);
 

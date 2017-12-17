@@ -11,7 +11,7 @@
             </thead>
             <tbody>
             {% for user in paginationUsers['users']  %}
-                <tr data-href="{{ path('horseman-details', {'id': user.id}) }}">
+                <tr class="cursor" data-href="{{ path('horseman-details', {'id': user.id}) }}">
                     <td data-title="Prénom">{{ user.firstName }}</td>
                     <td data-title="Nom">{{ user.lastName }}</td>
                     <td data-title="Cheval">

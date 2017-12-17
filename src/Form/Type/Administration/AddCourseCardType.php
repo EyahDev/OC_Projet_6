@@ -27,7 +27,7 @@ class AddCourseCardType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
             ))
-            ->add('balance', IntegerType::class, array(
+            ->add('balance', TextType::class, array(
                 'invalid_message' => 'Veuillez saisir un nombre de cours valide.',
                 'label' => 'Nombre de cours de la carte',
             ))
@@ -40,10 +40,10 @@ class AddCourseCardType extends AbstractType
         );
     }
 
-//    public function configureOptions(OptionsResolver $resolver)
-//    {
-//        $resolver->setDefaults(array(
-//            'validation_groups' => array('newhorse'),
-//        ));
-//    }
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'validation_groups' => array('newCourseCard'),
+        ));
+    }
 }

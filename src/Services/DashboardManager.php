@@ -14,6 +14,8 @@ use App\Form\Type\Administration\AddHorsemanType;
 use App\Form\Type\Administration\AddHorseType;
 use App\Form\Type\Administration\AddNewContactType;
 use App\Form\Type\Administration\UpdateContactType;
+use App\Form\Type\Administration\UpdateCourseCardHistoryType;
+use App\Form\Type\Administration\UpdateHorseType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -58,7 +60,8 @@ class DashboardManager
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function getAddHorsemanForm() {
+    public function getAddHorsemanForm()
+    {
         // Création d'un nouvel utilisateur
         $user = new User();
 
@@ -71,12 +74,13 @@ class DashboardManager
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function getAddHorseForm() {
+    public function getAddHorseForm()
+    {
         // Création d'un nouveau cheval
         $horse = new Horse();
 
         // Récupération du formulaire
-        return $this->formFactory->create(AddHorseType::class ,$horse);
+        return $this->formFactory->create(AddHorseType::class, $horse);
     }
 
     /**
@@ -84,7 +88,8 @@ class DashboardManager
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function getAddCourseCardForm() {
+    public function getAddCourseCardForm()
+    {
         $newCourseCard = new CourseCard();
         return $this->formFactory->create(AddCourseCardType::class, $newCourseCard);
     }
@@ -94,7 +99,8 @@ class DashboardManager
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function getNewContactForm() {
+    public function getNewContactForm()
+    {
         return $this->formFactory->create(AddNewContactType::class);
     }
 
@@ -104,20 +110,46 @@ class DashboardManager
      * @param $id
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function getUpdateContactForm($id) {
-        $existingContact = $this->em->getRepository(ContactType::class)->find($id);
+    public function getUpdateContactForm($id)
+    {
+        $existingContact = $this->em->getRepository(Contact::class)->find($id);
         return $this->formFactory->create(UpdateContactType::class, $existingContact);
+    }
+
+    /**
+     *  Mise à jour de l'historique de la carte de cours
+     *
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getUpdateCourseCardHistory()
+    {
+        return $this->formFactory->create(UpdateCourseCardHistoryType::class);
+    }
+
+    /**
+     * Récupération du formulaire d'édition d'un cheval
+     *
+     * @param $id
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getUpdateHorseForm($id)
+    {
+        $existingHorse = $this->em->getRepository(Horse::class)->find($id);
+        return $this->formFactory->create(UpdateHorseType::class, $existingHorse);
     }
 
 
     /* ---------- Getters ----------- */
 
     /**
-     * Récupération de tous les utilisateurs avec le role user
+     * Récupération de tous les utilisateurs avec le role user avec pagination
      *
-     * @return User[]|array
+     * @param $firstResult
+     * @param $perPage
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function getUsers($firstResult, $perPage) {
+    public function getUsers($firstResult, $perPage)
+    {
         return $this->em->getRepository(User::class)->getUsersExceptAdmin($firstResult, $perPage);
     }
 
@@ -127,26 +159,44 @@ class DashboardManager
      * @param $id
      * @return User|null|object
      */
-    public function getUser($id) {
+    public function getUser($id)
+    {
         return $this->em->getRepository(User::class)->find($id);
     }
 
     /**
-     * Récupération des numéros de téléphones de chaque utilisateurs
+     * Récupération des numéros de téléphones de chaque utilisateurs avec pagination
      *
-     * @return array
+     * @param $firstResult
+     * @param $perPage
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function getUsersPhone($firstResult, $perPage) {
+    public function getUsersPhone($firstResult, $perPage)
+    {
         return $this->em->getRepository(User::class)->getUsersPhone($firstResult, $perPage);
     }
 
     /**
-     * Récupération de tous les chevaux
+     * Récupération de tous les chevaux avec pagination
      *
-     * @return Horse[]|array
+     * @param $firstResult
+     * @param $perPage
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function getHorses($firstResult, $perPage) {
+    public function getHorses($firstResult, $perPage)
+    {
         return $this->em->getRepository(Horse::class)->getHorses($firstResult, $perPage);
+    }
+
+    /**
+     * Récupération d'un cheval spécifique par son id
+     *
+     * @param $id
+     * @return Horse|null|object
+     */
+    public function getHorse($id)
+    {
+        return $this->em->getRepository(Horse::class)->find($id);
     }
 
     /**
@@ -154,8 +204,33 @@ class DashboardManager
      *
      * @return ContactType[]|array
      */
-    public function getUsefullContacts() {
+    public function getUsefullContacts()
+    {
         return $this->em->getRepository(ContactType::class)->findAll();
+    }
+
+    /**
+     * Récupération des informations d'un contact spécifique
+     *
+     * @param $id
+     * @return Contact|null|object
+     */
+    public function getUsefullContact($id)
+    {
+        return $this->em->getRepository(Contact::class)->find($id);
+    }
+
+    /**
+     * Récupération de l'historique de la carte de cours de son utilisateur avec pagination
+     *
+     * @param $firstResult
+     * @param $perPage
+     * @param $id
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function getCourseCardHistory($firstResult, $perPage, $id)
+    {
+        return $this->em->getRepository(CourseCardHistory::class)->getHistoryByUser($firstResult, $perPage, $id);
     }
 
     /* ---------- Setters ----------- */
@@ -165,7 +240,8 @@ class DashboardManager
      *
      * @param User $data
      */
-    public function setNewHorseman(User $data) {
+    public function setNewHorseman(User $data)
+    {
         // Ajout d'un boolean de première connexion
         $data->setFirstConnexion(true);
 
@@ -174,7 +250,7 @@ class DashboardManager
         $data->setPassword($password);
 
         // Association pour le nom complet
-        $data->setCompleteName($data->getFirstName().' '.$data->getLastName());
+        $data->setCompleteName($data->getFirstName() . ' ' . $data->getLastName());
 
         // Ajout du role
         $data->setRoles(array('ROLE_USER'));
@@ -189,7 +265,8 @@ class DashboardManager
      *
      * @param Horse $data
      */
-    public function setNewHorse(Horse $data) {
+    public function setNewHorse(Horse $data)
+    {
         // Enregistrement en base de données
         $this->em->persist($data);
         $this->em->flush();
@@ -201,17 +278,19 @@ class DashboardManager
      * @param User $user
      * @param CourseCard $courseCard
      */
-    public function setNewCourseCard(User $user, CourseCard $courseCard) {
+    public function setNewCourseCard(User $user, CourseCard $courseCard)
+    {
         $courseCard->setRemainingCourse($courseCard->getBalance());
         $user->setCourseCard($courseCard);
 
         // Création d'un historique
         $newHistory = new CourseCardHistory();
-        $type = $this->em->getRepository(CountType::class)->findOneBy(array('name' => 'Ajout'));
+        $type = $this->em->getRepository(CountType::class)->findOneBy(array('name' => 'Nouvelle carte'));
 
 
         $newHistory->setCountDate(new \DateTime());
         $newHistory->setValue($courseCard->getBalance());
+        $newHistory->setRemainingCourse($courseCard->getBalance());
         $newHistory->setCountType($type);
 
         $user->addCourseCardHistory($newHistory);
@@ -224,7 +303,8 @@ class DashboardManager
      *
      * @param $data
      */
-    public function setNewContact($data) {
+    public function setNewContact($data)
+    {
         $newContact = new Contact();
 
         if ($data['existingType']) {
@@ -248,15 +328,86 @@ class DashboardManager
         }
     }
 
-
-    public function removeCoursesHistory($amount, $user) {
-
+    /**
+     * Mise à jour du contact
+     *
+     * @param Contact $data
+     */
+    public function updateContact(Contact $data)
+    {
+        $this->em->persist($data);
+        $this->em->flush();
     }
 
-    public function addCoursesHistory($amount, $user) {
+    /**
+     * Mise à jour de la carte de cours et ajout dans l'historique
+     *
+     * @param User $user
+     * @param $data
+     * @return bool
+     */
+    public function updateCourseCard(User $user, $data)
+    {
+        if ($data['countType']->getName() == 'Nouvelle carte') {
+            // Ajout de l'historique
+            $history = new CourseCardHistory();
+            $history->setUser($user);
+            $history->setCountType($data['countType']);
+            $history->setValue($data['value']);
+            $history->setCountDate(new \DateTime());
+
+            $user->getCourseCard()->setBalance($data['value']);
+
+            if ($user->getCourseCard()->getValidityDate() < new \DateTime()) {
+                $history->setRemainingCourse($data['value']);
+                $user->getCourseCard()->setRemainingCourse($data['value']);
+            } else {
+                $history->setRemainingCourse($data['value'] + $user->getCourseCard()->getRemainingCourse());
+                $user->getCourseCard()->setRemainingCourse($user->getCourseCard()->getRemainingCourse() + $data['value']);
+            }
+
+            $user->getCourseCard()->setValidityDate($data['validityDate']);
+            $user->addCourseCardHistory($history);
+
+        } else {
+            $history = new CourseCardHistory();
+
+            if ($data['countType']->getName() == 'Correction : retrait' || $data['countType']->getName() == 'Retrait') {
+                if ($data['value'] > $user->getCourseCard()->getRemainingCourse()) {
+                    return 'Il ne reste pas suffisamment de cours sur la carte.';
+                } elseif ($user->getCourseCard()->getValidityDate() < new \DateTime()) {
+                    return 'La carte n\'est plus valable.';
+                }
+
+                $history->setRemainingCourse($user->getCourseCard()->getRemainingCourse() - $data['value']);
+                $user->getCourseCard()->setRemainingCourse($user->getCourseCard()->getRemainingCourse() - $data['value']);
+            } else {
+                $history->setRemainingCourse($user->getCourseCard()->getRemainingCourse() + $data['value']);
+                $user->getCourseCard()->setRemainingCourse($user->getCourseCard()->getRemainingCourse() + $data['value']);
+            }
+
+            //Ajout de l'historique
+            $history->setUser($user);
+            $history->setCountType($data['countType']);
+            $history->setValue($data['value']);
+            $history->setCountDate(new \DateTime());
+
+            $user->addCourseCardHistory($history);
+        }
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return true;
     }
 
-
-
-
+    /**
+     * Mise à jour des informations du cheval
+     *
+     * @param Horse $data
+     */
+    public function updateHorse(Horse $data)
+    {
+        $this->em->persist($data);
+        $this->em->flush();
+    }
 }

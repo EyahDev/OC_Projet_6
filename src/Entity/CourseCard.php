@@ -31,16 +31,16 @@ class CourseCard
     private $validityDate;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="remaining_course", type="integer")
+     * @ORM\Column(name="remaining_course", type="string", length=255)
      */
     private $remainingCourse;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="balance", type="integer")
+     * @ORM\Column(name="balance", type="string", length=255)
      */
     private $balance;
 

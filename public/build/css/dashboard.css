@@ -9,3 +9,7 @@
 .progress-horse {
     display: none;
 }
+
+.cursor {
+    cursor: pointer;
+}

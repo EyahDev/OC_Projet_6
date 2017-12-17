@@ -1,0 +1,23 @@
+<div class="row" id="addCourseCardForm">
+    {{ form_start(addCourseCardForm) }}
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(addCourseCardForm.validityDate) }}
+        {{form_label(addCourseCardForm.validityDate) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_label(addCourseCardForm.balance) }}
+        {{ form_widget(addCourseCardForm.balance) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_widget(addCourseCardForm.submit, {"attr": {"data-url": path('add-course-card', {'id': user.id }) }})}}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="progress progress-add-course-card">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+    {{form_end(addCourseCardForm)}}
+</div>

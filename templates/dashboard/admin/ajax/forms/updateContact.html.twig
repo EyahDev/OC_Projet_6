@@ -1,0 +1,28 @@
+<div class="row" id="updateHorseForm">
+    {{ form_start(updateContactForm) }}
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(updateContactForm.type) }}
+        {{form_label(updateContactForm.type) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_label(updateContactForm.name) }}
+        {{ form_widget(updateContactForm.name) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_label(updateContactForm.phone) }}
+        {{ form_widget(updateContactForm.phone) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_widget(updateContactForm.submit, {"attr": {"data-url": path("update-contact", {'id': contact.id}), 'data-id': contact.id }})}}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="progress progress-update-contact">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+    {{form_end(updateContactForm)}}
+</div>

@@ -12,6 +12,13 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class HorseRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Requêtes de récupérations des chevaux pour la pagination
+     *
+     * @param $firstResult
+     * @param $perPage
+     * @return Paginator
+     */
     public function getHorses($firstResult, $perPage) {
         // Création de l'alias
         $qb = $this->createQueryBuilder('h');

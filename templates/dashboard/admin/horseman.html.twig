@@ -10,7 +10,22 @@
         .courses-history-title {
             padding-top: 10px;
         }
+
+        .progress-add-course-card, .progress-update-history, .progress-update-horse {
+            display: none;
+        }
+
+        #update_course_card_history_countType {
+            position:absolute;
+              display: inline;
+              height: 0;
+              padding: 0;
+              width: 0;
+              border: none;
+              box-shadow: unset;
+          }
     </style>
+    <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -26,16 +41,16 @@
                         {{user.completeName}}<br>
 
                         {% if user.address == null %}
-                            <i>Adresse non renseignée</i><br>
+                            <i>Adresse non définie</i><br>
                         {% else %}
                             {{ user.address }}<br>
-                            {{user.zipCode}} {{user.country}}<br>
+                            {{ user.zipCode }} {{user.country }}<br>
                         {% endif %}
 
                         {% if user.username == null %}
                             {{ user.username }}
                         {% else %}
-                            {{user.username}} / 0{{user.phone|phone}}
+                            {{user.username}} / {{ user.phone }}
                         {% endif %}
                     </p>
                 </div>
@@ -44,59 +59,17 @@
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Carte de cours</span>
-                    <a class="activator btn-floating btn-medium waves-effect waves-light absolute-icon"><i class="material-icons">mode_edit</i></a>
 
-                    {% if user.courseCard == null %}
-                        <p>{{ user.firstName }} n'a pas encore de carte de cours. <a class="hypertext modal-trigger" href="#addCourseCard">Ajouter une carte</a></p>
+                    {{ include('dashboard/admin/sections/courseCard.html.twig') }}
 
-                        <div id="addCourseCard" class="modal">
-                            <div class="modal-content">
-                                <h4>Ajout d'une carte de cours</h4>
-                                {{ form_start(addCourseCardForm) }}
-                                {{ form_errors(addCourseCardForm) }}
-                                {{ form_end(addCourseCardForm) }}
-                            </div>
-                        </div>
-
-                    {% else %}
-                        <p>
-                            Cours restant : {{ user.courseCard.remainingCourse }} / {{ user.courseCard.balance }}<br>
-                            Date de validité : {{ user.courseCard.validityDate|date('d/m/Y') }}
-                        </p>
-
-                        <span class="card-title courses-history-title">Historique des décomptes</span>
-
-                        <div class="table-responsive-vertical" id="usersTR">
-                            <table id="table" class="table table-hover table-mc-light-green">
-                                <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Commentaires</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for history in user.courseCardHistory  %}
-                                    {% if history.countType.name == 'Ajout' %}
-                                        <tr class="green">
-                                            <td data-title="Date">{{ history.countDate|date('d/m/Y') }}</td>
-                                            <td data-title="Commentaires">{{ history.countType.name }} de {{ history.value }} cours</td>
-                                        </tr>
-                                    {% else %}
-                                        <tr class="red">
-                                            <td data-title="Date">01/01/1970</td>
-                                            <td data-title="Type">Ajout</td>
-                                            <td data-title="Décompte">10</td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% endif %}
                 </div>
                 <div class="card-reveal">
                     <span class="card-title grey-text text-darken-4">Ajouter un décompte<i class="material-icons right">close</i></span>
-                    <p>Here is some more information about this product that is only revealed once clicked on.</p>
+
+                    <div class="col xl12 l12 m12 s12" id="flashMessagesCourseCardHistory"></div>
+
+                    {{ include('dashboard/admin/ajax/forms/updateCourseCard.html.twig') }}
+
                 </div>
             </div>
         </div>
@@ -104,49 +77,14 @@
         <div class="col xl4">
             <div class="card">
                 <div class="card-content">
-                    {% if user.horse|length == 0 %}
-                        <span class="card-title">Cheval</span>
-                        <p>{{user.firstName}} n'est pas propriétaire d'un cheval</p>
-                    {% else %}
-                        {% if user.horse|length > 1 %}
-                            <span class="card-title">Chevaux</span>
-                        {% else %}
-                            <span class="card-title">Cheval</span>
-                        {% endif %}
+                    <span class="card-title">
+                        {% transchoice user.horse|length %}
+                            [0,1] Cheval|]1,Inf[ Chevaux
+                        {% endtranschoice %}
+                    </span>
 
-                        {% for horse in user.horse %}
-                        <p class="horses-title"><b>{{horse.name}}</b></p>
-                        <p>
-                            Date de naissance :
-                                {{ horse.birthDate|date('d/m/Y')|default('---') }}
-                                <br>
+                    {{ include('dashboard/admin/sections/horse.html.twig') }}
 
-                            Date de vaccination :
-
-                            {% if horse.vaccinationDate|date('d/m/Y') is same as(null) %}
-                                inconnue <br>
-                            {% else %}
-                                {{ horse.vaccinationDate|date('d/m/Y') }}<br>
-                            {% endif %}
-
-                            Date de vermifugation :
-
-                            {% if horse.dewormingDate|date('d/m/Y') is same as(null) %}
-                                inconnue <br>
-                            {% else %}
-                                {{ horse.dewormingDate|date('d/m/Y') }}<br>
-                            {% endif %}
-
-                            Gestion couvertures :
-
-                            {% if horse.blanketsOption is same as(false) %}
-                                Non <br>
-                            {% else %}
-                                Oui <br>
-                            {% endif %}
-                        </p>
-                        {% endfor %}
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -154,11 +92,39 @@
 
     <div class="row">
 
-        <div class="col xl4">
+        <div class="col xl8 l8 m12 s12 offset-xl2 offset-l2">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title">Factures</span>
-                    <p>Sophia Blithikiotis</p>
+                    <span class="card-title">Factures</span> <a class="modal-trigger btn-floating btn-large waves-effect waves-light absolute-icon" href="#addBill"><i class="material-icons">add</i></a>
+
+                    <div id="addBill" class="modal">
+                        <div class="modal-content">
+                            <h4>Ajout d'une facture</h4>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive-vertical" id="usersTR">
+                        <table id="table" class="table table-hover table-mc-light-green">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type de facture</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-title="Date">01/01/1970</td>
+                                    <td data-title="Type de facture">Ajout</td>
+                                    <td data-title="Montant">200 €</td>
+                                    <td data-title="Statut">en attente</td>
+                                    <td data-title="Action">edit</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -167,9 +133,220 @@
 
 {% block javascripts %}
     <script>
+        // Initialisation des modals
+        function initMaterialize() {
+            $('.modal').modal();
+            $('select').material_select();
+        }
+
+        // Chargement du formulaire d'ajout d'une carte de cours
+        function loadModalAddCourseCard() {
+            $('body').on('click', '.add-course-card-modal-trigger', function (e) {
+                var url = $('#addCourseCard').attr('data-url');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#modalContentAddCourseCard').replaceWith(data);
+                    }
+                })
+            });
+        }
+
+        // Rechargement des contacts utiles
+        function loadModalUpdateHorse() {
+            $('body').on('click', '.edit-horse-modal-trigger', function (e) {
+                var htmlID = '#edit-horse-modal-';
+                var dataID = e.currentTarget.dataset.id;
+                console.log(htmlID);
+                console.log(dataID);
+                var url = $(htmlID+dataID).attr('data-url');
+                console.log(url);
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#modalContentUpdateHorse'+dataID).replaceWith(data);
+                        Materialize.updateTextFields();
+                        $('select').material_select();
+                    }
+                })
+            });
+        }
+
+        // Rechargement des informations lié à la carte de cours
+        function reloadCourseCardSection() {
+            var url = $('#courseCardInformations').attr('data-url');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    $('#courseCardInformations').replaceWith(data);
+                    initMaterialize();
+                }
+            })
+        }
+
+        // Soumission du formulaire d'ajout d'une carte de cours
+        function addCourseCard() {
+            $('body').on('submit', 'form[name="add_course_card"]', function (e) {
+                e.preventDefault();
+                $('.progress-add-course-card').show();
+                var $form = $(this);
+                var url = $('#add_course_card_submit').attr('data-url');
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationAddCourseCard">' + data + '</div>';
+
+                        $('#flashMessagesAddCourseCard').html(success);
+
+                        $('.progress-add-course-card').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationAddCourseCard').replaceWith('');
+                            $('#addCourseCard').modal('close');
+                            reloadCourseCardSection();
+                        }
+                        setTimeout(removeFlashMsg, 600);
+
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        $('#flashMessagesAddCourseCard').html(error);
+                        $('.progress-add-course-card').hide();
+                    }
+                })
+            });
+        }
+
+        // Soumission du formulaire de mise à jour de la carte de son historique
+        function addCourseCardHistory() {
+            $('body').on('submit', 'form[name="update_course_card_history"]', function (e) {
+                e.preventDefault();
+                $('.progress-update-history').show();
+                var $form = $(this);
+                var url = $('#update_course_card_history_submit').attr('data-url');
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationUpdateCourseCardHistory">' + data + '</div>';
+
+                        $('#flashMessagesCourseCardHistory').html(success);
+
+                        $('.progress-update-history').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationUpdateCourseCardHistory').replaceWith('');
+                        }
+                        setTimeout(removeFlashMsg, 5000);
+                        reloadCourseCardSection();
+                        reloadUpdateCourseCardForm();
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        $('#flashMessagesCourseCardHistory').html(error);
+                        $('.progress-update-history').hide();
+                    }
+                })
+            });
+        }
+
+        // Soumission du formulaire de mise à jour d'un cheval
+        function updateHorse() {
+            $('body').on('submit', 'form[name="update_horse"]', function (e) {
+                e.preventDefault();
+                $('.progress-update-horse').show();
+                var $form = $(this);
+                var url = $('#update_horse_submit').attr('data-url');
+                var id = $('#update_horse_submit').attr('data-id');
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationUpdateHorse'+id+'">' + data + '</div>';
+
+                        $('#flashMessagesUpdateHorse'+id).html(success);
+
+                        $('.progress-update-horse').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationUpdateHorse'+id).replaceWith('');
+                            $('#horse'+id).modal('close');
+                            reloadHorseSection();
+                        }
+                        setTimeout(removeFlashMsg, 600);
+
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        $('#flashMessagesUpdateHorse'+id).html(error);
+                        $('.progress-update-horse').hide();
+                    }
+                })
+            });
+        }
+
+        // Rechargement des informations lié à la carte de cours
+        function reloadHorseSection() {
+            var url = $('#horsesInformations').attr('data-url');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    $('#horsesInformations').replaceWith(data);
+                    initMaterialize();
+                }
+            })
+        }
+
+        // Rechargement du formulaire de ajout d'un cavalier
+        function reloadUpdateCourseCardForm() {
+            var url = $('#updateCourseCardForm').attr('data-url');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    $('#updateCourseCardForm').replaceWith(data);
+
+                    initMaterialize();
+                }
+            })
+        }
+
+        // Fonction de pagination de l'historique
+        function paginateHistory() {
+            $('body').on('click','#paginateCourseCardHistory a', function (e) {
+                e.preventDefault();
+                var $a = $(this);
+                var url = $a.attr('href');
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#table-course-card-history').replaceWith(data);
+                    }, error: function () {
+                    }
+                })
+            });
+        }
+
         $(document).ready(function(){
             // Initialisation des modals
-            $('.modal').modal();
+            initMaterialize();
+            loadModalAddCourseCard();
+            loadModalUpdateHorse();
+            addCourseCard();
+            paginateHistory();
+            addCourseCardHistory();
+            updateHorse();
         });
     </script>
 {% endblock %}
