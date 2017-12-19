@@ -3,13 +3,11 @@
         <p>{{user.firstName}} n'est pas propriétaire d'un cheval.</p>
     {% else %}
         {% for horse in user.horse %}
-            <p class="horses-title"><b>{{horse.name}}</b> | <a class="hypertext right-align modal-trigger edit-horse-modal-trigger" href="#horse{{ horse.id }}" data-id="{{ horse.id }}">Editer</a></p>
-
-            <div class="edit-horse-modal" id="edit-horse-modal-{{ horse.id }}" data-url="{{ path('update-horse-form', {'id': horse.id }) }}" data-id="{{ horse.id }}">
-                <div id="horse{{ horse.id }}" class="modal">
-                    <div id="modalContentUpdateHorse{{ horse.id }}"></div>
-                </div>
-            </div>
+            <p class="horses-title"><b>{{horse.name}}</b> |
+                <a class="hypertext right-align modal-trigger edit-horse-modal-trigger" id="edit-horse-{{ horse.id }}" data-url="{{ path('update-horse-form', {'id': horse.id }) }}" data-id="{{ horse.id }}">
+                    Editer
+                </a>
+            </p>
 
             <p>
                 Date de naissance : {{ horse.birthDate ? horse.birthDate|date('d/m/Y') : "Non définie" }}<br>

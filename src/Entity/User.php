@@ -26,13 +26,13 @@ class User implements UserInterface, \Serializable
     private $horse;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Alert", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Alert", mappedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $alerts;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Bill", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Bill", mappedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $bills;
@@ -590,6 +590,7 @@ class User implements UserInterface, \Serializable
     public function addAlert(Alert $alert)
     {
         $this->alerts[] = $alert;
+        $alert->setUser($this);
 
         return $this;
     }
@@ -624,6 +625,7 @@ class User implements UserInterface, \Serializable
     public function addBill(Bill $bill)
     {
         $this->bills[] = $bill;
+        $bill->setUser($this);
 
         return $this;
     }

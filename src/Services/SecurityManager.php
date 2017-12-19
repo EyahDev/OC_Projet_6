@@ -57,10 +57,13 @@ class SecurityManager
     }
 
     /**
-     * Création d'un token de reset de mot de passe + mail
-     *
      * @param $userMail
      * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * Création d'un token de reset de mot de passe + mail
      */
     public function lostPassword($userMail) {
         // Récupération des informations de l'utilisateur

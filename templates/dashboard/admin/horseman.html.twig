@@ -11,25 +11,41 @@
             padding-top: 10px;
         }
 
-        .progress-add-course-card, .progress-update-history, .progress-update-horse {
+        .progress-add-course-card, .progress-update-history, .progress-update-horse, .progress-add-bill, .progress-update-bill{
             display: none;
         }
 
         #update_course_card_history_countType {
-            position:absolute;
-              display: inline;
-              height: 0;
-              padding: 0;
-              width: 0;
-              border: none;
-              box-shadow: unset;
-          }
+            position: absolute;
+            display: inline;
+            height: 0;
+            padding: 0;
+            width: 0;
+            border: none;
+            box-shadow: unset;
+        }
+
+        .custom-file {
+            width: auto !important;
+        }
+
+        .custom-file:hover {
+            width: auto !important;
+        }
+
+        .custom-file-input-text {
+            margin-top: 15px !important;
+        }
     </style>
     <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
 {% endblock %}
 
 {% block body %}
     {{ include('common/nav.html.twig') }}
+
+    <div id="genericModal" class="modal">
+        <div id="modalContent"></div>
+    </div>
 
     <div class="row">
         <h3 class="col xl12 center-align">{{user.completeName}}</h3>
@@ -95,36 +111,15 @@
         <div class="col xl8 l8 m12 s12 offset-xl2 offset-l2">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title">Factures</span> <a class="modal-trigger btn-floating btn-large waves-effect waves-light absolute-icon" href="#addBill"><i class="material-icons">add</i></a>
+                    <span class="card-title">Factures</span>
 
-                    <div id="addBill" class="modal">
-                        <div class="modal-content">
-                            <h4>Ajout d'une facture</h4>
-                        </div>
-                    </div>
+                    <a class="modal-trigger  btn-floating btn-large waves-effect waves-light absolute-icon"
+                       id="add-bill-modal-trigger" data-url="{{ path('add-bill-form',{'id': user.id })}}">
+                        <i class="material-icons">add</i>
+                    </a>
 
-                    <div class="table-responsive-vertical" id="usersTR">
-                        <table id="table" class="table table-hover table-mc-light-green">
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Type de facture</th>
-                                <th>Montant</th>
-                                <th>Statut</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-title="Date">01/01/1970</td>
-                                    <td data-title="Type de facture">Ajout</td>
-                                    <td data-title="Montant">200 €</td>
-                                    <td data-title="Statut">en attente</td>
-                                    <td data-title="Action">edit</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    {{ include('dashboard/admin/tables/bills.html.twig') }}
+
                 </div>
             </div>
         </div>
@@ -141,13 +136,14 @@
 
         // Chargement du formulaire d'ajout d'une carte de cours
         function loadModalAddCourseCard() {
-            $('body').on('click', '.add-course-card-modal-trigger', function (e) {
-                var url = $('#addCourseCard').attr('data-url');
+            $('body').on('click', '#add-course-card-modal-trigger', function (e) {
+                var url = $('#add-course-card-modal-trigger').attr('data-url');
+                $('#genericModal').modal('open');
                 $.ajax({
                     type: 'GET',
                     url: url,
                     success: function (data) {
-                        $('#modalContentAddCourseCard').replaceWith(data);
+                        $('#modalContent').replaceWith(data);
                     }
                 })
             });
@@ -156,17 +152,51 @@
         // Rechargement des contacts utiles
         function loadModalUpdateHorse() {
             $('body').on('click', '.edit-horse-modal-trigger', function (e) {
-                var htmlID = '#edit-horse-modal-';
+                var htmlID = '#edit-horse-';
                 var dataID = e.currentTarget.dataset.id;
-                console.log(htmlID);
-                console.log(dataID);
                 var url = $(htmlID+dataID).attr('data-url');
-                console.log(url);
+                $('#genericModal').modal('open');
                 $.ajax({
                     type: 'GET',
                     url: url,
                     success: function (data) {
-                        $('#modalContentUpdateHorse'+dataID).replaceWith(data);
+                        $('#modalContent').replaceWith(data);
+                        Materialize.updateTextFields();
+                        $('select').material_select();
+                    }
+                })
+            });
+        }
+
+        // Chargement du formulaire pour l'ajout de la facture
+        function loadModalAddBill() {
+            $('body').on('click', '#add-bill-modal-trigger', function (e) {
+                var url = $('#add-bill-modal-trigger').attr('data-url');
+                $('#genericModal').modal('open');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#modalContent').replaceWith(data);
+                        $('select').material_select();
+                    }
+                })
+            });
+        }
+
+        // Chargement de la mise à jour d'une facture
+        function loadModalUpdateBill() {
+            $('body').on('click', '.update-bill-modal-trigger', function (e) {
+                var htmlID = '#update-bill-modal-';
+                var dataID = e.currentTarget.dataset.id;
+                console.log(htmlID+dataID);
+                var url = $(htmlID+dataID).attr('data-url');
+                $('#genericModal').modal('open');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#modalContent').replaceWith(data);
                         Materialize.updateTextFields();
                         $('select').material_select();
                     }
@@ -207,8 +237,9 @@
 
                         function removeFlashMsg() {
                             $('#confirmationAddCourseCard').replaceWith('');
-                            $('#addCourseCard').modal('close');
+                            $('#genericModal').modal('close');
                             reloadCourseCardSection();
+                            $('#modalContent').replaceWith('<div id="modalContent"></div>');
                         }
                         setTimeout(removeFlashMsg, 600);
 
@@ -256,6 +287,43 @@
             });
         }
 
+        // Soumission du formulaire d'ajout d'une facture'
+        function addBill() {
+            $('body').on('submit', 'form[name="add_new_bill"]', function (e) {
+                e.preventDefault();
+                $('.progress-add-bill').show();
+                var url = $('#add_new_bill_submit').attr('data-url');
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: new FormData(this),
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationAddBill">' + data + '</div>';
+
+                        $('#flashMessagesAddBill').html(success);
+
+                        $('.progress-add-bill').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationAddBill').replaceWith('');
+                            $('#genericModal').modal('close');
+                            reloadBillsTable();
+                            $('#modalContent').replaceWith('<div id="modalContent"></div>');
+                        }
+                        setTimeout(removeFlashMsg, 5000);
+
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        $('#flashMessagesAddBill').html(error);
+                        $('.progress-add-bill').hide();
+                    }
+                })
+            });
+        }
+
         // Soumission du formulaire de mise à jour d'un cheval
         function updateHorse() {
             $('body').on('submit', 'form[name="update_horse"]', function (e) {
@@ -278,8 +346,9 @@
 
                         function removeFlashMsg() {
                             $('#confirmationUpdateHorse'+id).replaceWith('');
-                            $('#horse'+id).modal('close');
+                            $('#genericModal').modal('close');
                             reloadHorseSection();
+                            $('#modalContent').replaceWith('<div id="modalContent"></div>');
                         }
                         setTimeout(removeFlashMsg, 600);
 
@@ -288,6 +357,45 @@
                         var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
                         $('#flashMessagesUpdateHorse'+id).html(error);
                         $('.progress-update-horse').hide();
+                    }
+                })
+            });
+        }
+
+        // Soumission du formulaire de mise à jour d'une facture
+        function updateBill() {
+            $('body').on('submit', 'form[name="update_bill"]', function (e) {
+                e.preventDefault();
+                $('.progress-update-bill').show();
+                var url = $('#update_bill_submit').attr('data-url');
+                var id = $('#update_bill_submit').attr('data-id');
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: new FormData(this),
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationUpdateBill'+id+'">' + data + '</div>';
+
+                        $('#flashMessagesUpdateBill'+id).html(success);
+
+                        $('.progress-update-bill').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationUpdateBill'+id).replaceWith('');
+                            $('#genericModal').modal('close');
+                            reloadBillsTable();
+                            $('#modalContent').replaceWith('<div id="modalContent"></div>');
+                        }
+                        setTimeout(removeFlashMsg, 600);
+
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        $('#flashMessagesUpdateBill'+id).html(error);
+                        $('.progress-update-bill').hide();
                     }
                 })
             });
@@ -302,6 +410,27 @@
                 success: function (data) {
                     $('#horsesInformations').replaceWith(data);
                     initMaterialize();
+                }
+            })
+        }
+
+        // Rechargement des informations lié à la carte de cours
+        function reloadBillsTable() {
+            var currentPageNb = $('#paginateBills').find('a').attr('data-current');
+            if (currentPageNb === '') {
+                currentPageNb = '1';
+            }
+
+            var argGet = '?page='+currentPageNb;
+
+            var urlNewRoute = $('#paginateBills').find('a').attr('href');
+
+            var newUrl = urlNewRoute+argGet;
+            $.ajax({
+                type: 'GET',
+                url: newUrl,
+                success: function (data) {
+                    $('#table-bills').replaceWith(data);
                 }
             })
         }
@@ -338,15 +467,37 @@
             });
         }
 
+        // Fonction de pagination des factures
+        function paginateBills() {
+            $('body').on('click','#paginateBills a', function (e) {
+                e.preventDefault();
+                var $a = $(this);
+                var url = $a.attr('href');
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#table-bills').replaceWith(data);
+                    }, error: function () {
+                    }
+                })
+            });
+        }
+
         $(document).ready(function(){
-            // Initialisation des modals
             initMaterialize();
             loadModalAddCourseCard();
             loadModalUpdateHorse();
+            loadModalAddBill();
+            loadModalUpdateBill();
             addCourseCard();
             paginateHistory();
             addCourseCardHistory();
             updateHorse();
+            addBill();
+            updateBill();
+            paginateBills();
         });
     </script>
 {% endblock %}

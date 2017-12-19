@@ -2,18 +2,21 @@
     {% for contactType in contacts %}
         {% if contactType.contacts is not empty %}
         <ul class="collection with-header col xl12 l12 m12 s12">
-                <li class="collection-header"><h5>{{ contactType.name }}</h5></li>
+                <li class="collection-header">
+                    <h5>{{ contactType.name }} |
+                        <a class="hypertext modal-trigger edit-contact-type-modal-trigger" id="modal-edit-contact-type-{{ contactType.id }}" data-url="{{ path('update-contact-type-form', {'id': contactType.id }) }}" data-id="{{ contactType.id }}">
+                            Editer
+                        </a>
+                    </h5>
+                </li>
             {% for contact in contactType.contacts  %}
                 <li class="collection-item">{{ contact.name }}
                     <span class="secondary-content">
-                        <a class="hypertext" href="tel:{{ contact.phone }}">{{ contact.phone|phone }}</a> | <a class="hypertext modal-trigger edit-contact-modal-trigger" href="#editModal{{ contact.id }}" data-id="{{ contact.id }}">Editer</a>
+                        <a class="hypertext" href="tel:{{ contact.phone }}">{{ contact.phone|phone }}</a> |
+                        <a class="hypertext modal-trigger edit-contact-modal-trigger" id="modal-edit-contact-{{ contact.id }}"  data-url="{{ path('update-contact-form', {'id': contact.id }) }}" data-id="{{ contact.id }}">
+                            Editer
+                        </a>
                     </span>
-
-                    <div class="edit-contact-modal" id="edit-contact-modal-{{ contact.id }}" data-url="{{ path('update-contact-form', {'id': contact.id }) }}" data-id="{{ contact.id }}">
-                        <div id="editModal{{ contact.id }}" class="modal">
-                            <div id="modalContent{{ contact.id }}"></div>
-                        </div>
-                    </div>
                 </li>
             {% endfor %}
         </ul>

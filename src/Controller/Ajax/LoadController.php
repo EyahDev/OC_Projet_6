@@ -79,4 +79,72 @@ class LoadController extends Controller
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
+
+    /**
+     * Chargement du formulaire de mise à jour du type de contact
+     *
+     * @param $id
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/update-contact-type-form/{id}", name="update-contact-type-form")
+     */
+    public function loadUpdateContactTypeForm($id, DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $updateContactTypeForm = $dashboard->getUpdateContactTypeForm($id);
+            $contactType = $dashboard->getContactType($id);
+
+            return $this->render('dashboard/admin/ajax/modals/editContactType.html.twig', array(
+                'updateContactTypeForm' => $updateContactTypeForm->createView(),
+                'contactType' => $contactType,
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Chargement du formulaire d'ajout de facture
+     *
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/add-bill-form/{id}", name="add-bill-form")
+     */
+    public function loadAddBillForm($id ,DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $addBillForm = $dashboard->getAddBillForm();
+            $user = $dashboard->getUser($id);
+
+            return $this->render('dashboard/admin/ajax/modals/addBill.html.twig', array(
+                'addBillForm' => $addBillForm->createView(),
+                'user' => $user
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Chargement du mise à jour du formulaire
+     *
+     * @param $id
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/update-bill-form/{id}", name="update-bill-form")
+     */
+    public function loadUpdateBillForm($id, DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $updateBillForm = $dashboard->getUpdateBillForm($id);
+            $bill = $dashboard->getBill($id);
+
+            return $this->render('dashboard/admin/ajax/modals/updateBill.html.twig', array(
+                'updateBillForm' => $updateBillForm->createView(),
+                'bill' => $bill
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
 }

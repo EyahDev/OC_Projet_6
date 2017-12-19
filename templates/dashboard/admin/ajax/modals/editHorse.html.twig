@@ -1,7 +1,9 @@
-<div class="modal-content">
-    <h4 class="center-align">{{horse.name}}</h4>
+<div class="modal-content" id="modalContent">
+    <div class="row">
+        <h4 class="center-align">{{horse.name}}</h4>
 
-    <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="flashMessagesUpdateHorse{{ horse.id }}"></div>
+        <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="flashMessagesUpdateHorse{{ horse.id }}"></div>
 
-    {{ include('dashboard/admin/ajax/forms/updateHorse.html.twig') }}
+        {{ include('dashboard/admin/ajax/forms/updateHorse.html.twig') }}
+    </div>
 </div>

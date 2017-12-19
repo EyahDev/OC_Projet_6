@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Entity\Alert;
+use App\Entity\AlertType;
+use App\Entity\Bill;
 use App\Entity\Contact;
 use App\Entity\ContactType;
 use App\Entity\CountType;
@@ -12,14 +15,19 @@ use App\Entity\User;
 use App\Form\Type\Administration\AddCourseCardType;
 use App\Form\Type\Administration\AddHorsemanType;
 use App\Form\Type\Administration\AddHorseType;
+use App\Form\Type\Administration\AddNewBillType;
 use App\Form\Type\Administration\AddNewContactType;
+use App\Form\Type\Administration\UpdateBillType;
 use App\Form\Type\Administration\UpdateContactType;
+use App\Form\Type\Administration\UpdateContactTypeType;
 use App\Form\Type\Administration\UpdateCourseCardHistoryType;
 use App\Form\Type\Administration\UpdateHorseType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Twig\Environment;
 
 class DashboardManager
 {
@@ -43,12 +51,39 @@ class DashboardManager
      */
     private $validator;
 
-    public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
+    /**
+     * @var
+     */
+    private $billsDirectory;
+
+    /**
+     * @var Filesystem
+     */
+    private $fileSystem;
+
+    /**
+     * @var \Swift_Mailer
+     */
+    private $mailer;
+
+    /**
+     * @var Environment
+     */
+    private $environment;
+
+    public function __construct($billsDirectory, EntityManagerInterface $entityManager,
+                                FormFactoryInterface $formFactory, UserPasswordEncoderInterface $encoder,
+                                ValidatorInterface $validator, Filesystem $filesystem, \Swift_Mailer $mailer,
+                                Environment $environment)
     {
+        $this->billsDirectory = $billsDirectory;
         $this->em = $entityManager;
         $this->formFactory = $formFactory;
         $this->encoder = $encoder;
         $this->validator = $validator;
+        $this->fileSystem = $filesystem;
+        $this->mailer = $mailer;
+        $this->environment = $environment;
     }
 
     /* ---------- ADMINISTRATEUR ----------- */
@@ -121,7 +156,7 @@ class DashboardManager
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function getUpdateCourseCardHistory()
+    public function getUpdateCourseCardHistoryForm()
     {
         return $this->formFactory->create(UpdateCourseCardHistoryType::class);
     }
@@ -138,6 +173,32 @@ class DashboardManager
         return $this->formFactory->create(UpdateHorseType::class, $existingHorse);
     }
 
+    /**
+     * Récupération du formulaire d'édition du type de contact
+     *
+     * @param $id
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getUpdateContactTypeForm($id) {
+        $existingContactType = $this->em->getRepository(ContactType::class)->find($id);
+        return $this->formFactory->create(UpdateContactTypeType::class, $existingContactType);
+    }
+
+    public function getAddBillForm() {
+        $newBill = new Bill();
+        return $this->formFactory->create(AddNewBillType::class, $newBill);
+    }
+
+    /**
+     * Récupération du formulaire de mise à jour de la facture
+     *
+     * @param $id
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getUpdateBillForm($id) {
+        $existingBill = $this->getBill($id);
+        return $this->formFactory->create(UpdateBillType::class, $existingBill);
+    }
 
     /* ---------- Getters ----------- */
 
@@ -221,6 +282,17 @@ class DashboardManager
     }
 
     /**
+     * Récupération d'une type de contact spécifique
+     *
+     * @param $id
+     * @return ContactType|null|object
+     */
+    public function getContactType($id)
+    {
+        return $this->em->getRepository(ContactType::class)->find($id);
+    }
+
+    /**
      * Récupération de l'historique de la carte de cours de son utilisateur avec pagination
      *
      * @param $firstResult
@@ -231,6 +303,27 @@ class DashboardManager
     public function getCourseCardHistory($firstResult, $perPage, $id)
     {
         return $this->em->getRepository(CourseCardHistory::class)->getHistoryByUser($firstResult, $perPage, $id);
+    }
+
+    /**
+     * @param $firstResult
+     * @param $perPage
+     * @param $id
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function getBills($firstResult, $perPage, $id)
+    {
+        return $this->em->getRepository(Bill::class)->getBillsByUser($firstResult, $perPage, $id);
+    }
+
+    /**
+     * Récupération de la facture sélectionnée
+     *
+     * @param $id
+     * @return Bill|null|object
+     */
+    public function getBill($id) {
+        return $this->em->getRepository(Bill::class)->find($id);
     }
 
     /* ---------- Setters ----------- */
@@ -329,6 +422,75 @@ class DashboardManager
     }
 
     /**
+     * Création de la nouvelle facture
+     *
+     * @param User $user
+     * @param Bill $data
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function setNewBill(User $user, Bill $data)
+    {
+        $data->setBillDate(new \DateTime());
+
+        $path = $this->billsDirectory;
+        $newFile = $data->getPdfPath();
+        $fileName = md5(uniqid()).'.'.$newFile->guessExtension();
+        $newFile->move($path, $fileName);
+        $filePath = "uploads/bills/".$fileName;
+
+        $data->setPdfPath($filePath);
+        $user->addBill($data);
+
+        // Création d'une alerte
+        $alert = new Alert();
+        $alert->setAlertDate(new \DateTime());
+        $alert->setType($this->em->getRepository(AlertType::class)->findOneBy(array('name' => 'Facture')));
+        $alert->setAlertDescription('Une nouvelle facture est disponible !');
+
+        $user->addAlert($alert);
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        // Envoi d'un email
+        $message = (new \Swift_Message('Une nouvelle facture est disponible'))
+            ->setFrom(array('noreply@adriendesmet.com' => 'Fief Malzais'))
+            ->setTo($user->getUsername())
+            ->setBody($this->environment->render('mail/bills/bill.html.twig', array('bill' => $data)), 'text/html')
+            ->attach(\Swift_Attachment::fromPath($filePath));
+        $this->mailer->send($message);
+
+    }
+
+    /**
+     * Mise à jour de la facture existante
+     *
+     * @param $existingFile
+     * @param Bill $data
+     */
+    public function updateBill($existingFile, Bill $data)
+    {
+        $path = $this->billsDirectory;
+
+        $newFile = $data->getPdfPath();
+
+        if ($newFile === null) {
+            $data->setPdfPath($existingFile);
+        } else {
+            $this->fileSystem->remove($existingFile);
+            $fileName = md5(uniqid()).'.'.$newFile->guessExtension();
+            $newFile->move($path, $fileName);
+            $filePath = "uploads/bills/".$fileName;
+            $data->setPdfPath($filePath);
+        }
+
+        $this->em->persist($data);
+        $this->em->flush();
+    }
+
+    /**
      * Mise à jour du contact
      *
      * @param Contact $data
@@ -336,6 +498,39 @@ class DashboardManager
     public function updateContact(Contact $data)
     {
         $this->em->persist($data);
+        $this->em->flush();
+    }
+
+    /**
+     * Suppression du contact
+     *
+     * @param $id
+     */
+    public function deleteContact($id)
+    {
+        $this->em->remove($this->getUsefullContact($id));
+        $this->em->flush();
+    }
+
+    /**
+     * Mise à jour du type de contact
+     *
+     * @param ContactType $data
+     */
+    public function updateContactType(ContactType $data)
+    {
+        $this->em->persist($data);
+        $this->em->flush();
+    }
+
+    /**
+     * Suppression du type de contact
+     *
+     * @param $id
+     */
+    public function deleteContactType($id)
+    {
+        $this->em->remove($this->getContactType($id));
         $this->em->flush();
     }
 

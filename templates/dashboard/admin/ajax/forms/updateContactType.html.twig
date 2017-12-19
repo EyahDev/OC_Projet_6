@@ -1,0 +1,25 @@
+<div class="row" id="updateContactTypeForm">
+    {{ form_start(updateContactTypeForm) }}
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(updateContactTypeForm.name) }}
+        {{form_label(updateContactTypeForm.name) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_widget(updateContactTypeForm.submit, {"attr": {"data-url": path("update-contact-type", {'id': contactType.id}), 'data-id': contactType.id }})}}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="progress progress-update-contact-type">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+
+    <div class="input-field col xl10 l10 m10 s12 offset-xl1 offset-l1">
+        <a class="cursor text-red" id="delete-contact-type" data-url="{{ path('delete-contact-type', {'id': contactType.id}) }}" data-id="{{ contactType.id }}">
+            Supprimer le type de contact (cela supprimera tous les contacts à associés)
+        </a>
+    </div>
+
+    {{form_end(updateContactTypeForm)}}
+</div>

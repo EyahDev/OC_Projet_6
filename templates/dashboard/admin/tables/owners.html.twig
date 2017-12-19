@@ -6,7 +6,7 @@
             {% if owner.phone is not empty %}
                 {% if owner.horse is empty %}
                     <li class="collection-item">{{ owner.completeName }}
-                        <a class="secondary-content" style="color: #00b1bc;" href="tel:+33{{ owner.phone }}">{{ owner.phone|phone }}</a>
+                        <a class="secondary-content hypertext" href="tel:{{ owner.phone }}">{{ owner.phone|phone }}</a>
                     </li>
                 {% else %}
                     <li class="collection-item">{{ owner.completeName }}
@@ -19,7 +19,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <a class="secondary-content" style="color: #00b1bc;" href="tel:+33{{ owner.phone }}">{{ owner.phone|phone }}</a>
+                        <a class="secondary-content hypertext" href="tel:{{ owner.phone }}">{{ owner.phone|phone }}</a>
                     </li>
                 {% endif %}
             {% endif %}

@@ -85,7 +85,7 @@ class PaginationController extends Controller
      *
      * @Route(path="dashboard/paginate-course-card-history/{id}/{currentPage}", name="paginate-course-card-history")
      */
-    public function paginationCourseCardHistory($id, DashboardManager $dashboard, AjaxManager $ajaxManager, $currentPage, Request $request) {
+    public function paginationCourseCardHistory($id, $currentPage, DashboardManager $dashboard, AjaxManager $ajaxManager, Request $request) {
         if ($request->isXmlHttpRequest()) {
             $user = $dashboard->getUser($id);
             $paginationCourseCardHistory = $ajaxManager->getPaginatedCourseCardHistory($currentPage, $id);
@@ -93,6 +93,29 @@ class PaginationController extends Controller
             return $this->render('dashboard/admin/tables/courseCardHistory.html.twig', array(
                 'user' => $user,
                 'paginationCourseCardHistory' => $paginationCourseCardHistory
+            ));
+        }
+        throw $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Gestion de la pagination des factures par utilisateurs
+     *
+     * @param AjaxManager $ajaxManager
+     * @param $currentPage
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/paginate-bills/{id}/{currentPage}", name="paginate-bills")
+     */
+    public function paginationBills($id, $currentPage, AjaxManager $ajaxManager, DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $user = $dashboard->getUser($id);
+            $paginationBills = $ajaxManager->getPaginatedBills($currentPage, $id);
+
+            return $this->render('dashboard/admin/tables/bills.html.twig', array(
+                'user' => $user,
+                'paginationBills' => $paginationBills
             ));
         }
         throw $this->createNotFoundException("Cette page n'existe pas.");

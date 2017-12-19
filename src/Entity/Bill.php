@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Bill
@@ -20,12 +21,12 @@ class Bill
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\BillType")
+     * @ORM\ManyToOne(targetEntity="App\Entity\BillType")
      */
     private $type;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\BillStatus")
+     * @ORM\ManyToOne(targetEntity="App\Entity\BillStatus")
      */
     private $status;
 
@@ -43,7 +44,7 @@ class Bill
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="bill_date", type="date")
+     * @ORM\Column(name="bill_date", type="datetime")
      */
     private $billDate;
 
@@ -51,6 +52,8 @@ class Bill
      * @var int
      *
      * @ORM\Column(name="amount", type="integer")
+     * @Assert\Type(type="numeric", message="Le montant de la facture ne peut contenir que des chiffres.")
+     * @Assert\NotBlank(message="Veuillez saisir un montant valide.")
      */
     private $amount;
 
@@ -58,6 +61,12 @@ class Bill
      * @var string
      *
      * @ORM\Column(name="pdf_path", type="string", length=255, nullable=true)
+     * @Assert\File(
+     *     maxSize="2M",
+     *     maxSizeMessage="Votre fichier PDF ne peut pas dépasser 2Mo.",
+     *     mimeTypes={"application/pdf","application/x-pdf"},
+     *     mimeTypesMessage="Veuillez charger un fichier PDF valide."
+     * )
      */
     private $pdfPath;
 

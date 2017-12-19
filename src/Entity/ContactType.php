@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * ContactType
@@ -14,7 +15,7 @@ class ContactType
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Contact", mappedBy="type")
+     * @ORM\OneToMany(targetEntity="App\Entity\Contact", mappedBy="type", cascade={"persist", "remove"})
      */
     private $contacts;
 
@@ -31,6 +32,8 @@ class ContactType
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\Length(min="2", minMessage="Le nom du type de contact doit contenir au minimun {{ limit }} caractères.")
+     * @Assert\NotBlank(message="Veuillez saisir un nom de type de contact valide.")
      */
     private $name;
 

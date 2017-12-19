@@ -1,22 +1,12 @@
 {% extends 'base.html.twig' %}
 
-
-{#{% form_theme contactsForm _self %}#}
-
-{#{% block _edit_usefull_contacts_contacts_entry_row %}#}
-    {#<h3>mon contact</h3>#}
-    {#{{ form_widget(form.phone) }}#}
-    {#{{ form_widget(form.name) }}#}
-    {#{{ form_widget(form.type) }}#}
-{#{% endblock %}#}
-
 {% block stylesheets %}
 <style>
     .owners {
         min-height: 506.2px !important;
     }
 
-    .progress-new-contact, .progress-update-contact {
+    .progress-new-contact, .progress-update-contact, .progress-update-contact-type {
         display: none;
     }
 </style>
@@ -24,6 +14,10 @@
 
 {% block body %}
     {{ include('common/nav.html.twig') }}
+
+    <div id="genericModal" class="modal">
+        <div id="modalContent"></div>
+    </div>
 
     <div class="row">
         <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">

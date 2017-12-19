@@ -73,3 +73,14 @@ input[type="checkbox"].filled-in:checked + label:after{
 .hypertext:hover {
     color: #83d622 ;
 }
+
+.cursor {
+    cursor: pointer;
+}
+
+/* -------------- Couleurs text -------------- */
+
+.text-red {
+    color: #F44336 !important;
+}
+

@@ -60,5 +60,6 @@ class UpdateContactType extends AbstractType
                     'class' => 'btn waves-effect waves-light'
                 )
             ));
+
     }
 }

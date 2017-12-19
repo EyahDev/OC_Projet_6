@@ -24,5 +24,10 @@
             <div class="indeterminate"></div>
         </div>
     </div>
+
+    <div class="input-field col xl3 l3 m3 s12 offset-xl1 offset-l1">
+        <a class="cursor text-red" id="delete-contact" data-url="{{ path('delete-contact', {'id': contact.id}) }}" data-id="{{ contact.id }}">Supprimer le contact</a>
+    </div>
+
     {{form_end(updateContactForm)}}
 </div>

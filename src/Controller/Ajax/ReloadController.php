@@ -91,6 +91,24 @@ class ReloadController extends Controller
     }
 
     /**
+     * @param $id
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/reload-add-bills-form/{id}", name="reload-add-bills-form")
+     */
+    public function reloadBillsForm($id, DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $user = $dashboard->getUser($id);
+            return $this->render('dashboard/admin/sections/bills.html.twig', array(
+                'user' => $user
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
      * Rechargement des contacts utiles
      *
      * @param DashboardManager $dashboard

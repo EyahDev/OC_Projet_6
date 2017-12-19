@@ -1,10 +1,11 @@
 <div id="courseCardInformations" data-url="{{ path('reload-course-card',{'id': user.id }) }}">
     {% if user.courseCard == null %}
-        <p>{{ user.firstName }} n'a pas encore de carte de cours. <a class="hypertext modal-trigger add-course-card-modal-trigger" href="#addCourseCard">Ajouter une carte</a></p>
+        <p>{{ user.firstName }} n'a pas encore de carte de cours.
+            <a class="hypertext modal-trigger" id="add-course-card-modal-trigger" data-url="{{ path('add-course-card-form', {'id': user.id }) }}">
+                Ajouter une carte
+            </a>
+        </p>
 
-        <div id="addCourseCard" class="modal" data-url="{{ path('add-course-card-form', {'id': user.id }) }}">
-            <div id="modalContentAddCourseCard"></div>
-        </div>
     {% else %}
         <a class="activator btn-floating btn-medium waves-effect waves-light absolute-icon"><i class="material-icons">mode_edit</i></a>
         <p>

@@ -150,6 +150,33 @@ class AjaxManager
         );
     }
 
+    /**
+     * Gestion de laz pagination des factures par utilisateur
+     *
+     * @param int $currentPage
+     * @param $id
+     * @return array
+     */
+    public function getPaginatedBills($currentPage = 1, $id) {
+        // Définition du nombres d'affichage par page
+        $perPage = 12;
+
+        // Calcul du premier résultat à afficher
+        $firstResult = ($currentPage-1) * $perPage;
+
+        // Récupération de tous les utilisateurs existant
+        $owners = $this->dashbordManager->getBills($firstResult, $perPage, $id);
+
+        // Calcul du nombre de page neécessaire
+        $nbPage = ceil(count($owners) / $perPage);
+
+        return array(
+            'bills' => $owners,
+            'nbPage' => $nbPage,
+            'currentPage' => $currentPage
+        );
+    }
+
     /* ---------- Validation forms ----------- */
 
     /**

@@ -6,6 +6,7 @@ use App\Services\AjaxManager;
 use App\Services\DashboardManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -119,19 +120,91 @@ class FormController extends Controller
             $updateContactForm->handleRequest($request);
 
             if ($updateContactForm->isSubmitted()) {
-                $updateContactForm = $updateContactForm->getData();
-                $errors = $ajaxManager->validateAjax($updateContactForm);
+
+                $data = $updateContactForm->getData();
+                $errors = $ajaxManager->validateAjax($data);
 
                 if ($errors !== true) {
                     return new Response($errors, Response::HTTP_BAD_REQUEST);
                 }
 
-                $dashboard->updateContact($updateContactForm);
+                $dashboard->updateContact($data);
                 return new Response('Le contact a été mis à jour.');
             }
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
+
+    /**
+     * Supression du contact
+     *
+     * @param $id
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @return Response
+     *
+     * @Route(path="dashboard/delete-contact/{id}", name="delete-contact")
+     */
+    public function deleteContact($id, Request $request, DashboardManager $dashboard) {
+        if ($request->isXmlHttpRequest()) {
+            $dashboard->deleteContact($id);
+            return new Response('Le contact a été supprimé.');
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Mise à jour du type de contact
+     *
+     * @param $id
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     *
+     * @Route(path="dashboard/update-contact-type/{id}", name="update-contact-type")
+     */
+    public function updateContactType($id, Request $request, DashboardManager $dashboard, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+            $updateContactTypeForm = $dashboard->getUpdateContactTypeForm($id);
+            $updateContactTypeForm->handleRequest($request);
+
+            if ($updateContactTypeForm->isSubmitted()) {
+
+                $data = $updateContactTypeForm->getData();
+                $errors = $ajaxManager->validateAjax($data);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $dashboard->updateContactType($data);
+                return new Response('Le type de contact a été mis à jour.');
+            }
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Suppression d'un type de contact
+     *
+     * @param $id
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     *
+     * @Route(path="dashboard/delete-contact-type/{id}", name="delete-contact-type")
+     */
+    public function deleteContactType($id, Request $request, DashboardManager $dashboard, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+            $dashboard->deleteContactType($id);
+            return new Response('Le Type de contact a été supprimé.');
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+
 
     /**
      * @param $id
@@ -181,7 +254,7 @@ class FormController extends Controller
             $user = $dashboard->getUser($id);
 
             // Formulaire
-            $updateCourseCardForm = $dashboard->getUpdateCourseCardHistory();
+            $updateCourseCardForm = $dashboard->getUpdateCourseCardHistoryForm();
             $updateCourseCardForm->handleRequest($request);
 
             if ($updateCourseCardForm->isSubmitted()) {
@@ -237,6 +310,74 @@ class FormController extends Controller
                 $dashboard->updateHorse($data);
 
                 return new Response('Les informations du cheval ont été mises à jour.');
+            }
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Création d'une nouvelle facture
+     *
+     * @param $id
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * @Route(path="dashboard/add-bill/{id}", name="add-bill")
+     */
+    public function addBill($id, Request $request, DashboardManager $dashboard, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+            $user = $dashboard->getUser($id);
+
+            $addBillForm = $dashboard->getAddBillForm();
+            $addBillForm->handleRequest($request);
+
+            if ($addBillForm->isSubmitted()) {
+                $data = $addBillForm->getData();
+                $errors = $ajaxManager->validateAjax($data);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $dashboard->setNewBill($user, $data);
+                return new Response('La nouvelle facture a été ajoutée.');
+            }
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Mise à jour de la facture existante
+     *
+     * @param $id
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     *
+     * @Route(path="dashboard/update-bill/{id}", name="update-bill")
+     */
+    public function updateBill($id, Request $request, DashboardManager $dashboard, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+            $existingFile = $dashboard->getBill($id)->getPdfPath();
+            $updateBillForm = $dashboard->getUpdateBillForm($id);
+            $updateBillForm->handleRequest($request);
+
+            if ($updateBillForm->isSubmitted()) {
+                $data = $updateBillForm->getData();
+                $errors = $ajaxManager->validateAjax($data);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $dashboard->updateBill($existingFile, $data);
+                return new Response('La facture a été mise à jour.');
             }
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");

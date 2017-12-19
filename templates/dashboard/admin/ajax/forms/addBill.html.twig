@@ -1,0 +1,42 @@
+<div class="row" id="newBillForm" data-url="{{ path('reload-add-bills-form',{'id': user.id }) }}">
+    {{ form_start(addBillForm) }}
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(addBillForm.type) }}
+        {{form_label(addBillForm.type) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_label(addBillForm.amount) }}
+        {{ form_widget(addBillForm.amount) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(addBillForm.status) }}
+        {{form_label(addBillForm.status) }}
+    </div>
+
+
+    <div class="file-field input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="btn custom-file">
+            <span>Fichier</span>
+            {{form_widget(addBillForm.pdfPath) }}
+        </div>
+        <div class="file-path-wrapper">
+            <input class="file-path validate custom-file-input-text" type="text">
+        </div>
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_widget(addBillForm.submit, {'attr': {'data-url': path('add-bill', {'id': user.id }) }}) }}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="progress progress-add-bill">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+
+    {{form_end(addBillForm)}}
+
+</div>

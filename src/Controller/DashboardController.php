@@ -22,6 +22,8 @@ class DashboardController extends Controller
      */
     public function dashboard(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request) {
 
+        $user = $this->getUser();
+
         /*--------- ADMINISTRATEUR ----------*/
 
         if ($this->isGranted('ROLE_ADMIN')) {
@@ -32,6 +34,7 @@ class DashboardController extends Controller
             $addHorseForm = $dashboardManager->getAddHorseForm();
 
             return $this->render('dashboard/admin/dashboard.html.twig', array(
+                'user' => $user,
                 'paginationUsers' => $paginationUsers,
                 'paginationHorses' => $paginationHorses,
                 'addHorsemanForm' => $addHorsemanForm->createView(),
@@ -41,9 +44,7 @@ class DashboardController extends Controller
 
         /* --------- UTILISATEUR ---------- */
 
-        if ($this->isGranted('ROLE_USER')) {
-            return $this->render('dashboard/user/dashboard.html.twig');
-        }
+        return $this->render('dashboard/user/dashboard.html.twig', array('user' => $user));
     }
 
     /**
@@ -60,12 +61,13 @@ class DashboardController extends Controller
         // Utilisateur
         $user = $dashboardManager->getUser($id);
 
-        // Pagination de l'historique de la carte de cours
+        // Paginations
         $paginationCourseCardHistory = $ajaxManager->getPaginatedCourseCardHistory(1, $id);
+        $paginationsBills = $ajaxManager->getPaginatedBills(1, $id);
 
         // Formulaire
         $addCourseCard = $dashboardManager->getAddCourseCardForm();
-        $updateCourseCardHistory = $dashboardManager->getUpdateCourseCardHistory();
+        $updateCourseCardHistory = $dashboardManager->getUpdateCourseCardHistoryForm();
 
         $addCourseCard->handleRequest($request);
         if ($addCourseCard->isSubmitted() && $addCourseCard->isValid()) {
@@ -78,6 +80,7 @@ class DashboardController extends Controller
         return $this->render('dashboard/admin/horseman.html.twig', array(
             'user' => $user,
             'paginationCourseCardHistory' => $paginationCourseCardHistory,
+            'paginationBills' => $paginationsBills,
             'addCourseCardForm' => $addCourseCard->createView(),
             'updateCourseCardHistory' => $updateCourseCardHistory->createView()
         ));

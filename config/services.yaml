@@ -2,6 +2,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fr'
+    bills_directory: '%kernel.project_dir%/public/uploads/bills'
 
 services:
     # default configuration for services in *this* file
@@ -27,3 +28,8 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
+
+    App\Services\DashboardManager:
+        arguments:
+            $billsDirectory: '%bills_directory%'
+
