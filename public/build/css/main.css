@@ -1,4 +1,15 @@
 /* -------------- Global -------------- */
+@font-face {
+    font-family: 'manoNegra';
+    src: url(../fonts/WCManoNegraBta-webfont.eot);
+    src: url(../fonts/WCManoNegraBta-webfont.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/WCManoNegraBta-webfont.woff) format('woff'),
+    url(../fonts/WCManoNegraBta-webfont.ttf) format('truetype'),
+    url(../fonts/WCManoNegraBta-webfont.svg#wc_mano_negra_btaregular) format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
 
 body {
     background-image: url(../img/background-dashboard-light.png);
@@ -7,23 +18,23 @@ body {
 /* -------------- Couleurs des formulaires -------------- */
 
 .input-field input:focus + label {
-    color: #83d622 !important;
+    color: #99da4d !important;
 }
 
 .input-field input:focus {
-    border-bottom: 1px solid #83d622 !important;
+    border-bottom: 1px solid #99da4d !important;
     box-shadow: 0 1px 0 0 #000;
 }
 
 input[type="checkbox"].filled-in:checked + label:after{
-    border: 2px solid #83d622;
-    background-color: #83d622;
+    border: 2px solid #99da4d;
+    background-color: #99da4d;
 }
 
 .btn {
     width: 100% !important;
     margin-top: 15px;
-    background-color: #83d622;
+    background-color: #99da4d;
 }
 .btn:hover {
     width: 100% !important;
@@ -34,7 +45,7 @@ input[type="checkbox"].filled-in:checked + label:after{
 .btn:focus {
     width: 100% !important;
     margin-top: 15px;
-    background-color: #83d622;
+    background-color: #99da4d;
 }
 
 
@@ -48,11 +59,14 @@ input[type="checkbox"].filled-in:checked + label:after{
     margin-right: 10px;
 }
 
-
-
 .pagination li.active {
-    background: #83d622 ;
+    background: #99da4d ;
 }
+
+.dropdown-content li > span {
+    color: rgba(0,0,0,0.87) !important;
+}
+
 
 /* -------------- Bouton ajout/modification/suppression -------------- */
 
@@ -60,7 +74,11 @@ input[type="checkbox"].filled-in:checked + label:after{
     position: absolute;
     top: 15px;
     right: 15px;
-    background-color: #83d622 !important;
+    background-color: #99da4d !important;
+}
+
+.absolute-icon:hover {
+    background: #00b1bc !important;
 }
 
 /* -------------- Liens -------------- */
@@ -71,7 +89,7 @@ input[type="checkbox"].filled-in:checked + label:after{
 }
 
 .hypertext:hover {
-    color: #83d622 ;
+    color: #99da4d ;
 }
 
 .cursor {
@@ -82,5 +100,26 @@ input[type="checkbox"].filled-in:checked + label:after{
 
 .text-red {
     color: #F44336 !important;
+}
+
+/* -------------- Navigations -------------- */
+
+.green-malzais {
+    background-color: #99da4d;
+}
+
+nav ul a:hover {
+    background-color: #00b1bc;
+}
+
+.icon-dashboard {
+    font-size: 20px;
+}
+
+.dropdown-content {
+}
+
+.dropdown-content li > a{
+    color: rgba(0,0,0,0.87) !important;
 }
 

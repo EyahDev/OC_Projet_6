@@ -1,66 +1,47 @@
 <style>
-    .fixed-action-btn {
-        top: 15px !important;
-        right:15px !important;
-        bottom: 0 !important;
+    .logo-nav {
+        padding-top: 25px;
+        height: 125px;
     }
 
-    .green-malzais {
-        background-color: #83d622;
+    .title-nav {
+        font-family: manoNegra, Arial, Helvetica, sans-serif;
+        color: rgba(0,0,0,0.8);
     }
-
-    .green-malzais:hover {
-        background-color: #83d622;
-    }
-
-    a {
-        color: white;
-    }
-
-    .btn-dashboard {
-        justify-content: center;
-        height: 55px;
-    }
-
-    .icon-dashboard {
-        font-size: 20px;
-    }
-
-    @media (min-width: 814px) {
-        .hamb-responsive {
-            display: none;
-        }
-    }
-
-
-    @media (max-width: 814px) {
-        #desktop {
-            display: none;
-        }
-
-        body {
-            padding-top: 80px;
-        }
-    }
-
 </style>
 
-<div class="row" id="desktop">
-    <a href="http://ecuriefiefmalzais.fr/"><div class="col xl1 l2 m2 card-panel valign-wrapper btn-dashboard grey darken-3"><i class="icon-dashboard fa fa-arrow-left" aria-hidden="true"></i> Retour au site</div></a>
-    <a href="{{ path('dashboard') }}"><div class="col xl2 l2 m2 offset-xl1 card-panel valign-wrapper center-align btn-dashboard blue darken-3"><i class="icon-dashboard fa fa-tachometer" aria-hidden="true"></i> Dashboard</div></a>
-    <a href="{{ path('dashboard') }}"><div class="col xl2 l2 m2 card-panel valign-wrapper center-align btn-dashboard green"><i class="icon-dashboard fa fa-calendar" aria-hidden="true"></i> Cours</div></a>
-    <a href="{{ path('usefull-contacts') }}"><div class="col xl2 l2 m2 card-panel valign-wrapper center-align btn-dashboard amber darken-1"><i class="icon-dashboard fa fa-address-book-o" aria-hidden="true"></i> Contacts utiles</div></a>
-    <a href="{{ path('logout_page') }}"><div class="col xl2 l2 m2 card-panel valign-wrapper center-align btn-dashboard red"><i class="icon-dashboard fa fa-sign-out" aria-hidden="true"></i> Déconnexion</div></a>
-</div>
+<nav class="green-malzais">
+    <div class="nav-wrapper container">
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="hide-on-med-and-down">
+            <li><a href="{{ path('dashboard') }}"><i class="icon-dashboard fa fa-tachometer" aria-hidden="true"></i> Dashboard</a></li>
+            <li><a href="{{ path('dashboard') }}"><i class="icon-dashboard fa fa-calendar" aria-hidden="true"></i> Cours</a></li>
+            <li><a href="{{ path('usefull-contacts') }}"><i class="icon-dashboard fa fa-address-book-o" aria-hidden="true"></i> Contacts</a></li>
+            <li class="right"><a class="dropdown-button" data-activates="dropdown-param"><i class="fa fa-user-circle-o left icon-dashboard" aria-hidden="true"></i> {{ app.user.completeName }} <i class="material-icons right">arrow_drop_down</i></a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+            <li class="center-align">
+                <img class="logo-nav" src="{{ asset('../public/build/img/logo.png') }}" alt="logo">
+                <h4 class="title-nav">Fief Malzais</h4>
+            </li>
+            <li><a class="dropdown-button" data-activates="dropdown-param-mob"><i class="fa fa-user-circle-o left icon-dashboard" aria-hidden="true"></i> {{ app.user.completeName }} <i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a href="{{ path('dashboard') }}"><i class="icon-dashboard fa fa-tachometer" aria-hidden="true"></i> Dashboard</a></li>
+            <li><a href="{{ path('dashboard') }}"><i class="icon-dashboard fa fa-calendar" aria-hidden="true"></i> Cours</a></li>
+            <li><a href="{{ path('usefull-contacts') }}"><i class="icon-dashboard fa fa-address-book-o" aria-hidden="true"></i> Contacts</a></li>
+        </ul>
+    </div>
+</nav>
 
-<div class="fixed-action-btn horizontal click-to-toggle hamb-responsive">
-    <a class="btn-floating btn-large green-malzais">
-        <i class="fa fa-bars" aria-hidden="true"></i>
-    </a>
-    <ul>
-        <li><a href="{{ path('dashboard') }}" class="btn-floating blue darken-3"><i style="font-size: 20px; line-height: 10px" class="fa fa-tachometer" aria-hidden="true"></i></a></li>
-        <li><a href="{{ path('dashboard') }}" class="btn-floating green"><i style="font-size: 18px;" class="fa fa-calendar" aria-hidden="true"></i></a></li>
-        <li><a href="{{ path('usefull-contacts') }}" class="btn-floating amber darken-1"><i style="font-size: 18px;" class="fa fa-address-book-o" aria-hidden="true"></i></a></li>
-        <li><a href="{{ path('logout_page') }}" class="btn-floating red"><i style="font-size: 18px;" class="fa fa-sign-out" aria-hidden="true"></i></a></li>
-    </ul>
-</div>
+<ul id="dropdown-param" class="dropdown-content">
+    <li><a><i class="fa fa-address-card-o" aria-hidden="true"></i> Vos informations</a></li>
+    <li><a><i class="fa fa-key" aria-hidden="true"></i> Mot de passe</a></li>
+    <li class="divider"></li>
+    <li><a href="{{ path('logout_page') }}"><i class="fa fa-sign-out" aria-hidden="true"></i> Se déconnecter</a></li>
+</ul>
+
+<ul id="dropdown-param-mob" class="dropdown-content">
+    <li><a><i class="fa fa-address-card-o" aria-hidden="true"></i> Vos informations</a></li>
+    <li><a><i class="fa fa-key" aria-hidden="true"></i> Mot de passe</a></li>
+    <li class="divider"></li>
+    <li><a href="{{ path('logout_page') }}"><i class="fa fa-sign-out" aria-hidden="true"></i> Se déconnecter</a></li>
+</ul>

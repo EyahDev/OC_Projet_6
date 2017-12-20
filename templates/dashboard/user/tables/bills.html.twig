@@ -1,0 +1,33 @@
+{% if paginationBills['bills'] is empty %}
+    <p>Vous n'avez pas encore de factures.</p>
+{% else %}
+    <div id="table-bills">
+        <div class="table-responsive-vertical">
+            <table id="table" class="table table-mc-light-green">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type de facture</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="billsTR">
+                {% for bill in paginationBills['bills'] %}
+                    <tr>
+                        <td data-title="Date">{{ bill.billDate|date('d/m/Y') }}</td>
+                        <td data-title="Type de facture">{{ bill.type.name }}</td>
+                        <td data-title="Montant">{{ bill.amount }} €</td>
+                        <td data-title="Statut">{{ bill.status.name }}</td>
+                        <td data-title="Actions"><a class="hypertext" href="{{ asset(bill.pdfPath) }}" target="_blank"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {{ include('dashboard/user/ajax/pagination/bills.html.twig') }}
+
+    </div>
+{% endif %}

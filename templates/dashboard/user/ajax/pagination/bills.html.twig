@@ -1,0 +1,21 @@
+<ul class="pagination center-align" id="paginateBills">
+    {% if paginationBills['currentPage'] <= 1 %}
+        <li class="disabled"><i class="material-icons">chevron_left</i></li>
+    {% else %}
+        <li class="waves-effect"><a href="{{ path('paginate-course-card-history',{'currentPage': paginationBills['currentPage']|number_format -1, 'id': app.user.id }) }}"><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
+
+    {% for i in 1..paginationBills['nbPage'] %}
+        {% if i == paginationBills['currentPage'] %}
+            <li class="active"><a href="{{ path('paginate-bills',{'currentPage': i, 'id': app.user.id }) }}" data-current="{{ paginationBills['currentPage'] }}">{{ i }}</a></li>
+        {% else %}
+            <li><a href="{{ path('paginate-bills',{'currentPage': i, 'id': app.user.id }) }}">{{ i }}</a></li>
+        {% endif %}
+    {% endfor %}
+
+    {% if paginationBills['currentPage'] >= paginationBills['nbPage'] %}
+        <li class="disabled"><i class="material-icons">chevron_right</i></li>
+    {% else %}
+        <li class="waves-effect"><a href="{{ path('paginate-bills',{'currentPage': paginationBills['currentPage']|number_format +1, 'id': app.user.id }) }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+</ul>

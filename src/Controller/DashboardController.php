@@ -97,15 +97,40 @@ class DashboardController extends Controller
      * @Route(path="/dashboard/contacts", name="usefull-contacts")
      */
     public function contacts(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request) {
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $contacts = $dashboardManager->getUsefullContacts();
+            $ownersPhone = $ajaxManager->getPaginatedOwners();
+
+            $addNewContactForm = $dashboardManager->getNewContactForm();
+
+            return $this->render('dashboard/admin/contacts.html.twig', array(
+                'contacts' => $contacts,
+                'paginationOwners' => $ownersPhone,
+                'addNewContactForm' => $addNewContactForm->createView()
+            ));
+        }
+
         $contacts = $dashboardManager->getUsefullContacts();
         $ownersPhone = $ajaxManager->getPaginatedOwners();
 
-        $addNewContactForm = $dashboardManager->getNewContactForm();
-
-        return $this->render('dashboard/admin/contacts.html.twig', array(
+        return $this->render('dashboard/user/contacts.html.twig', array(
             'contacts' => $contacts,
             'paginationOwners' => $ownersPhone,
-            'addNewContactForm' => $addNewContactForm->createView()
         ));
+    }
+
+    /**
+     * Page de toutes les factures de l'utilisateurs
+     *
+     * @param DashboardManager $dashboardManager
+     * @param AjaxManager $ajaxManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route(path="/dashboard/factures", name="bills")
+     */
+    public function bills(AjaxManager $ajaxManager) {
+        $paginationBills = $ajaxManager->getPaginatedBills(1, $this->getUser()->getId());
+        return $this->render('dashboard/user/bills.html.twig', array('paginationBills' => $paginationBills));
     }
 }
