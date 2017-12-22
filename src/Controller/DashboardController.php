@@ -133,4 +133,37 @@ class DashboardController extends Controller
         $paginationBills = $ajaxManager->getPaginatedBills(1, $this->getUser()->getId());
         return $this->render('dashboard/user/bills.html.twig', array('paginationBills' => $paginationBills));
     }
+
+    /**
+     * Page de mise à jour des coordonnées de l'utilisateur
+     *
+     * @param DashboardManager $dashboardManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route(path="/dashboard/vos-informations", name="user-informations")
+     */
+    public function userInformations(DashboardManager $dashboardManager) {
+        $user = $this->getUser();
+
+        $informationsForm = $dashboardManager->getUserInformationsForm($user);
+        return $this->render('common/informations.html.twig', array(
+            'informationsForm' => $informationsForm->createView()
+        ));
+    }
+
+    /**
+     * Page de modification de mot de passe de l'utilisateur
+     *
+     * @param DashboardManager $dashboardManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route(path="/dashboard/votre-mot-de-pass", name="user-password")
+     */
+    public function userPassord(DashboardManager $dashboardManager) {
+        $changePasswordForm = $dashboardManager->getChangePasswordForm();
+
+        return $this->render('common/password.html.twig', array(
+            'passwordForm' => $changePasswordForm->createView()
+        ));
+    }
 }

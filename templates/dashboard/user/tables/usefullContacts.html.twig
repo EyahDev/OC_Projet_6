@@ -7,9 +7,9 @@
                 </li>
             {% for contact in contactType.contacts  %}
                 <li class="collection-item">{{ contact.name }}
-                    <span class="secondary-content">
+                    <p class="secondary-content">
                         <a class="hypertext" href="tel:{{ contact.phone }}">{{ contact.phone|phone }}</a>
-                    </span>
+                    </p>
                 </li>
             {% endfor %}
         </ul>

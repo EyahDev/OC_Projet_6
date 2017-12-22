@@ -33,15 +33,15 @@
 </nav>
 
 <ul id="dropdown-param" class="dropdown-content">
-    <li><a><i class="fa fa-address-card-o" aria-hidden="true"></i> Vos informations</a></li>
-    <li><a><i class="fa fa-key" aria-hidden="true"></i> Mot de passe</a></li>
+    <li><a href="{{ path('user-informations') }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> Vos informations</a></li>
+    <li><a href="{{ path('user-password') }}"><i class="fa fa-key" aria-hidden="true"></i> Mot de passe</a></li>
     <li class="divider"></li>
     <li><a href="{{ path('logout_page') }}"><i class="fa fa-sign-out" aria-hidden="true"></i> Se déconnecter</a></li>
 </ul>
 
 <ul id="dropdown-param-mob" class="dropdown-content">
-    <li><a><i class="fa fa-address-card-o" aria-hidden="true"></i> Vos informations</a></li>
-    <li><a><i class="fa fa-key" aria-hidden="true"></i> Mot de passe</a></li>
+    <li><a href="{{ path('user-informations') }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> Vos informations</a></li>
+    <li><a href="{{ path('user-password') }}"><i class="fa fa-key" aria-hidden="true"></i> Mot de passe</a></li>
     <li class="divider"></li>
     <li><a href="{{ path('logout_page') }}"><i class="fa fa-sign-out" aria-hidden="true"></i> Se déconnecter</a></li>
 </ul>

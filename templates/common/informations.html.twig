@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
+
+    <style>
+        .divider-form {
+            margin-bottom: 50px;
+        }
+
+        .progress-user-informations {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {{ include('common/navUser.html.twig') }}
+
+    <div class="row">
+        <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+
+
+                    <h3 class="center-align">Vos informations</h3>
+                    <div class="divider divider-form"></div>
+                    <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="horsemanForm" data-url="{{ path('reload-horseman-form') }}">
+                        {{form_start(informationsForm)}}
+
+                        <div class="row">
+                            <div class="input-field col xl6 l6 m12 s12">
+                                {{form_widget(informationsForm.firstName)}}
+                                {{form_label(informationsForm.firstName)}}
+                            </div>
+
+                            <div class="input-field col xl6 l6 m12 s12">
+                                {{form_widget(informationsForm.lastName)}}
+                                {{form_label(informationsForm.lastName)}}
+                            </div>
+
+                            <div class="input-field col xl12 l12 m12 s12">
+                                {{form_widget(informationsForm.address)}}
+                                {{form_label(informationsForm.address)}}
+                            </div>
+
+                            <div class="input-field col xl6 l6 m12 s12">
+                                {{form_widget(informationsForm.zip_code)}}
+                                {{form_label(informationsForm.zip_code)}}
+                            </div>
+
+                            <div class="input-field col xl6 l6 m12 s12">
+                                {{form_widget(informationsForm.country)}}
+                                {{form_label(informationsForm.country)}}
+                            </div>
+
+                            <div class="input-field col xl12 l12 m12 s12">
+                                {{form_widget(informationsForm.phone)}}
+                                {{form_label(informationsForm.phone)}}
+                            </div>
+
+                            <div class="input-field col xl12 l12 m12 s12">
+                                {{form_widget(informationsForm.submit, {'attr': {'data-url': path('add-horseman') }})}}
+                            </div>
+
+                            <div class="col xl12 l12 m12 s12">
+                                <div class="progress progress-user-informations">
+                                    <div class="indeterminate"></div>
+                                </div>
+                            </div>
+
+                            {{form_end(informationsForm)}}
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}
+
+
