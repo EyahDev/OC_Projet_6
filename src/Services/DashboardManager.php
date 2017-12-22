@@ -22,6 +22,8 @@ use App\Form\Type\Administration\UpdateContactType;
 use App\Form\Type\Administration\UpdateContactTypeType;
 use App\Form\Type\Administration\UpdateCourseCardHistoryType;
 use App\Form\Type\Administration\UpdateHorseType;
+use App\Form\Type\Common\UpdateUserInformationsType;
+use App\Form\Type\Common\ChangePasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -198,6 +200,25 @@ class DashboardManager
     public function getUpdateBillForm($id) {
         $existingBill = $this->getBill($id);
         return $this->formFactory->create(UpdateBillType::class, $existingBill);
+    }
+
+    /**
+     * Récupération du formulaire de mise à jour des informations de l'utilisateur connecté
+     *
+     * @param User $user
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getUserInformationsForm(User $user) {
+        return $this->formFactory->create(UpdateUserInformationsType::class, $user);
+    }
+
+    /**
+     * Récupération du formulaire pour un changement de mot de passe
+     *
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getChangePasswordForm() {
+        return $this->formFactory->create(ChangePasswordType::class);
     }
 
     /* ---------- Getters ----------- */
@@ -604,5 +625,9 @@ class DashboardManager
     {
         $this->em->persist($data);
         $this->em->flush();
+    }
+
+    public function updateUserInformations() {
+
     }
 }

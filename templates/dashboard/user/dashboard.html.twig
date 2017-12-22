@@ -2,6 +2,11 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
     <link rel="stylesheet" href="{{ asset('build/css/dashboard.css') }}">
+    <style>
+        .card-notifications {
+            padding: 10px !important;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -14,7 +19,13 @@
                 <div class="card-content">
                     <h3 class="center-align">Notifications</h3>
                     <div class="divider"></div>
-                    <p>Aucune notifications.</p>
+                    <div class="card yellow">
+                        <div class="card-content card-notifications">
+                            {% for alert in app.user.alerts %}
+                                <p>{{ alert.alertDescription }} <i class="material-icons right">clear</i></p>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
