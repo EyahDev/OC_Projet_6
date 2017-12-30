@@ -21,7 +21,7 @@ class ChangePasswordType extends AbstractType
                 'label' => 'Ancien mot de passe',
                 'invalid_message' => 'Veuillez saisir un ancien mot de passe valide.',
                 'constraints' => array(
-                    new UserPassword(array('message' => 'Votre ancien mot de passe est incorrecte.'))
+                    new UserPassword(array('message' => 'Votre ancien mot de passe est incorrect.'))
                 )
             ))
             ->add('newPassword', RepeatedType::class, array(

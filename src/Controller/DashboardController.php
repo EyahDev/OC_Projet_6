@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Services\AjaxManager;
 use App\Services\DashboardManager;
+use App\Services\SecurityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,8 +44,12 @@ class DashboardController extends Controller
         }
 
         /* --------- UTILISATEUR ---------- */
+        $paginationCourseCardHistory = $ajaxManager->getPaginatedCourseCardHistory(1, $this->getUser()->getId());
 
-        return $this->render('dashboard/user/dashboard.html.twig', array('user' => $user));
+        return $this->render('dashboard/user/dashboard.html.twig', array(
+            'user' => $user,
+            'paginationCourseCardHistory' => $paginationCourseCardHistory
+        ));
     }
 
     /**
@@ -159,8 +164,8 @@ class DashboardController extends Controller
      *
      * @Route(path="/dashboard/votre-mot-de-pass", name="user-password")
      */
-    public function userPassord(DashboardManager $dashboardManager) {
-        $changePasswordForm = $dashboardManager->getChangePasswordForm();
+    public function userPassord(SecurityManager $security) {
+        $changePasswordForm = $security->getChangePasswordForm();
 
         return $this->render('common/password.html.twig', array(
             'passwordForm' => $changePasswordForm->createView()

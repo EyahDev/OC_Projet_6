@@ -4,6 +4,7 @@ namespace App\Controller\Ajax;
 
 use App\Services\AjaxManager;
 use App\Services\DashboardManager;
+use App\Services\SecurityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,7 +82,7 @@ class ReloadController extends Controller
     public function reloadUpdateCourseCardForm($id, DashboardManager $dashboard, Request $request) {
         if ($request->isXmlHttpRequest()) {
             $user = $dashboard->getUser($id);
-            $updateCourseCardHistoryForm = $dashboard->getUpdateCourseCardHistory();
+            $updateCourseCardHistoryForm = $dashboard->getUpdateCourseCardHistoryForm();
             return $this->render('dashboard/admin/ajax/forms/updateCourseCard.html.twig', array(
                 'user' => $user,
                 'updateCourseCardHistory' => $updateCourseCardHistoryForm->createView()
@@ -103,6 +104,25 @@ class ReloadController extends Controller
             $user = $dashboard->getUser($id);
             return $this->render('dashboard/admin/sections/bills.html.twig', array(
                 'user' => $user
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Rechargement du formulaire de modification de mot de passe
+     *
+     * @param SecurityManager $security
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/reload-change-password-form/", name="reload-change-password-form")
+     */
+    public function reloadChangePasswordForm(SecurityManager $security, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $passwordForm = $security->getChangePasswordForm();
+            return $this->render('common/forms/changePassword.html.twig', array(
+                'passwordForm' => $passwordForm->createView()
             ));
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");

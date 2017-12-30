@@ -212,15 +212,6 @@ class DashboardManager
         return $this->formFactory->create(UpdateUserInformationsType::class, $user);
     }
 
-    /**
-     * Récupération du formulaire pour un changement de mot de passe
-     *
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    public function getChangePasswordForm() {
-        return $this->formFactory->create(ChangePasswordType::class);
-    }
-
     /* ---------- Getters ----------- */
 
     /**
@@ -627,7 +618,13 @@ class DashboardManager
         $this->em->flush();
     }
 
-    public function updateUserInformations() {
-
+    /**
+     * Mises à jour des informations de l'utilisateur
+     *
+     * @param User $data
+     */
+    public function updateUserInformations(User $data) {
+        $this->em->persist($data);
+        $this->em->flush();
     }
 }

@@ -1,23 +1,21 @@
-{% if paginationUsers['nbPage'] > 1 %}
-    <ul class="pagination center-align" id="paginateUsers">
-        {% if paginationUsers['currentPage'] <= 1 %}
-            <li class="disabled"><i class="material-icons">chevron_left</i></li>
-        {% else %}
-            <li class="waves-effect"><a href="{{ path('paginate-user',{'currentPage': paginationUsers['currentPage']|number_format -1 }) }}"><i class="material-icons">chevron_left</i></a></li>
-        {% endif %}
+<ul class="pagination center-align" id="paginateUsers">
+    {% if paginationUsers['currentPage'] <= 1 %}
+        <li class="disabled"><i class="material-icons">chevron_left</i></li>
+    {% else %}
+        <li class="waves-effect"><a href="{{ path('paginate-user',{'currentPage': paginationUsers['currentPage']|number_format -1 }) }}"><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
 
-        {% for i in 1..paginationUsers['nbPage'] %}
-            {% if i == paginationUsers['currentPage'] %}
-                <li class="active"><a href="{{ path('paginate-user',{'currentPage': i}) }}" data-current="{{ paginationUsers['currentPage'] }}">{{ i }}</a></li>
-            {% else %}
-                <li><a href="{{ path('paginate-user',{'currentPage': i}) }}">{{ i }}</a></li>
-            {% endif %}
-        {% endfor %}
-
-        {% if paginationUsers['currentPage'] >= paginationUsers['nbPage'] %}
-            <li class="disabled"><i class="material-icons">chevron_right</i></li>
+    {% for i in 1..paginationUsers['nbPage'] %}
+        {% if i == paginationUsers['currentPage'] %}
+            <li class="active"><a href="{{ path('paginate-user',{'currentPage': i}) }}" data-current="{{ paginationUsers['currentPage'] }}">{{ i }}</a></li>
         {% else %}
-            <li class="waves-effect"><a href="{{ path('paginate-user',{'currentPage': paginationUsers['currentPage']|number_format +1 }) }}"><i class="material-icons">chevron_right</i></a></li>
+            <li><a href="{{ path('paginate-user',{'currentPage': i}) }}">{{ i }}</a></li>
         {% endif %}
-    </ul>
-{% endif %}
+    {% endfor %}
+
+    {% if paginationUsers['currentPage'] >= paginationUsers['nbPage'] %}
+        <li class="disabled"><i class="material-icons">chevron_right</i></li>
+    {% else %}
+        <li class="waves-effect"><a href="{{ path('paginate-user',{'currentPage': paginationUsers['currentPage']|number_format +1 }) }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+</ul>

@@ -102,6 +102,10 @@ input[type="checkbox"].filled-in:checked + label:after{
     color: #F44336 !important;
 }
 
+.progress .indeterminate {
+    background-color: #00b1bc !important;
+}
+
 /* -------------- Navigations -------------- */
 
 .green-malzais {

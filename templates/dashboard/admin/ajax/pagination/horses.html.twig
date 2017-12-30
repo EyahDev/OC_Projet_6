@@ -1,23 +1,21 @@
-{% if paginationHorses['nbPage'] > 1 %}
-    <ul class="pagination center-align" id="paginateHorses">
-        {% if paginationHorses['currentPage'] <= 1 %}
-            <li class="disabled"><i class="material-icons">chevron_left</i></li>
-        {% else %}
-            <li class="waves-effect"><a href="{{ path('paginate-horse',{'currentPage': paginationHorses['currentPage']|number_format -1 }) }}"><i class="material-icons">chevron_left</i></a></li>
-        {% endif %}
+<ul class="pagination center-align" id="paginateHorses">
+    {% if paginationHorses['currentPage'] <= 1 %}
+        <li class="disabled"><i class="material-icons">chevron_left</i></li>
+    {% else %}
+        <li class="waves-effect"><a href="{{ path('paginate-horse',{'currentPage': paginationHorses['currentPage']|number_format -1 }) }}"><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
 
-        {% for i in 1..paginationHorses['nbPage'] %}
-            {% if i == paginationHorses['currentPage'] %}
-                <li class="active"><a href="{{ path('paginate-horse',{'currentPage': i}) }}" data-current="{{ paginationHorses['currentPage'] }}">{{ i }}</a></li>
-            {% else %}
-                <li><a href="{{ path('paginate-horse',{'currentPage': i}) }}">{{ i }}</a></li>
-            {% endif %}
-        {% endfor %}
-
-        {% if paginationHorses['currentPage'] >= paginationHorses['nbPage'] %}
-            <li class="disabled"><i class="material-icons">chevron_right</i></li>
+    {% for i in 1..paginationHorses['nbPage'] %}
+        {% if i == paginationHorses['currentPage'] %}
+            <li class="active"><a href="{{ path('paginate-horse',{'currentPage': i}) }}" data-current="{{ paginationHorses['currentPage'] }}">{{ i }}</a></li>
         {% else %}
-            <li class="waves-effect"><a href="{{ path('paginate-horse',{'currentPage': paginationHorses['currentPage']|number_format +1 }) }}"><i class="material-icons">chevron_right</i></a></li>
+            <li><a href="{{ path('paginate-horse',{'currentPage': i}) }}">{{ i }}</a></li>
         {% endif %}
-    </ul>
-{% endif %}
+    {% endfor %}
+
+    {% if paginationHorses['currentPage'] >= paginationHorses['nbPage'] %}
+        <li class="disabled"><i class="material-icons">chevron_right</i></li>
+    {% else %}
+        <li class="waves-effect"><a href="{{ path('paginate-horse',{'currentPage': paginationHorses['currentPage']|number_format +1 }) }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+</ul>

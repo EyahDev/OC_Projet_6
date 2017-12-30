@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Services\AjaxManager;
+use App\Services\DashboardManager;
 use App\Services\SecurityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -92,6 +94,37 @@ class SecurityController extends Controller
 
         } elseif ($tokenVerification === false) {
            throw $this->createNotFoundException("Ce lien n'est plus valable, veuillez refaire une demande réinitialisation de mot de passe.");
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Modification du mot de passe par l'utilisateur
+     *
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     *
+     * @Route(path="dashboard/change-user-password", name="change-user-password")
+     */
+    public function changeUserPassword(Request $request, SecurityManager $security, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+            $changePasswordForm = $security->getChangePasswordForm();
+            $changePasswordForm->handleRequest($request);
+
+            if ($changePasswordForm->isSubmitted()) {
+                $data = $changePasswordForm->getData();
+                $errors = $ajaxManager->validateAjaxWithoutEntity($changePasswordForm);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $security->changeUserPassword($this->getUser(), $data);
+
+                return new Response('Votre mot de passe a été mis à jour.');
+            }
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }

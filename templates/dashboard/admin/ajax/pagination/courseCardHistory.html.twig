@@ -1,4 +1,3 @@
-{% if paginationCourseCardHistory > 1 %}
 <ul class="pagination center-align" id="paginateCourseCardHistory">
     {% if paginationCourseCardHistory['currentPage'] <= 1 %}
         <li class="disabled"><i class="material-icons">chevron_left</i></li>
@@ -20,4 +19,3 @@
         <li class="waves-effect"><a href="{{ path('paginate-course-card-history',{'currentPage': paginationCourseCardHistory['currentPage']|number_format +1, 'id': user.id }) }}"><i class="material-icons">chevron_right</i></a></li>
     {% endif %}
 </ul>
-{% endif %}

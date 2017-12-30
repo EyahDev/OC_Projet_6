@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Entity\User;
+use App\Form\Type\Common\ChangePasswordType;
 use App\Form\Type\Security\ResetPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -135,6 +136,15 @@ class SecurityManager
     }
 
     /**
+     * Récupération du formulaire pour un changement de mot de passe
+     *
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getChangePasswordForm() {
+        return $this->formFactory->create(ChangePasswordType::class);
+    }
+
+    /**
      * Modification du mot de passe
      *
      * @param $password
@@ -153,5 +163,18 @@ class SecurityManager
         $user->setTokenReset(null);
         $this->em->persist($user);
         $this->em->flush();
+    }
+
+    /**
+     * Modification du mot de passe par l'utilisateur
+     *
+     * @param User $user
+     * @param $data
+     */
+    public function changeUserPassword(User $user, $data) {
+            $newPassword = $this->encoder->encodePassword($user, $data['newPassword']);
+            $user->setPassword($newPassword);
+            $this->em->persist($user);
+            $this->em->flush();
     }
 }

@@ -382,4 +382,35 @@ class FormController extends Controller
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
+
+    /**
+     * Mise à jour des information de l'utilisateur
+     *
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     *
+     * @Route(path="dashboard/update-user-informations", name="update-user-informations")
+     */
+    public function updateUserInformations(Request $request, DashboardManager $dashboard, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+            $userInformationsForm = $dashboard->getUserInformationsForm($this->getUser());
+            $userInformationsForm->handleRequest($request);
+
+            if ($userInformationsForm->isSubmitted()) {
+                $data = $userInformationsForm->getData();
+                $errors = $ajaxManager->validateAjax($data);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $dashboard->updateUserInformations($data);
+                return new Response('Vos informations ont été mises à jour.');
+            }
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
 }
