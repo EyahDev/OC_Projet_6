@@ -1,0 +1,35 @@
+<div id="notifications" data-url="{{ path('reload-notifications') }}">
+    {% if app.user.alerts is empty %}
+        <p>Aucune notifications</p>
+    {% else %}
+
+        {% for alert in app.user.alerts %}
+        {{ dump(alert.alertDate|date_modify('-7days') >= date())}}
+        {{ dump(date())}}
+        {{ dump(alert.alertDate|date_modify('-7days'))}}
+            {% if alert.alertDate|date_modify('-7days') <= date() %}
+                <ul class="collection">
+                    {% if alert.type.name == "Cours" %}
+                        <li class="collection-item dismissable green">{{ alert.alertDescription }}
+                            <i class="material-icons right cursor" id="delete-notification" data-url="{{ path('delete-user-notification', {'id': alert.id}) }}">clear</i>
+                        </li>
+                    {% endif %}
+
+                    {% if alert.type.name == "Facture" %}
+                        <li class="collection-item dismissable yellow">{{ alert.alertDescription }}
+                            <i class="material-icons right cursor" id="delete-notification" data-url="{{ path('delete-user-notification', {'id': alert.id}) }}">clear</i>
+                        </li>
+                    {% endif %}
+
+                    {% if alert.type.name == "Personnel" %}
+                            <li class="collection-item dismissable red">{{ alert.alertDescription }}
+                                <i class="material-icons right cursor" id="delete-notification" data-url="{{ path('delete-user-notification', {'id': alert.id}) }}">clear</i>
+                            </li>
+                    {% endif %}
+                </ul>
+            {% else %}
+                <p>Aucune notifications</p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>

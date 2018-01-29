@@ -147,4 +147,23 @@ class LoadController extends Controller
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
+
+    /**
+     * @param $id
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/add-notification-form", name="add-notification-form")
+     */
+    public function loadNotificationsForm(DashboardManager $dashboard, Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            $notificationForm = $dashboard->getAddNotificationForm();
+
+            return $this->render('dashboard/user/ajax/modals/addNotification.html.twig', array(
+                'notificationForm' => $notificationForm->createView(),
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
 }

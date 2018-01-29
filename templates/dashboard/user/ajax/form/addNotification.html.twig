@@ -1,0 +1,26 @@
+<div class="row" id="add-notification-submit" data-url="{{ path('add-notification', {'id': app.user.id}) }}">
+    {{ form_start(notificationForm) }}
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(notificationForm.alertDate, {'attr': {'placeholder': '01/01/2017'}}) }}
+        {{form_label(notificationForm.alertDate) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_label(notificationForm.alertDescription) }}
+        {{ form_widget(notificationForm.alertDescription, {'attr': {'placeholder': 'Ex : Appeler le maréchal'}}) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_widget(notificationForm.submit) }}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="progress progress-add-notification">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+
+    {{form_end(notificationForm)}}
+
+</div>

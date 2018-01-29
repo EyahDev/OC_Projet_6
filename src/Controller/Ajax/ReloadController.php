@@ -190,4 +190,20 @@ class ReloadController extends Controller
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
+
+    /**
+     * Rechargement des notifications
+     *
+     * @param DashboardManager $dashboard
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/reload-notifications", name="reload-notifications")
+     */
+    public function reloadNotificationsSection(Request $request) {
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('dashboard/admin/sections/notifications.html.twig');
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
 }

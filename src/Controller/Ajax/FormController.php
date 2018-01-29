@@ -413,4 +413,55 @@ class FormController extends Controller
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
 
+    /**
+     * Suppression d'une notification par l'utilisateur
+     *
+     * @param $id
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @return Response
+     *
+     * @Route(path="dashboard/delete-user-notification/{id}", name="delete-user-notification")
+     */
+    public function deleteNotification($id, Request $request, DashboardManager $dashboard) {
+        if ($request->isXmlHttpRequest()) {
+            $dashboard->deleteNotification($id);
+            return new Response('La notification a été supprimé.');
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
+    /**
+     * Création du rappel personnalisé
+     *
+     * @param $id
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     *
+     * @Route(path="dashboard/add-notification/{id}", name="add-notification")
+     */
+    public function addNotification($id, Request $request, DashboardManager $dashboard, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+            $user = $dashboard->getUser($id);
+
+            $notificationForm = $dashboard->getAddNotificationForm();
+            $notificationForm->handleRequest($request);
+
+            if ($notificationForm->isSubmitted()) {
+                $data = $notificationForm->getData();
+                $errors = $ajaxManager->validateAjax($data);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $dashboard->setNewNotification($user, $data);
+                return new Response('Le rappel a été ajouté.');
+            }
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
 }

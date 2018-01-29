@@ -22,6 +22,7 @@ use App\Form\Type\Administration\UpdateContactType;
 use App\Form\Type\Administration\UpdateContactTypeType;
 use App\Form\Type\Administration\UpdateCourseCardHistoryType;
 use App\Form\Type\Administration\UpdateHorseType;
+use App\Form\Type\Common\AddNotificationType;
 use App\Form\Type\Common\UpdateUserInformationsType;
 use App\Form\Type\Common\ChangePasswordType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -212,6 +213,17 @@ class DashboardManager
         return $this->formFactory->create(UpdateUserInformationsType::class, $user);
     }
 
+    /**
+     * Récupération du formulaire pour la création d'un rappel
+     *
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getAddNotificationForm() {
+        $newNotification = new Alert();
+        return $this->formFactory->create(AddNotificationType::class, $newNotification);
+    }
+
+
     /* ---------- Getters ----------- */
 
     /**
@@ -336,6 +348,16 @@ class DashboardManager
      */
     public function getBill($id) {
         return $this->em->getRepository(Bill::class)->find($id);
+    }
+
+    /**
+     * Récupération d'une alert spécifique
+     *
+     * @param $id
+     * @return Alert|null|object
+     */
+    public function getAlert($id) {
+        return $this->em->getRepository(Alert::class)->find($id);
     }
 
     /* ---------- Setters ----------- */
@@ -624,6 +646,30 @@ class DashboardManager
      * @param User $data
      */
     public function updateUserInformations(User $data) {
+        $this->em->persist($data);
+        $this->em->flush();
+    }
+
+    /**
+     * Supression d'une notification par l'utilisateur
+     *
+     * @param $id
+     */
+    public function deleteNotification($id) {
+        $this->em->remove($this->getAlert($id));
+        $this->em->flush();
+    }
+
+    /**
+     * Ajout d'un nouveau rappel
+     *
+     * @param User $user
+     * @param Alert $data
+     */
+    public function setNewNotification(User $user, Alert $data) {
+        $data->setUser($user);
+        $data->setType($this->em->getRepository(AlertType::class)->findOneBy(array('name' => 'Personnel')));
+
         $this->em->persist($data);
         $this->em->flush();
     }
