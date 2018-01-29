@@ -1,0 +1,32 @@
+<div id="table-owners" >
+    <ul class="collection with-header owners">
+        <li class="collection-header"><h5>Propriétaires & cavaliers</h5></li>
+
+        {% for owner in paginationOwners['owners']  %}
+            {% if owner.phone is not empty %}
+                {% if owner.horse is empty %}
+                    <li class="collection-item">{{ owner.completeName }}
+                        <a class="secondary-content hypertext" href="tel:{{ owner.phone }}">{{ owner.phone|phone }}</a>
+                    </li>
+                {% else %}
+                    <li class="collection-item">{{ owner.completeName }}
+                        {% for horse in owner.horse %}
+
+                            {% if owner.horse|length > 1 %}
+                                {% if loop.first %}({% endif %}{{ horse.name }}{% if not loop.last %} / {% endif %}{% if loop.last %}){% endif %}
+                            {% else %}
+                                ({{ horse.name }})
+                            {% endif %}
+                        {% endfor %}
+
+                        <a class="secondary-content hypertext" href="tel:{{ owner.phone }}">{{ owner.phone|phone }}</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    {{ include('dashboard/admin/ajax/pagination/owners.html.twig') }}
+
+</div>
+

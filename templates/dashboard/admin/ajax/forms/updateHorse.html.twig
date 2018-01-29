@@ -1,0 +1,23 @@
+<div class="row" id="updateHorseForm">
+    {{ form_start(updateHorseForm) }}
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(updateHorseForm.vaccinationDate) }}
+        {{form_label(updateHorseForm.vaccinationDate) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_label(updateHorseForm.dewormingDate) }}
+        {{ form_widget(updateHorseForm.dewormingDate) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_widget(updateHorseForm.submit, {"attr": {"data-url": path("update-horse", {'id': horse.id}), 'data-id': horse.id }})}}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="progress progress-update-horse">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+    {{form_end(updateHorseForm)}}
+</div>

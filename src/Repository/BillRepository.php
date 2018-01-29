@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 /**
  * BillRepository
  *
@@ -10,4 +12,27 @@ namespace App\Repository;
  */
 class BillRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * Récupération des factures par utilisateurs avec la pagination
+     *
+     * @param $firstResult
+     * @param $perPage
+     * @param $id
+     * @return Paginator
+     */
+    public function getBillsByUser($firstResult, $perPage, $id) {
+        // Création de l'alias
+        $qb = $this->createQueryBuilder('b');
+
+        // Création de la requête personnalisée
+        $query = $qb->where('b.user = :user')->orderBy('b.billDate', 'DESC')
+            ->setParameter('user', $id)
+            ->setFirstResult($firstResult)->setMaxResults($perPage);
+
+        $paginator = new Paginator($query);
+
+        // Récupération du résultat
+        return $paginator;
+    }
 }

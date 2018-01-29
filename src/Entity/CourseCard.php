@@ -12,13 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CourseCard
 {
-    /* -------------- Relations -------------- */
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="courseCard")
-     */
-    private $user;
-
     /* -------------- Fields -------------- */
 
     /**
@@ -38,16 +31,16 @@ class CourseCard
     private $validityDate;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="remaining_course", type="integer")
+     * @ORM\Column(name="remaining_course", type="string", length=255)
      */
     private $remainingCourse;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="balance", type="integer")
+     * @ORM\Column(name="balance", type="string", length=255)
      */
     private $balance;
 
@@ -133,29 +126,5 @@ class CourseCard
     public function getBalance()
     {
         return $this->balance;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \App\Entity\User $user
-     *
-     * @return CourseCard
-     */
-    public function setUser(\App\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \App\Entity\User
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 }

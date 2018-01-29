@@ -1,0 +1,45 @@
+<div class="row">
+    {{ form_start(updateBillForm) }}
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(updateBillForm.type) }}
+        {{form_label(updateBillForm.type) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_label(updateBillForm.amount) }}
+        {{ form_widget(updateBillForm.amount) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{form_widget(updateBillForm.status) }}
+        {{form_label(updateBillForm.status) }}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <p><a class="hypertext" target="_blank" href="{{ asset(bill.pdfPath) }}">Voir le fichier déjà chargé</a></p>
+    </div>
+
+    <div class="file-field input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="btn custom-file">
+            <span>Fichier</span>
+            {{form_widget(updateBillForm.pdfPath) }}
+        </div>
+        <div class="file-path-wrapper">
+            <input class="file-path validate custom-file-input-text" type="text">
+        </div>
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_widget(updateBillForm.submit, {'attr': {'data-url': path('update-bill', {'id': bill.id }) }}) }}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="progress progress-update-bill">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+
+    {{form_end(updateBillForm)}}
+
+</div>

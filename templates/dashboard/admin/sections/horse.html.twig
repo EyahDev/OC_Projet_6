@@ -1,0 +1,29 @@
+<div id="horsesInformations" data-url="{{ path('reload-horse-section',{'id': user.id }) }}">
+    {% if user.horse|length == 0 %}
+        <p>{{user.firstName}} n'est pas propriétaire d'un cheval.</p>
+    {% else %}
+        {% for horse in user.horse %}
+            <p class="horses-title"><b>{{horse.name}}</b> |
+                <a class="hypertext right-align modal-trigger edit-horse-modal-trigger" id="edit-horse-{{ horse.id }}" data-url="{{ path('update-horse-form', {'id': horse.id }) }}" data-id="{{ horse.id }}">
+                    Editer
+                </a>
+            </p>
+
+            <p>
+                Date de naissance : {{ horse.birthDate ? horse.birthDate|date('d/m/Y') : "Non définie" }}<br>
+
+                Date de vaccination : {{ horse.vaccinationDate ? horse.vaccinationDate|date('d/m/Y') : "Non définie" }}<br>
+
+                Date de vermifugation : {{ horse.dewormingDate ? horse.dewormingDate|date('d/m/Y') : "Non définie" }}<br>
+
+                Gestion couvertures :
+
+                {% if horse.blanketsOption is same as(false) %}
+                    Non <br>
+                {% else %}
+                    Oui <br>
+                {% endif %}
+            </p>
+        {% endfor %}
+    {% endif %}
+</div>

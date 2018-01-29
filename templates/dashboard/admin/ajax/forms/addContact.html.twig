@@ -1,0 +1,41 @@
+<div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="newContactForm" data-url="{{ path('reload-add-contact-form') }}">
+    {{ form_start(addNewContactForm) }}
+
+    <div class="row">
+        <div class="input-field col xl12 l12 m12 s12">
+            {{ form_label(addNewContactForm.name) }}
+            {{ form_widget(addNewContactForm.name) }}
+        </div>
+
+        <div class="input-field col xl12 l12 m12 s12">
+            {{ form_label(addNewContactForm.phone) }}
+            {{ form_widget(addNewContactForm.phone) }}
+        </div>
+
+        <div class="input-field col xl5 l12 m12 s12">
+            {{form_widget(addNewContactForm.existingType) }}
+            {{form_label(addNewContactForm.existingType) }}
+        </div>
+
+        <div class="col xl1 l4 m12 s12">
+            <p class="center-align" style="line-height: 45px">Ou</p>
+        </div>
+
+        <div class="input-field col xl6 l12 m12 s12">
+            {{ form_label(addNewContactForm.newType) }}
+            {{ form_widget(addNewContactForm.newType) }}
+        </div>
+
+        <div class="input-field col xl12 l12 m12 s12">
+            {{ form_widget(addNewContactForm.submit, {'attr': {'data-url': path('add-contact') }}) }}
+        </div>
+
+        <div class="col xl12 l12 m12 s12">
+            <div class="progress progress-new-contact">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        {{form_end(addNewContactForm)}}
+    </div>
+</div>

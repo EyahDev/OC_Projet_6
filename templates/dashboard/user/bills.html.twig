@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/css/dashboard.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    {{ include('common/navUser.html.twig') }}
+
+    <div class="row">
+        <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="center-align">Factures</h3>
+
+                    {{ include('dashboard/user/tables/bills.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Fonction de pagination des factures
+        function paginateBills() {
+            $('body').on('click','#paginateBills a', function (e) {
+                e.preventDefault();
+                var $a = $(this);
+                var url = $a.attr('href');
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#table-bills').replaceWith(data);
+                    }, error: function () {
+                    }
+                })
+            });
+        }
+
+        $(document).ready(function(){
+            paginateBills();
+        });
+    </script>
+{% endblock %}
+
+

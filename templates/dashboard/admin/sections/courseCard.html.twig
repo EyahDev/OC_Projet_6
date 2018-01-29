@@ -1,0 +1,26 @@
+<div id="courseCardInformations" data-url="{{ path('reload-course-card',{'id': user.id }) }}">
+    {% if user.courseCard == null %}
+        <p>{{ user.firstName }} n'a pas encore de carte de cours.
+            <a class="hypertext modal-trigger" id="add-course-card-modal-trigger" data-url="{{ path('add-course-card-form', {'id': user.id }) }}">
+                Ajouter une carte
+            </a>
+        </p>
+
+    {% else %}
+        <a class="activator btn-floating btn-medium waves-effect waves-light absolute-icon"><i class="material-icons">mode_edit</i></a>
+        <p>
+            Cours restant : {{ user.courseCard.remainingCourse }} / {{ user.courseCard.balance }}<br>
+            Date de validité :
+            {% if date(user.courseCard.validityDate) < date("now") %}
+                <span style="color: #B0413E">{{ user.courseCard.validityDate|date('d/m/Y') }}</span>
+            {% else %}
+                {{ user.courseCard.validityDate|date('d/m/Y') }}
+            {% endif %}
+        </p>
+
+        <span class="card-title courses-history-title">Historique des décomptes</span>
+
+        {{ include('dashboard/admin/tables/courseCardHistory.html.twig') }}
+
+    {% endif %}
+</div>

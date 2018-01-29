@@ -1,0 +1,21 @@
+<ul class="pagination center-align" id="paginateOwners">
+    {% if paginationOwners['currentPage'] <= 1 %}
+        <li class="disabled"><i class="material-icons">chevron_left</i></li>
+    {% else %}
+        <li class="waves-effect"><a href="{{ path('paginate-owners',{'currentPage': paginationOwners['currentPage']|number_format -1 }) }}"><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
+
+    {% for i in 1..paginationOwners['nbPage'] %}
+        {% if i == paginationOwners['currentPage'] %}
+            <li class="active"><a href="{{ path('paginate-owners',{'currentPage': i}) }}" data-current="{{ paginationOwners['currentPage'] }}">{{ i }}</a></li>
+        {% else %}
+            <li><a href="{{ path('paginate-owners',{'currentPage': i}) }}">{{ i }}</a></li>
+        {% endif %}
+    {% endfor %}
+
+    {% if paginationOwners['currentPage'] >= paginationOwners['nbPage'] %}
+        <li class="disabled"><i class="material-icons">chevron_right</i></li>
+    {% else %}
+        <li class="waves-effect"><a href="{{ path('paginate-owners',{'currentPage': paginationOwners['currentPage']|number_format +1 }) }}"><i class="material-icons">chevron_right</i></a></li>
+    {% endif %}
+</ul>

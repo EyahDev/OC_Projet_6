@@ -1,0 +1,47 @@
+<div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="horseForm" data-url="{{ path('reload-horse-form') }}">
+    {{form_start(addHorseForm)}}
+
+    <div class="row">
+        <div class="input-field col xl12 l12 m12 s12">
+            {{form_widget(addHorseForm.user)}}
+            {{form_label(addHorseForm.user)}}
+        </div>
+
+        <div class="input-field col xl12 l12 m12 s12">
+            {{form_widget(addHorseForm.name)}}
+            {{form_label(addHorseForm.name)}}
+        </div>
+
+        <div class="input-field col xl4 l12 m12 s12">
+            {{form_widget(addHorseForm.birthDate)}}
+            {{form_label(addHorseForm.birthDate)}}
+        </div>
+
+        <div class="input-field col xl4 l12 m12 s12">
+            {{form_widget(addHorseForm.vaccinationDate)}}
+            {{form_label(addHorseForm.vaccinationDate)}}
+        </div>
+
+        <div class="input-field col xl4 l12 m12 s12">
+            {{form_widget(addHorseForm.dewormingDate)}}
+            {{form_label(addHorseForm.dewormingDate)}}
+        </div>
+
+        <div class="col xl12 l12 m12 s12">
+            {{form_widget(addHorseForm.blanketsOption)}}
+            {{form_label(addHorseForm.blanketsOption)}}
+        </div>
+
+        <div class="input-field col xl12 l12 m12 s12">
+            {{form_widget(addHorseForm.submit, {'attr': {'data-url': path('add-horse') }})}}
+        </div>
+
+        <div class="col xl12 l12 m12 s12">
+            <div class="progress progress-horse">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        {{form_end(addHorseForm)}}
+    </div>
+</div>

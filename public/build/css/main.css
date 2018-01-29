@@ -1,0 +1,129 @@
+/* -------------- Global -------------- */
+@font-face {
+    font-family: 'manoNegra';
+    src: url(../fonts/WCManoNegraBta-webfont.eot);
+    src: url(../fonts/WCManoNegraBta-webfont.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/WCManoNegraBta-webfont.woff) format('woff'),
+    url(../fonts/WCManoNegraBta-webfont.ttf) format('truetype'),
+    url(../fonts/WCManoNegraBta-webfont.svg#wc_mano_negra_btaregular) format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body {
+    background-image: url(../img/background-dashboard-light.png);
+}
+
+/* -------------- Couleurs des formulaires -------------- */
+
+.input-field input:focus + label {
+    color: #99da4d !important;
+}
+
+.input-field input:focus {
+    border-bottom: 1px solid #99da4d !important;
+    box-shadow: 0 1px 0 0 #000;
+}
+
+input[type="checkbox"].filled-in:checked + label:after{
+    border: 2px solid #99da4d;
+    background-color: #99da4d;
+}
+
+.btn {
+    width: 100% !important;
+    margin-top: 15px;
+    background-color: #99da4d;
+}
+.btn:hover {
+    width: 100% !important;
+    margin-top: 15px;
+    background-color: #00b1bc;
+}
+
+.btn:focus {
+    width: 100% !important;
+    margin-top: 15px;
+    background-color: #99da4d;
+}
+
+
+.btn-dashboard {
+    justify-content: center;
+    height: 55px;
+}
+
+.icon-dashboard {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.pagination li.active {
+    background: #99da4d ;
+}
+
+.dropdown-content li > span {
+    color: rgba(0,0,0,0.87) !important;
+}
+
+
+/* -------------- Bouton ajout/modification/suppression -------------- */
+
+.absolute-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #99da4d !important;
+}
+
+.absolute-icon:hover {
+    background: #00b1bc !important;
+}
+
+/* -------------- Liens -------------- */
+
+.hypertext {
+    cursor: pointer;
+    color: #00b1bc ;
+}
+
+.hypertext:hover {
+    color: #99da4d ;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+/* -------------- Couleurs text -------------- */
+
+.text-red {
+    color: #F44336 !important;
+}
+
+.progress .indeterminate {
+    background-color: #00b1bc !important;
+}
+
+/* -------------- Navigations -------------- */
+
+.green-malzais {
+    background-color: #99da4d;
+}
+
+nav ul a:hover {
+    background-color: #00b1bc;
+}
+
+.icon-dashboard {
+    font-size: 20px;
+}
+
+.dropdown-content {
+}
+
+.dropdown-content li > a{
+    color: rgba(0,0,0,0.87) !important;
+}
+

@@ -1,0 +1,33 @@
+<div id="table-course-card-history" >
+    <div class="table-responsive-vertical">
+        <table id="table" class="table table-mc-light-green">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>Solde</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for history in paginationCourseCardHistory['history']  %}
+                {% if history.countType.name == 'Nouvelle carte' or history.countType.name == 'Correction : Ajout'%}
+                    <tr class="green lighten-3">
+                        <td data-title="Date">{{ history.countDate|date('d/m/Y') }}</td>
+                        <td data-title="Action">{{ history.countType.name }} de {{ history.value }} cours</td>
+                        <td data-title="Solde">Reste {{ history.remainingCourse }} cours</td>
+                    </tr>
+                {% elseif history.countType.name == 'Retrait' or history.countType.name == 'Correction : Retrait' %}
+                    <tr class="red lighten-3">
+                        <td data-title="Date">{{ history.countDate|date('d/m/Y') }}</td>
+                        <td data-title="Action">{{ history.countType.name }} de {{ history.value }} cours</td>
+                        <td data-title="Solde">Reste {{ history.remainingCourse }} cours</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {{ include('dashboard/admin/ajax/pagination/courseCardHistory.html.twig') }}
+
+</div>

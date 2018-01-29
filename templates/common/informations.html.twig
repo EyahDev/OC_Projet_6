@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
+
+    <style>
+        .divider-form {
+            margin-bottom: 50px;
+        }
+
+        .progress-user-informations {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {{ include('common/navUser.html.twig') }}
+
+    <div class="row">
+        <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+
+
+                    <h3 class="center-align">Vos informations</h3>
+                    <div class="divider divider-form"></div>
+
+                    <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="flashMessagesUserInformations"></div>
+
+                    <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1">
+                        {{form_start(informationsForm)}}
+
+                        <div class="row">
+                            <div class="input-field col xl6 l6 m12 s12">
+                                {{form_widget(informationsForm.firstName)}}
+                                {{form_label(informationsForm.firstName)}}
+                            </div>
+
+                            <div class="input-field col xl6 l6 m12 s12">
+                                {{form_widget(informationsForm.lastName)}}
+                                {{form_label(informationsForm.lastName)}}
+                            </div>
+
+                            <div class="input-field col xl12 l12 m12 s12">
+                                {{form_widget(informationsForm.address)}}
+                                {{form_label(informationsForm.address)}}
+                            </div>
+
+                            <div class="input-field col xl6 l6 m12 s12">
+                                {{form_widget(informationsForm.zip_code)}}
+                                {{form_label(informationsForm.zip_code)}}
+                            </div>
+
+                            <div class="input-field col xl6 l6 m12 s12">
+                                {{form_widget(informationsForm.country)}}
+                                {{form_label(informationsForm.country)}}
+                            </div>
+
+                            <div class="input-field col xl12 l12 m12 s12">
+                                {{form_widget(informationsForm.phone)}}
+                                {{form_label(informationsForm.phone)}}
+                            </div>
+
+                            <div class="input-field col xl12 l12 m12 s12">
+                                {{form_widget(informationsForm.submit, {'attr': {'data-url': path('update-user-informations') }})}}
+                            </div>
+
+                            <div class="col xl12 l12 m12 s12">
+                                <div class="progress progress-user-informations">
+                                    <div class="indeterminate"></div>
+                                </div>
+                            </div>
+
+                            {{form_end(informationsForm)}}
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Soumission du formulaire de modification des informations de l'utilisateur
+        function updateInformations() {
+            $('body').on('submit', 'form[name="update_user_informations"]', function (e) {
+                e.preventDefault();
+                $('.progress-user-informations').show();
+                var url = $('#update_user_informations_submit').attr('data-url');
+                var $form = $(this);
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationUpdateInformations">' + data + '</div>';
+
+                        $('#flashMessagesUserInformations').html(success);
+
+                        $('.progress-user-informations').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationUpdateInformations').replaceWith('');
+                        }
+                        setTimeout(removeFlashMsg, 5000);
+
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        $('#flashMessagesUserInformations').html(error);
+                        $('.progress-user-informations').hide();
+                    }
+                })
+            });
+        }
+
+        $(document).ready(function(){
+            updateInformations();
+        });
+    </script>
+{% endblock %}
+
+

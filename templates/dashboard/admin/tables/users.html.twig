@@ -1,0 +1,38 @@
+<div id="table-users">
+    <div class="table-responsive-vertical" id="usersTR">
+        <table id="table" class="table table-hover table-mc-light-green">
+            <thead>
+                <tr>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Cheval</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in paginationUsers['users']  %}
+                <tr class="cursor" data-href="{{ path('horseman-details', {'id': user.id}) }}">
+                    <td data-title="Prénom">{{ user.firstName }}</td>
+                    <td data-title="Nom">{{ user.lastName }}</td>
+                    <td data-title="Cheval">
+                        {% for horse in user.horse  %}
+                            {% if user.horse|length > 1 %}
+                                {{ horse.name }}
+                                {% if not loop.last %}
+                                    /
+                                {% endif %}
+                            {% else %}
+                                {{ horse.name }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td data-title="Contact">{{ user.phone }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {{ include('dashboard/admin/ajax/pagination/users.html.twig') }}
+
+</div>

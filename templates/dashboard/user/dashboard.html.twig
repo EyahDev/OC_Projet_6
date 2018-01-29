@@ -1,0 +1,256 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/css/dashboard.css') }}">
+    <style>
+        .card-notifications {
+            padding: 10px !important;
+        }
+
+        .horses-title {
+            font-size: 16px;
+            padding: 5px 5px 5px 0;
+        }
+
+        .right {
+            margin-left: 0 !important;
+        }
+
+        .progress-add-notification {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {{ include('common/navUser.html.twig') }}
+
+    <div id="genericModal" class="modal">
+        <div id="modalContent"></div>
+    </div>
+
+    <div class="row">
+        <div class="col xl8 l12 m12 s12 offset-xl2">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="center-align">Notifications & alertes</h3>
+                    <a class="btn-floating btn-large waves-effect waves-light absolute-icon" id="add-notification-modal-trigger" data-url="{{ path('add-notification-form') }}"><i class="material-icons">notifications_active</i></a>
+                    <div class="divider"></div>
+
+                    {{ include('dashboard/admin/sections/notifications.html.twig') }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col xl4 l12 m12 s12 offset-xl2">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Vos coordonnées</span>
+                    <p>
+                        {{app.user.completeName}}<br>
+
+                        {% if app.user.address == null %}
+                            <i>Adresse non définie</i><br>
+                        {% else %}
+                            {{ app.user.address }}<br>
+                            {{ app.user.zipCode }} {{app.user.country }}<br>
+                        {% endif %}
+
+                        {% if app.user.username == null %}
+                            {{ app.user.username }}
+                        {% else %}
+                            {{app.user.username}} / {{ app.user.phone }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">
+                        {% transchoice app.user.horse|length %}
+                            [0,1] Votre cheval|]1,Inf[ Vos chevaux
+                        {% endtranschoice %}
+                    </span>
+
+                    {% if user.horse|length == 0 %}
+                        <p>Vous n'êtes pas propriétaire d'un cheval.</p>
+                    {% else %}
+                        {% for horse in app.user.horse %}
+                            <p class="horses-title"><b>{{horse.name}}</b></p>
+
+                            <p>
+                                Date de naissance : {{ horse.birthDate ? horse.birthDate|date('d/m/Y') : "Non définie" }}<br>
+
+                                Date de vaccination : {{ horse.vaccinationDate ? horse.vaccinationDate|date('d/m/Y') : "Non définie" }}<br>
+
+                                Date de vermifugation : {{ horse.dewormingDate ? horse.dewormingDate|date('d/m/Y') : "Non définie" }}<br>
+
+                                Gestion couvertures :
+
+                                {% if horse.blanketsOption is same as(false) %}
+                                    Non <br>
+                                {% else %}
+                                    Oui <br>
+                                {% endif %}
+                            </p>
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col xl4 l12 m12 s12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Votre carte de cours</span>
+
+                    <div id="courseCardInformations" data-url="{{ path('reload-course-card',{'id': user.id }) }}">
+                        {% if app.user.courseCard == null %}
+                            <p>Vous n'avez pas encore de carte de cours.</p>
+
+                        {% else %}
+
+                            <p>
+                                Cours restant : {{ user.courseCard.remainingCourse }} / {{ user.courseCard.balance }}<br>
+                                Date de validité :
+                                {% if date(app.user.courseCard.validityDate) < date("now") %}
+                                    <span style="color: #B0413E">{{ user.courseCard.validityDate|date('d/m/Y') }}</span>
+                                {% else %}
+                                    {{ app.user.courseCard.validityDate|date('d/m/Y') }}
+                                {% endif %}
+                            </p>
+
+                            <span class="card-title courses-history-title">Historique des décomptes</span>
+
+                            {{ include('dashboard/admin/tables/courseCardHistory.html.twig') }}
+
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Chargement de l'ajout d'une notification
+        function loadModalNotification() {
+            $('body').on('click', '#add-notification-modal-trigger', function (e) {
+                e.preventDefault();
+                $('#genericModal').modal('open');
+                var url = $('#add-notification-modal-trigger').attr('data-url');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#modalContent').replaceWith(data);
+                        Materialize.updateTextFields();
+                        materializeSelect();
+                    }
+                })
+            });
+        }
+
+        // Rechargement du formulaire d'ajout d'un nouveau contact
+        function reloadNotifications() {
+            var url = $('#notifications').attr('data-url');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    $('#notifications').replaceWith(data);
+                }
+            })
+        }
+
+        // Soumission du formulaire d'ajout d'une carte de cours
+        function addNotification() {
+            $('body').on('submit', 'form[name="add_notification"]', function (e) {
+                e.preventDefault();
+                $('.progress-add-notification').show();
+                var $form = $(this);
+                var url = $('#add-notification-submit').attr('data-url');
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationAddNotification">' + data + '</div>';
+
+                        $('#flashMessagesAddNotification').html(success);
+
+                        $('.progress-add-notification').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationAddNotification').replaceWith('');
+                            $('#genericModal').modal('close');
+                            $('#modalContent').replaceWith('<div id="modalContent"></div>');
+                        }
+                        setTimeout(removeFlashMsg, 1000);
+
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        $('#confirmationAddNotification').html(error);
+                        $('.progress-add-notification').hide();
+                    }
+                })
+            });
+        }
+
+
+        // Fonction pour la supression d'une notification
+        function deleteNotification() {
+            $('body').on('click', '#delete-notification', function (e) {
+                e.preventDefault();
+                var url = $('#delete-notification').attr('data-url');
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    success: function (data) {
+                        reloadNotifications();
+                    },
+                    error: function (jqxhr) {
+                    }
+                })
+            });
+        }
+
+        // Fonction de pagination de l'historique
+        function paginateHistory() {
+            $('body').on('click','#paginateCourseCardHistory a', function (e) {
+                e.preventDefault();
+                var $a = $(this);
+                var url = $a.attr('href');
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#table-course-card-history').replaceWith(data);
+                    }, error: function () {
+                    }
+                })
+            });
+        }
+
+        $(document).ready(function(){
+            $('.modal').modal();
+            paginateHistory();
+            deleteNotification();
+            loadModalNotification();
+            addNotification();
+        });
+    </script>
+{% endblock %}
+
+

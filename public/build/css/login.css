@@ -1,0 +1,40 @@
+/* Unique */
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: url(../img/img-login.jpg);
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+h1 {
+    font-family: manoNegra, Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+}
+
+
+.forgot-password, .back-website {
+    cursor: pointer;
+    color: #00b1bc !important;
+    margin: 0 !important;
+}
+
+.forgot-password:hover, .back-website:hover{
+    color: #99da4d !important;
+}
+
+.card-panel {
+    margin-bottom: 25px !important;
+    padding: 15px !important;
+}
+
+.progress {
+    display: none;
+}

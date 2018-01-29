@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * UserRepository
@@ -10,4 +11,44 @@ namespace App\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Récupération des utilisateurs sans l'administrateur
+     *
+     * @return Paginator
+     */
+    public function getUsersExceptAdmin($firstResult, $perPage) {
+        // Création de l'alias
+        $qb = $this->createQueryBuilder('u');
+
+        // Création de la requête personnalisée
+        $query = $qb->where('u.roles LIKE :roles')->orderBy('u.lastName', 'ASC')
+            ->setParameter('roles', '%ROLE_USER%')
+            ->setFirstResult($firstResult)->setMaxResults($perPage);
+
+        $paginator = new Paginator($query);
+
+        // Récupération du résultat
+        return $paginator;
+    }
+
+    /**
+     * Récupération du noms complets de chaques utilisateurs et leurs numéros de téléphones
+     *
+     * @return Paginator
+     */
+    public function getUsersPhone($firstResult, $perPage) {
+        $qb = $this->createQueryBuilder('u');
+
+        $query =
+            $qb->select('u')
+            ->where('u.roles LIKE :roles')
+            ->andWhere('u.phone IS NOT NULL')
+            ->orderBy('u.lastName', 'ASC')
+            ->setParameter('roles', '%ROLE_USER%')
+            ->setFirstResult($firstResult)->setMaxResults($perPage);
+
+        $paginator = new Paginator($query);
+
+        return $paginator->setUseOutputWalkers(false);
+    }
 }
