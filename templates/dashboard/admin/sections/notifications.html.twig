@@ -2,11 +2,7 @@
     {% if app.user.alerts is empty %}
         <p>Aucune notifications</p>
     {% else %}
-
         {% for alert in app.user.alerts %}
-        {{ dump(alert.alertDate|date_modify('-7days') >= date())}}
-        {{ dump(date())}}
-        {{ dump(alert.alertDate|date_modify('-7days'))}}
             {% if alert.alertDate|date_modify('-7days') <= date() %}
                 <ul class="collection">
                     {% if alert.type.name == "Cours" %}
