@@ -1,0 +1,36 @@
+<div class="row" id="reload-add-day-off" data-url="{{ path('reload-add-day-off') }}">
+    {{ form_start(dayOffForm) }}
+
+    <div class="input-field col xl5 l5 m12 s12 offset-xl1 offset-l1">
+        {{form_label(dayOffForm.dateBegin) }}
+        {{form_widget(dayOffForm.dateBegin, {'attr': {'class': 'datepicker'}}) }}
+    </div>
+
+    <div class="input-field col xl5 l5 m12 s12">
+        {{form_label(dayOffForm.timeBegin) }}
+        {{form_widget(dayOffForm.timeBegin, {'attr': {'class': 'timepicker'}}) }}
+    </div>
+
+    <div class="input-field col xl5 l5 m12 s12 offset-xl1 offset-l1">
+        {{ form_label(dayOffForm.dateEnd) }}
+        {{ form_widget(dayOffForm.dateEnd, {'attr': {'class': 'datepicker'}}) }}
+    </div>
+
+    <div class="input-field col xl5 l5 m12 s12">
+        {{form_label(dayOffForm.timeEnd) }}
+        {{form_widget(dayOffForm.timeEnd, {'attr': {'class': 'timepicker'}}) }}
+    </div>
+
+    <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        {{ form_widget(dayOffForm.submit, {'attr': {'data-url': path('add-day-off') }}) }}
+    </div>
+
+    <div class="col xl10 l10 m12 s12 offset-xl1 offset-l1">
+        <div class="progress progress-add-day-off">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+
+    {{form_end(dayOffForm)}}
+
+</div>

@@ -464,4 +464,35 @@ class FormController extends Controller
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
 
+    /**
+     * Création de la période d'indisponibilité
+     *
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     *
+     * @Route(path="dashboard/add-day-off", name="add-day-off")
+     */
+    public function addDayOff(Request $request, DashboardManager $dashboard, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+
+            $addDayOffForm = $dashboard->getDayOffForm();
+            $addDayOffForm->handleRequest($request);
+
+            if ($addDayOffForm->isSubmitted()) {
+                $data = $addDayOffForm->getData();
+                $errors = $ajaxManager->validateAjaxWithoutEntity($addDayOffForm);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $dashboard->setNewDayOff($data);
+                return new Response('La période d\'indisponibilité a été ajouté.');
+            }
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
 }

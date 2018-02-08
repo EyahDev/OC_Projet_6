@@ -206,4 +206,20 @@ class ReloadController extends Controller
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     *
+     * @Route(path="dashboard/reload-add-day-off", name="reload-add-day-off")
+     */
+    public function reloadAddDayOffForm(Request $request, DashboardManager $dashboardManager) {
+        if ($request->isXmlHttpRequest()) {
+            $dayOffForm = $dashboardManager->getDayOffForm();
+            return $this->render('dashboard/admin/ajax/forms/addDayOff.html.twig', array(
+                'dayOffForm' => $dayOffForm->createView()
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
 }

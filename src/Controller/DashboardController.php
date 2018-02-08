@@ -92,6 +92,15 @@ class DashboardController extends Controller
     }
 
     /**
+     * @Route(path="/dashboard/cours", name="courses")
+     */
+    public function courses(DashboardManager $dashboardManager) {
+        return $this->render('dashboard/admin/courses.html.twig', array(
+            'dayOffForm' => $dashboardManager->getDayOffForm()->createView()
+        ));
+    }
+
+    /**
      * Page de tous les contacts utiles
      *
      * @param DashboardManager $dashboardManager
@@ -162,9 +171,9 @@ class DashboardController extends Controller
      * @param DashboardManager $dashboardManager
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Route(path="/dashboard/votre-mot-de-pass", name="user-password")
+     * @Route(path="/dashboard/votre-mot-de-passe", name="user-password")
      */
-    public function userPassord(SecurityManager $security) {
+    public function userPassword(SecurityManager $security) {
         $changePasswordForm = $security->getChangePasswordForm();
 
         return $this->render('common/password.html.twig', array(

@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .picker__date-display {
+            background-color: #00b1bc;
+        }
+
+        .picker__today, .picker__close {
+            color: #00b1bc;
+        }
+
+        .picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected {
+            border-radius: 10%;
+            background-color: #00b1bc;
+        }
+
+        .divider {
+            margin-bottom: 25px;
+        }
+
+        .progress-add-day-off {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ include('common/navAdmin.html.twig') }}
+
+    <div class="row">
+        <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="center-align">Indisponibilités</h3>
+                    <div class="divider"></div>
+
+                    <div class="col xl10 l10 m10 s12 offset-xl1 offset-l1 offset-m1" id="flashMessagesDayOff"></div>
+
+                    {{ include('dashboard/admin/ajax/forms/addDayOff.html.twig') }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+
+        // Soumission du formulaire d'ajout d'un cavalier
+        function addDayOff() {
+            $('body').on('submit', 'form[name="add_day_off"]', function (e) {
+                e.preventDefault();
+
+                $('.progress-add-day-off').show();
+
+                var $form = $(this);
+
+                var url = $('#add_day_off_submit').attr('data-url');
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationDayOff">' + data + '</div>';
+
+                        $('#flashMessagesDayOff').html(success);
+
+                        $('.progress-add-day-off').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationDayOff').replaceWith('');
+                            reloadAddDayOffForm();
+                        }
+
+                        setTimeout(removeFlashMsg, 5000);
+                    },
+                    error: function (jqxhr) {
+                        // Construction du html pour le message flash
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        // ajoute le message flash dans la div dédiée
+                        $('#flashMessagesDayOff').html(error);
+
+                        // Retrait de la barre de chargement
+                        $('.progress-add-day-off').hide();
+                    }
+                })
+            });
+
+            function reloadAddDayOffForm() {
+                var url = $('#reload-add-day-off').attr('data-url');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#reload-add-day-off').replaceWith(data);
+                    }
+                })
+            }
+        }
+
+        $(document).ready(function(){
+            addDayOff();
+
+            $('.datepicker').pickadate({
+                format: 'dd/mm/yyyy',
+                firstDay: 1,
+                monthsFull: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                monthsShort: ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'],
+                weekdaysFull: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+                weekdaysShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+                weekdaysLetter: [ 'D', 'L', 'M', 'M', 'J', 'V', 'S' ],
+                labelMonthNext: 'Mois suivant',
+                labelMonthPrev: 'Mois précédent',
+                today: 'Aujourd\'hui',
+                clear: 'Effacer',
+                min: true,
+                closeOnSelect: true,
+                onRender: function () {
+                    var day = $('.picker__day-display');
+                    var month = $('.picker__month-display');
+                    day.insertBefore(month);
+                    day.remove();
+                }
+            });
+
+            $('.timepicker').pickatime({
+                default: 'now',
+                twelvehour: false,
+                donetext: 'OK',
+                cleartext: 'Effacer',
+                canceltext: 'Retour',
+                autoclose: false
+            });
+        });
+    </script>
+{% endblock %}
+

@@ -10,9 +10,11 @@ use App\Entity\ContactType;
 use App\Entity\CountType;
 use App\Entity\CourseCard;
 use App\Entity\CourseCardHistory;
+use App\Entity\DayOff;
 use App\Entity\Horse;
 use App\Entity\User;
 use App\Form\Type\Administration\AddCourseCardType;
+use App\Form\Type\Administration\AddDayOffType;
 use App\Form\Type\Administration\AddHorsemanType;
 use App\Form\Type\Administration\AddHorseType;
 use App\Form\Type\Administration\AddNewBillType;
@@ -221,6 +223,10 @@ class DashboardManager
     public function getAddNotificationForm() {
         $newNotification = new Alert();
         return $this->formFactory->create(AddNotificationType::class, $newNotification);
+    }
+
+    public function getDayOffForm() {
+        return $this->formFactory->create(AddDayOffType::class);
     }
 
 
@@ -671,6 +677,27 @@ class DashboardManager
         $data->setType($this->em->getRepository(AlertType::class)->findOneBy(array('name' => 'Personnel')));
 
         $this->em->persist($data);
+        $this->em->flush();
+    }
+
+    /**
+     * Enregistrement de la période d'indisponibilité de l'admin
+     *
+     * @param $data
+     */
+    public function setNewDayOff($data) {
+        $dayOff = new DayOff();
+
+        $hours = substr($data['timeBegin'], 0, 2);
+        $minutes = substr($data['timeBegin'], 3, 2);
+
+        $beginDate = $data['dateBegin']->setTime($hours, $minutes);
+        $endDate = $data['dateEnd']->setTime($hours, $minutes);
+
+        $dayOff->setDateOffBegin($beginDate);
+        $dayOff->setDateOffEnd($endDate);
+
+        $this->em->persist($dayOff);
         $this->em->flush();
     }
 }
