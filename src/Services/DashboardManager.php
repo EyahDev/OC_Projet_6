@@ -226,7 +226,8 @@ class DashboardManager
     }
 
     public function getDayOffForm() {
-        return $this->formFactory->create(AddDayOffType::class);
+        $dayOff = new DayOff();
+        return $this->formFactory->create(AddDayOffType::class, $dayOff);
     }
 
 
@@ -683,21 +684,10 @@ class DashboardManager
     /**
      * Enregistrement de la période d'indisponibilité de l'admin
      *
-     * @param $data
+     * @param DayOff $data
      */
-    public function setNewDayOff($data) {
-        $dayOff = new DayOff();
-
-        $hours = substr($data['timeBegin'], 0, 2);
-        $minutes = substr($data['timeBegin'], 3, 2);
-
-        $beginDate = $data['dateBegin']->setTime($hours, $minutes);
-        $endDate = $data['dateEnd']->setTime($hours, $minutes);
-
-        $dayOff->setDateOffBegin($beginDate);
-        $dayOff->setDateOffEnd($endDate);
-
-        $this->em->persist($dayOff);
+    public function setNewDayOff(DayOff $data) {
+        $this->em->persist($data);
         $this->em->flush();
     }
 }

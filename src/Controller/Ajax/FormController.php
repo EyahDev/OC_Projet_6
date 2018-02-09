@@ -482,7 +482,7 @@ class FormController extends Controller
 
             if ($addDayOffForm->isSubmitted()) {
                 $data = $addDayOffForm->getData();
-                $errors = $ajaxManager->validateAjaxWithoutEntity($addDayOffForm);
+                $errors = $ajaxManager->validateAjax($addDayOffForm);
 
                 if ($errors !== true) {
                     return new Response($errors, Response::HTTP_BAD_REQUEST);

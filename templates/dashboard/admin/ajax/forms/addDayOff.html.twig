@@ -2,23 +2,13 @@
     {{ form_start(dayOffForm) }}
 
     <div class="input-field col xl5 l5 m12 s12 offset-xl1 offset-l1">
-        {{form_label(dayOffForm.dateBegin) }}
-        {{form_widget(dayOffForm.dateBegin, {'attr': {'class': 'datepicker'}}) }}
+        {{form_label(dayOffForm.dateOffBegin) }}
+        {{form_widget(dayOffForm.dateOffBegin, {'attr': {'class': 'flatpickr'}}) }}
     </div>
 
     <div class="input-field col xl5 l5 m12 s12">
-        {{form_label(dayOffForm.timeBegin) }}
-        {{form_widget(dayOffForm.timeBegin, {'attr': {'class': 'timepicker'}}) }}
-    </div>
-
-    <div class="input-field col xl5 l5 m12 s12 offset-xl1 offset-l1">
-        {{ form_label(dayOffForm.dateEnd) }}
-        {{ form_widget(dayOffForm.dateEnd, {'attr': {'class': 'datepicker'}}) }}
-    </div>
-
-    <div class="input-field col xl5 l5 m12 s12">
-        {{form_label(dayOffForm.timeEnd) }}
-        {{form_widget(dayOffForm.timeEnd, {'attr': {'class': 'timepicker'}}) }}
+        {{ form_label(dayOffForm.dateOffEnd) }}
+        {{ form_widget(dayOffForm.dateOffEnd, {'attr': {'class': 'flatpickr'}}) }}
     </div>
 
     <div class="input-field col xl10 l10 m12 s12 offset-xl1 offset-l1">

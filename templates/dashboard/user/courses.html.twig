@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .courses-calendar .flatpickr-input {
+             display: none;
+        }
+
+        .courses-calendar .flatpickr-calendar.inline {
+            width: 100%;
+            height: 500px;
+        }
+
+        .courses-calendar .flatpickr-rContainer, .courses-calendar .flatpickr-days, .courses-calendar .dayContainer {
+            width: 100%;
+        }
+
+        .courses-calendar .dayContainer {
+            min-width: 100%;
+            max-width: 100%;
+        }
+        .courses-calendar .flatpickr-day {
+            height: 74px;
+            line-height: 74px;
+        }
+
+        .courses {
+            margin-top: 2px;
+            min-height: 500px !important;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
+{% endblock %}
+
+{% block body %}
+    {{ include('common/navUser.html.twig') }}
+
+    <div class="row">
+        <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="center-align" id="test">Planning des cours</h3>
+                    <div class="divider"></div>
+
+                    <div class="row">
+                        <div class="courses-calendar col xl7 l7 m12 s12">
+                            <form action="">
+
+                                <input type="text" class="flatpickr-courses" id="course-date">
+                            </form>
+
+                        </div>
+                        <div class="card col xl5 l5 m12 s12 courses">
+                            <div class="card-content">
+                                <p id="selected-date"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+
+        $(document).ready(function(){
+            $(".flatpickr-courses").flatpickr({
+                locale: 'fr',
+                minDate: "today",
+                altInput: true,
+                dateFormat: "Y-m-d",
+                inline: true,
+                onChange: function() {
+                    console.log($('#course-date').attr('value'))
+                }
+            });
+        });
+
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+{% endblock %}
+

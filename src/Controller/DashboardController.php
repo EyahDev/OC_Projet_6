@@ -95,7 +95,14 @@ class DashboardController extends Controller
      * @Route(path="/dashboard/cours", name="courses")
      */
     public function courses(DashboardManager $dashboardManager) {
-        return $this->render('dashboard/admin/courses.html.twig', array(
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->render('dashboard/admin/courses.html.twig', array(
+                'dayOffForm' => $dashboardManager->getDayOffForm()->createView()
+            ));
+        }
+
+        return $this->render('dashboard/user/courses.html.twig', array(
             'dayOffForm' => $dashboardManager->getDayOffForm()->createView()
         ));
     }

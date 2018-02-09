@@ -21,7 +21,42 @@
         .progress-add-day-off {
             display: none;
         }
+
+        input[type="text"]:not(.browser-default)[readonly="readonly"] {
+            color: inherit;
+            border-bottom: 1px solid rgba(0,0,0,0.42)
+        }
+
+        /*.courses-calendar .flatpickr-input {*/
+             /*display: none;*/
+        /*}*/
+
+        .courses-calendar .flatpickr-calendar.inline {
+            width: 100%;
+            height: 500px;
+        }
+
+        .courses-calendar .flatpickr-rContainer, .courses-calendar .flatpickr-days, .courses-calendar .dayContainer {
+            width: 100%;
+        }
+
+        .courses-calendar .dayContainer {
+            min-width: 100%;
+            max-width: 100%;
+        }
+        .courses-calendar .flatpickr-day {
+            height: 74px;
+            line-height: 74px;
+        }
+
+        .courses {
+            margin-top: 2px;
+            min-height: 500px !important;
+        }
+
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
 {% endblock %}
 
 {% block body %}
@@ -43,10 +78,56 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="center-align">Planning des cours</h3>
+                    <div class="divider"></div>
+
+                    <div class="row">
+                        <div class="courses-calendar col xl7 l7 m12 s12">
+                            <form action="">
+                            <input type="text" class="flatpickr-courses">
+                            </form>
+
+                        </div>
+                        <div class="card col xl5 l5 m12 s12 courses">
+                            <div class="card-content">
+                                <p id="selected-date"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // Chargement du datepicker
+        function datepicker() {
+            $(".flatpickr").flatpickr({
+                locale: 'fr',
+                minDate: "today",
+                enableTime: true,
+                time_24hr: true,
+                altInput: true,
+                altFormat: "d/m/Y à H:i"
+            });
+        }
+
+        // function test() {
+        //     $('body').on('click', '.flatpickr-day', function(e) {
+        //         console.log(e)
+        //     });
+        // }
 
         // Soumission du formulaire d'ajout d'un cavalier
         function addDayOff() {
@@ -96,6 +177,7 @@
                     url: url,
                     success: function (data) {
                         $('#reload-add-day-off').replaceWith(data);
+                        datepicker();
                     }
                 })
             }
@@ -103,38 +185,14 @@
 
         $(document).ready(function(){
             addDayOff();
-
-            $('.datepicker').pickadate({
-                format: 'dd/mm/yyyy',
-                firstDay: 1,
-                monthsFull: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                monthsShort: ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'],
-                weekdaysFull: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-                weekdaysShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
-                weekdaysLetter: [ 'D', 'L', 'M', 'M', 'J', 'V', 'S' ],
-                labelMonthNext: 'Mois suivant',
-                labelMonthPrev: 'Mois précédent',
-                today: 'Aujourd\'hui',
-                clear: 'Effacer',
-                min: true,
-                closeOnSelect: true,
-                onRender: function () {
-                    var day = $('.picker__day-display');
-                    var month = $('.picker__month-display');
-                    day.insertBefore(month);
-                    day.remove();
-                }
-            });
-
-            $('.timepicker').pickatime({
-                default: 'now',
-                twelvehour: false,
-                donetext: 'OK',
-                cleartext: 'Effacer',
-                canceltext: 'Retour',
-                autoclose: false
+            datepicker();
+            $(".flatpickr-courses").flatpickr({
+                locale: 'fr',
+                minDate: "today",
+                inline: true
             });
         });
     </script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
 {% endblock %}
 
