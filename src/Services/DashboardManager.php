@@ -27,6 +27,7 @@ use App\Form\Type\Administration\UpdateHorseType;
 use App\Form\Type\Common\AddNotificationType;
 use App\Form\Type\Common\UpdateUserInformationsType;
 use App\Form\Type\Common\ChangePasswordType;
+use App\Form\Type\Users\AddCourseType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -225,9 +226,23 @@ class DashboardManager
         return $this->formFactory->create(AddNotificationType::class, $newNotification);
     }
 
+    /**
+     * Récupération du formulaire pour la création d'une période d'indisponibilité
+     *
+     * @return \Symfony\Component\Form\FormInterface
+     */
     public function getDayOffForm() {
         $dayOff = new DayOff();
         return $this->formFactory->create(AddDayOffType::class, $dayOff);
+    }
+
+    /**
+     * Récupération du formulaire pour la création d'une période d'indisponibilité
+     *
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getAddCourseForm() {
+        return $this->formFactory->create(AddCourseType::class);
     }
 
 

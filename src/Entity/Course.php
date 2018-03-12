@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,9 +16,9 @@ class Course
     /* -------------- Relations -------------- */
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="courses")
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="courses")
      */
-    private $user;
+    private $users;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\CourseStatus")
@@ -48,6 +49,13 @@ class Course
     private $courseDate;
 
     /* -------------- Setters and Getters -------------- */
+
+    /**
+     * Course constructor.
+     */
+    public function __construct() {
+        $this->users = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -153,5 +161,13 @@ class Course
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }

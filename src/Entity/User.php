@@ -38,7 +38,7 @@ class User implements UserInterface, \Serializable
     private $bills;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Course", mappedBy="user")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Course", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
      */
     private $courses;

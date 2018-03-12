@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
     <style>
-        .courses-calendar .flatpickr-input {
+        .courses-calendar .flatpickr-input, #add-course-calendar {
              display: none;
         }
 
@@ -28,37 +28,116 @@
             min-height: 500px !important;
         }
 
+        .divider.m-bot {
+            margin-bottom: 25px;
+        }
+
+        .dateRed {
+            color: #B0413E;
+        }
+
+        .divider.m-top {
+            margin-top: 20px;
+        }
+
+        .collapsible li p, .collapsible-body {
+            padding: 15px;
+        }
+
+        .collapsible-header{
+            padding-top: 0;
+        }
+
+        .header-course{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .checkin {
+            margin-left: auto;
+        }
+
+        .no-collapse {
+            padding: 0 10px 10px 10px;
+        }
+
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
 {% endblock %}
 
 {% block body %}
+
     {{ include('common/navUser.html.twig') }}
+
+    <div id="genericModal" class="modal">
+        <div id="modalContent"></div>
+    </div>
 
     <div class="row">
         <div class="col xl8 l8 m10 s12 offset-xl2 offset-l2 offset-m1">
             <div class="card">
                 <div class="card-content">
                     <h3 class="center-align" id="test">Planning des cours</h3>
-                    <div class="divider"></div>
-
+                    <div class="divider m-bot"></div>
                     <div class="row">
-                        <div class="courses-calendar col xl7 l7 m12 s12">
-                            <form action="">
+                        <p class="col xl12 l12 m12 s12 right-align">
+                            Cours restant sur votre carte : {{ app.user.courseCard.remainingCourse }}/{{ app.user.courseCard.balance }} |
+                            Date de validité :
+                            {% if app.user.courseCard.remainingCourse < date('today') %}
+                                <span class="dateRed">{{ app.user.courseCard.validityDate|date('d/m/y') }}</span>
+                            {% else %}
+                                {{ app.user.courseCard.validityDate|date('d/m/y') }}
+                            {% endif %}
 
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="courses-calendar col xl7 l12 m12 s12">
+                            <form action="">
                                 <input type="text" class="flatpickr-courses" id="course-date">
                             </form>
 
                         </div>
-                        <div class="card col xl5 l5 m12 s12 courses">
+                        <div class="card col xl5 l12 m12 s12 courses">
                             <div class="card-content">
-                                <p id="selected-date"></p>
+                                <a class="btn-floating btn-medium waves-effect waves-light absolute-icon" id="add-course-calendar" data-url="{{ path('add-course-form') }}">
+                                    <i class="material-icons">add</i>
+                                </a>
+
+                                <div id="selected-date">
+                                    <p>Veuillez saisir une date sur le calendrier</p>
+                                </div>
+
+                                <ul class="collapsible" data-collapsible="accordion">
+                                    <li>
+                                        <div class="header-course">
+                                            <p>De 10h à 11h</p>
+                                            <p class="checkin"><a class="hypertext">S'inscrire</a></p>
+                                        </div>
+                                        <div class="collapsible-header">Voir les cavaliers inscrits</div>
+                                        <div class="collapsible-body">
+                                            <span>Sophia Blithikiotis</span><br>
+                                            <span>Sophia Blithikiotis</span><br>
+                                            <span>Sophia Blithikiotis</span><br>
+                                            <span>Sophia Blithikiotis</span><br>
+                                            <span>Sophia Blithikiotis</span><br>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <ul class="collapsible" data-collapsible="accordion">
+                                    <li>
+                                        <div class="header-course">
+                                            <p>De 10h à 11h</p>
+                                        </div>
+                                        <div class="no-collapse">Cours individuel : Sophia Blithikiotis</div>
+                                    </li>
+                                </ul>
+
                             </div>
                         </div>
                     </div>
-
-                    <div class="divider"></div>
 
                 </div>
             </div>
@@ -70,7 +149,48 @@
 {% block javascripts %}
     <script>
 
+        // Chargement de la modal d'une proposition de cours
+        function loadModalAddCourse() {
+            $('body').on('click', '#add-course-calendar', function (e) {
+                $('#genericModal').modal('open');
+                var url = $("#add-course-calendar").attr('data-url');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        $('#modalContent').replaceWith(data);
+
+                        var selectedDate = $('#course-date').attr('value');
+                        var newSelectedDate = new Date(selectedDate);
+                        var selectedDay = newSelectedDate.getDate();
+                        var selectedMonth = newSelectedDate.getMonth() + 1;
+                        var selectedYear = newSelectedDate.getFullYear();
+
+                        if (selectedMonth < 10) { selectedMonth = '0' + selectedMonth; }
+                        if (selectedDay < 10) { selectedDay = '0' + selectedDay; }
+
+                        var formatedDate = selectedDay + '/' + selectedMonth +'/'+ selectedYear;
+
+                        $('#add_course_courseDate').attr('value', selectedDate);
+                        $('select').material_select();
+
+                        $('.timepicker').pickatime({
+                            default: 'now',
+                            fromnow: 0,
+                            twelvehour: false,
+                            donetext: 'OK',
+                            cleartext: 'Effacer',
+                            canceltext: 'Annuler',
+                            autoclose: false
+                        });
+                    }
+                })
+            });
+        }
+
         $(document).ready(function(){
+            $('.modal').modal();
+            $('.collapsible').collapsible();
             $(".flatpickr-courses").flatpickr({
                 locale: 'fr',
                 minDate: "today",
@@ -78,9 +198,31 @@
                 dateFormat: "Y-m-d",
                 inline: true,
                 onChange: function() {
-                    console.log($('#course-date').attr('value'))
+
+                    var selectedDate = $('#course-date').attr('value');
+                    var newSelectedDate = new Date(selectedDate);
+                    var selectedDay = newSelectedDate.getDate();
+                    var selectedMonth = newSelectedDate.getMonth() + 1;
+                    var selectedYear = newSelectedDate.getFullYear();
+
+                    if (selectedMonth < 10) { selectedMonth = '0' + selectedMonth; }
+                    if (selectedDay < 10) { selectedDay = '0' + selectedDay; }
+
+                    var formatedDate = selectedDay + '/' + selectedMonth +'/'+ selectedYear;
+
+                    $('#selected-date').replaceWith(
+                        '<div id="selected-date">' +
+                            '<p>'+ formatedDate +'</p>' +
+                            '<div class="divider m-top"></div>'+
+                        '</div>'
+                    );
+                    $('#add-course-calendar').css('display', 'inherit')
                 }
             });
+            loadModalAddCourse();
+
+
+
         });
 
 
