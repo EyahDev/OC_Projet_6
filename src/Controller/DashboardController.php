@@ -16,12 +16,11 @@ class DashboardController extends Controller
      *
      * @param DashboardManager $dashboardManager
      * @param AjaxManager $ajaxManager
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      *
      * @Route(path="/dashboard", name="dashboard")
      */
-    public function dashboard(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request) {
+    public function dashboard(DashboardManager $dashboardManager, AjaxManager $ajaxManager) {
 
         $user = $this->getUser();
 
@@ -101,7 +100,7 @@ class DashboardController extends Controller
      *
      * @Route(path="/dashboard/contacts", name="usefull-contacts")
      */
-    public function contacts(DashboardManager $dashboardManager, AjaxManager $ajaxManager, Request $request) {
+    public function contacts(DashboardManager $dashboardManager, AjaxManager $ajaxManager) {
 
         if ($this->isGranted('ROLE_ADMIN')) {
             $contacts = $dashboardManager->getUsefullContacts();
@@ -123,6 +122,21 @@ class DashboardController extends Controller
             'contacts' => $contacts,
             'paginationOwners' => $ownersPhone,
         ));
+    }
+
+    /**
+     * Page des cours
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route(path="/dashboard/cours", name="courses")
+     */
+    public function courses() {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->render('dashboard/admin/courses.html.twig');
+        }
+
+        return $this->render('dashboard/user/courses.html.twig');
     }
 
     /**
