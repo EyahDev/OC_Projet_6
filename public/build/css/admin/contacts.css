@@ -1,0 +1,7 @@
+.owners {
+    min-height: 506.2px !important;
+}
+
+.progress-new-contact, .progress-update-contact, .progress-update-contact-type {
+    display: none;
+}

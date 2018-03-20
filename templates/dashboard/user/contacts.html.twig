@@ -1,16 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-<style>
-    .owners {
-        min-height: 506.2px !important;
-    }
-
-    .progress-new-contact, .progress-update-contact, .progress-update-contact-type {
-        display: none;
-    }
-</style>
 {% endblock %}
+
+{% block title %}Fief Malzais : Contacts utiles{% endblock %}
 
 {% block body %}
     {{ include('common/navUser.html.twig') }}
@@ -40,5 +33,4 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('build/js/dashboard/contacts.js') }}" type="text/javascript"></script>
 {% endblock %}

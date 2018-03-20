@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('../public/build/css/login.css') }}">
+    <link rel="stylesheet" href="{{ absolute_url(asset('build/css/login.css')) }}">
 {% endblock %}
+{% block title %}Ecurie du fief Malzais : Connexion{% endblock %}
 {% block body %}
     <div class="row">
         <div class="col s12 m8 l6 xl4 offset-m2 offset-l3 offset-xl4 ">
             <div class="card">
                 <div class="card-content">
                     <div class="center-align">
-                        <img class="responsive-img " src="{{ asset('../public/build/img/logo.png') }}" alt="logo">
+                        <img class="responsive-img " src="{{ absolute_url(asset('build/img/logo.png')) }}" alt="logo">
                         <h1>Ecurie Fief Malzais</h1>
                     </div>
                     {% if error %}
@@ -61,5 +62,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('build/js/security/login.js') }}"></script>
+    <script type="text/javascript" src="{{ absolute_url(asset('build/js/security/login.js')) }}"></script>
 {%endblock %}

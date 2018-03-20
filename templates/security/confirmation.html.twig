@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('../public/build/css/login.css') }}">
+    <link rel="stylesheet" href="{{ absolute_url(asset('build/css/login.css')) }}">
 {% endblock %}
 
 {% block title %}
@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="center-align">
-                        <img class="responsive-img " src="{{ asset('../public/build/img/logo.png') }}" alt="logo">
+                        <img class="responsive-img " src="{{ absolute_url(asset('build/img/logo.png')) }}" alt="logo">
                         <h1>Ecurie Fief Malzais</h1>
                     </div>
 

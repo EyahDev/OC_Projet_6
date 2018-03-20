@@ -1,15 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-<style>
-    .owners {
-        min-height: 506.2px !important;
-    }
-
-    .progress-new-contact, .progress-update-contact, .progress-update-contact-type {
-        display: none;
-    }
-</style>
+    <link rel="stylesheet" href="{{ absolute_url(asset('build/css/admin/contacts.css')) }}">
 {% endblock %}
 
 {% block body %}

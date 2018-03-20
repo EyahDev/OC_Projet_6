@@ -1,0 +1,28 @@
+.relative {
+    position: relative;
+}
+
+.progress-horseman {
+    display: none;
+}
+
+.progress-horse {
+    display: none;
+}
+
+.card-notifications {
+    padding: 10px !important;
+}
+
+.horses-title {
+    font-size: 16px;
+    padding: 5px 5px 5px 0;
+}
+
+.right {
+    margin-left: 0 !important;
+}
+
+.progress-add-notification {
+    display: none;
+}

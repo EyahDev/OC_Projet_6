@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('build/css/table.css') }}">
-    <link rel="stylesheet" href="{{ asset('build/css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ absolute_url(asset('build/css/common/table.css')) }}">
+    <link rel="stylesheet" href="{{ absolute_url(asset('build/css/common/dashboard.css')) }}">
 {% endblock %}
+
+{% block title %}Fief Malzais : Factures{% endblock %}
 
 {% block body %}
 
@@ -23,29 +25,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        // Fonction de pagination des factures
-        function paginateBills() {
-            $('body').on('click','#paginateBills a', function (e) {
-                e.preventDefault();
-                var $a = $(this);
-                var url = $a.attr('href');
-
-                $.ajax({
-                    type: 'GET',
-                    url: url,
-                    success: function (data) {
-                        $('#table-bills').replaceWith(data);
-                    }, error: function () {
-                    }
-                })
-            });
-        }
-
-        $(document).ready(function(){
-            paginateBills();
-        });
-    </script>
+    <script src="{{ absolute_url(asset('build/js/bills/user.js')) }}" type="text/javascript"></script>
 {% endblock %}
 
 
