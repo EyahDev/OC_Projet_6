@@ -30,7 +30,7 @@ class FormController extends Controller
 
             if ($addhorsemanForm->isSubmitted()) {
                 $newHorseman = $addhorsemanForm->getData();
-                $errors = $ajaxManager->validateAjax($newHorseman, 'newhorseman');
+                $errors = $ajaxManager->validateAjax($newHorseman, null, 'newhorseman');
 
                 if ($errors !== true) {
                     return new Response($errors, Response::HTTP_BAD_REQUEST);
@@ -60,7 +60,7 @@ class FormController extends Controller
             if ($addhorseForm->isSubmitted()) {
 
                 $addhorseForm = $addhorseForm->getData();
-                $errors = $ajaxManager->validateAjax($addhorseForm, 'newhorse');
+                $errors = $ajaxManager->validateAjax($addhorseForm, null,'newhorse');
 
                 if ($errors !== true) {
                     return new Response($errors, Response::HTTP_BAD_REQUEST);
