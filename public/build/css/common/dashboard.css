@@ -26,3 +26,7 @@
 .progress-add-notification {
     display: none;
 }
+
+i.material-icons.right {
+    margin-left: 15px !important;
+}
