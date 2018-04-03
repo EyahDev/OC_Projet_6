@@ -7,7 +7,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 
@@ -17,10 +17,9 @@ class AddCourseType extends AbstractType
     {
         $builder
             ->add('courseDate', HiddenType::class)
-            ->add('courseHours', TimeType::class, array(
+            ->add('courseHours', TextType::class, array(
                 'invalid_message' => 'Veuillez saisir un horaire valide.',
-                'placeholder' => 'Select a value',
-                'widget' => 'single_text',
+                'label' => 'Horaire du cours',
                 'attr' => array('class' => 'timepicker')
             ))
             ->add('courseType', EntityType::class, array(

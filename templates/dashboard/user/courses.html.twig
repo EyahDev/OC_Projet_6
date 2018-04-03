@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
     <style>
-        .courses-calendar .flatpickr-input, #add-course-calendar {
+        .courses-calendar .flatpickr-input, #add-course-calendar, .progress-add-course {
              display: none;
         }
 
@@ -82,12 +82,17 @@
                     <div class="divider m-bot"></div>
                     <div class="row">
                         <p class="col xl12 l12 m12 s12 right-align">
-                            Cours restant sur votre carte : {{ app.user.courseCard.remainingCourse }}/{{ app.user.courseCard.balance }} |
-                            Date de validité :
-                            {% if app.user.courseCard.remainingCourse < date('today') %}
-                                <span class="dateRed">{{ app.user.courseCard.validityDate|date('d/m/y') }}</span>
+                            {% if app.user.courseCard != null %}
+                                Cours restant sur votre carte : {{ app.user.courseCard.remainingCourse }}/{{ app.user.courseCard.balance }} |
+                                Date de validité :
+
+                                {% if app.user.courseCard.remainingCourse < date('today') %}
+                                    <span class="dateRed">{{ app.user.courseCard.validityDate|date('d/m/y') }}</span>
+                                {% else %}
+                                    {{ app.user.courseCard.validityDate|date('d/m/y') }}
+                                {% endif %}
                             {% else %}
-                                {{ app.user.courseCard.validityDate|date('d/m/y') }}
+                                Vous n'avez pas de carte de cours.
                             {% endif %}
 
                         </p>
@@ -170,6 +175,8 @@
                         if (selectedDay < 10) { selectedDay = '0' + selectedDay; }
 
                         var formatedDate = selectedDay + '/' + selectedMonth +'/'+ selectedYear;
+
+                        $('#formTitle').replaceWith('<h4 class="center-align" id="formTitle">' + formatedDate + ' : Proposition de cours' + '</h4>');
 
                         $('#add_course_courseDate').attr('value', selectedDate);
                         $('select').material_select();
