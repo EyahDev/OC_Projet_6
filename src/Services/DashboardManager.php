@@ -8,8 +8,10 @@ use App\Entity\Bill;
 use App\Entity\Contact;
 use App\Entity\ContactType;
 use App\Entity\CountType;
+use App\Entity\Course;
 use App\Entity\CourseCard;
 use App\Entity\CourseCardHistory;
+use App\Entity\CourseStatus;
 use App\Entity\DayOff;
 use App\Entity\Horse;
 use App\Entity\User;
@@ -703,6 +705,24 @@ class DashboardManager
      */
     public function setNewDayOff(DayOff $data) {
         $this->em->persist($data);
+        $this->em->flush();
+    }
+
+    /**
+     * Ajout d'une proposition de cours par un utilisateur
+     *
+     * @param User $user
+     * @param $data
+     */
+    public function setNewCourse(User $user , $data) {
+        $newCourse = new Course();
+
+        $newCourse->setCourseDate(new \DateTime($data['courseDate'] . " " . $data['courseHours']));
+        $newCourse->setType($data['courseType']);
+        $newCourse->setStatus($this->em->getRepository(CourseStatus::class)->findOneBy(array('name' => 'En attente de validation')));
+        $user->addCourse($newCourse);
+
+        $this->em->persist($newCourse);
         $this->em->flush();
     }
 }

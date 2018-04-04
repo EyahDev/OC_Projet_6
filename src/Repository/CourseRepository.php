@@ -10,4 +10,28 @@ namespace App\Repository;
  */
 class CourseRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * Récupération des cours existant entre la date selectionnée et la date +1 heure
+     *
+     * @param $dateSelected
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getExistingCourse($dateSelected) {
+        // Création de l'alias
+        $qb = $this->createQueryBuilder('c');
+
+        $date = new \DateTime($dateSelected);
+        $datePlusOneH = new \DateTime($dateSelected);
+        $datePlusOneH->add(new \DateInterval('PT1H'));
+
+        // Création de la requête personnalisée
+        $query = $qb->where('c.courseDate BETWEEN :date AND :hour')
+            ->setParameter('date', $date)
+            ->setParameter('hour', $datePlusOneH);
+
+        return $query->getQuery()->getResult();
+    }
+
 }

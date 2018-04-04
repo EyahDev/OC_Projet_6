@@ -495,4 +495,34 @@ class FormController extends Controller
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
 
+    /**
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param AjaxManager $ajaxManager
+     * @return Response
+     *
+     * @Route(path="dashboard/add-course", name="add-course")
+     */
+    public function addCourse(Request $request, DashboardManager $dashboard, AjaxManager $ajaxManager) {
+        if ($request->isXmlHttpRequest()) {
+            $user = $this->getUser();
+
+            $courseForm = $dashboard->getAddCourseForm();
+            $courseForm->handleRequest($request);
+
+            if ($courseForm->isSubmitted()) {
+                $data = $courseForm->getData();
+                $errors = $ajaxManager->validateAjaxWithoutEntity($courseForm);
+
+                if ($errors !== true) {
+                    return new Response($errors, Response::HTTP_BAD_REQUEST);
+                }
+
+                $dashboard->setNewCourse($user, $data);
+                return new Response('La proposition de cours a été créée.');
+            }
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
+
 }

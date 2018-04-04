@@ -39,6 +39,7 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Course", inversedBy="users")
+     * @ORM\JoinTable(name="users_courses")
      * @ORM\JoinColumn(nullable=true)
      */
     private $courses;
@@ -660,7 +661,7 @@ class User implements UserInterface, \Serializable
     public function addCourse(Course $course)
     {
         $this->courses[] = $course;
-
+        $course->addUser($this);
         return $this;
     }
 

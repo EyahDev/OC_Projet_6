@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
     <style>
+        @media only screen and (max-width: 992px) {
+            .modal {
+                width: 95%;
+                min-height: 85%;
+            }
+        }
+
         .courses-calendar .flatpickr-input, #add-course-calendar, .progress-add-course {
              display: none;
         }
@@ -59,6 +66,10 @@
 
         .no-collapse {
             padding: 0 10px 10px 10px;
+        }
+
+        .modal-content {
+            min-height: 425px;
         }
 
     </style>
@@ -195,6 +206,41 @@
             });
         }
 
+        // Soumission du formulaire d'ajout d'une carte de cours
+        function addCourse() {
+            $('body').on('submit', 'form[name="add_course"]', function (e) {
+                e.preventDefault();
+                $('.progress-add-course').show();
+                var $form = $(this);
+                var url = $('#add-course-submit').attr('data-url');
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        var success = '<div class="card-panel green accent-4" id="confirmationAddCourse">' + data + '</div>';
+
+                        $('#flashMessagesAddCourse').html(success);
+
+                        $('.progress-add-course').hide();
+
+                        function removeFlashMsg() {
+                            $('#confirmationAddCouse').replaceWith('');
+                            $('#genericModal').modal('close');
+                            $('#modalContent').replaceWith('<div id="modalContent"></div>');
+                        }
+                        setTimeout(removeFlashMsg, 1000);
+
+                    },
+                    error: function (jqxhr) {
+                        var error = '<div class="card-panel deep-orange accent-4">' + jqxhr.responseText + '</div>';
+                        $('#flashMessagesAddCourse').html(error);
+                        $('.progress-add-course').hide();
+                    }
+                })
+            });
+        }
+
         $(document).ready(function(){
             $('.modal').modal();
             $('.collapsible').collapsible();
@@ -227,8 +273,7 @@
                 }
             });
             loadModalAddCourse();
-
-
+            addCourse();
 
         });
 

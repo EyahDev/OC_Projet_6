@@ -3,6 +3,7 @@
 namespace App\Form\Type\Users;
 
 use App\Entity\CourseType;
+use App\Validator\CourseType\ContainsExistingCourse;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -20,8 +21,11 @@ class AddCourseType extends AbstractType
             ->add('courseHours', TextType::class, array(
                 'invalid_message' => 'Veuillez saisir un horaire valide.',
                 'label' => 'Horaire du cours',
-                'attr' => array('class' => 'timepicker')
-            ))
+                'attr' => array('class' => 'timepicker'),
+                'constraints' => array(
+                    new ContainsExistingCourse()
+
+            )))
             ->add('courseType', EntityType::class, array(
                 'class' => CourseType::class,
                 'choice_label' => 'name',

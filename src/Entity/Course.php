@@ -21,12 +21,12 @@ class Course
     private $users;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\CourseStatus")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CourseStatus")
      */
     private $status;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\CourseType")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CourseType")
      */
     private $type;
 
@@ -122,7 +122,7 @@ class Course
      *
      * @return Course
      */
-    public function setStatus(\App\Entity\CourseStatus $status = null)
+    public function setStatus(CourseStatus $status = null)
     {
         $this->status = $status;
 
@@ -146,7 +146,7 @@ class Course
      *
      * @return Course
      */
-    public function setType(\App\Entity\CourseType $type = null)
+    public function setType(CourseType $type = null)
     {
         $this->type = $type;
 
@@ -169,5 +169,27 @@ class Course
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * AddUser
+     *
+     * @param User $user
+     * @return $this
+     */
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param User $user
+     */
+    public function removeUser(User $user)
+    {
+        $this->users->removeElement($user);
     }
 }
