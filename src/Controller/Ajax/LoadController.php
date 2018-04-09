@@ -185,4 +185,27 @@ class LoadController extends Controller
         }
         throw  $this->createNotFoundException("Cette page n'existe pas.");
     }
+
+
+    /**
+     * Récupération et affichage des cours par date
+     *
+     * @param Request $request
+     * @param DashboardManager $dashboard
+     * @param $date
+     * @return Response
+     * @throws \Exception
+     *
+     * @Route(path="dashboard/load-courses/{date}", name="load-courses")
+     */
+    public function loadCourses(Request $request, DashboardManager $dashboard, $date) {
+        if ($request->isXmlHttpRequest()) {
+            $courses = $dashboard->getCourses($date);
+
+            return $this->render('dashboard/user/tables/courses.html.twig', array(
+                'courses' => $courses
+            ));
+        }
+        throw  $this->createNotFoundException("Cette page n'existe pas.");
+    }
 }

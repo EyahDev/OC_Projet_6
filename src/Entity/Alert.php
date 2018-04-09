@@ -16,16 +16,22 @@ class Alert
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="alerts")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\AlertType")
+     * @ORM\ManyToOne(targetEntity="App\Entity\AlertType")
      */
     private $type;
 
-    /* -------------- Fields -------------- */
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Course", inversedBy="alert")
+     * @ORM\JoinColumn(nullable=true, name="course_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $course;
 
+    /* -------------- Fields -------------- */
     /**
      * @var int
      *
@@ -156,4 +162,23 @@ class Alert
     {
         return $this->type;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCourse()
+    {
+        return $this->course;
+    }
+
+    /**
+     * @param mixed $course
+     */
+    public function setCourse($course): void
+    {
+        $this->course = $course;
+        $course->setAlert($this);
+    }
+
+
 }

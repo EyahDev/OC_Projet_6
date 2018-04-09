@@ -30,6 +30,12 @@ class Course
      */
     private $type;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Alert", mappedBy="course", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $alert;
+
     /* -------------- Fields -------------- */
 
     /**
@@ -191,5 +197,21 @@ class Course
     public function removeUser(User $user)
     {
         $this->users->removeElement($user);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlert()
+    {
+        return $this->alert;
+    }
+
+    /**
+     * @param mixed $alert
+     */
+    public function setAlert(Alert $alert): void
+    {
+        $this->alert = $alert;
     }
 }

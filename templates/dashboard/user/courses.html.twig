@@ -65,11 +65,15 @@
         }
 
         .no-collapse {
-            padding: 0 10px 10px 10px;
+            padding: 0 15px 15px 15px;
         }
 
         .modal-content {
             min-height: 425px;
+        }
+
+        .no-courses {
+            padding-top: 10px;
         }
 
     </style>
@@ -125,31 +129,7 @@
                                     <p>Veuillez saisir une date sur le calendrier</p>
                                 </div>
 
-                                <ul class="collapsible" data-collapsible="accordion">
-                                    <li>
-                                        <div class="header-course">
-                                            <p>De 10h à 11h</p>
-                                            <p class="checkin"><a class="hypertext">S'inscrire</a></p>
-                                        </div>
-                                        <div class="collapsible-header">Voir les cavaliers inscrits</div>
-                                        <div class="collapsible-body">
-                                            <span>Sophia Blithikiotis</span><br>
-                                            <span>Sophia Blithikiotis</span><br>
-                                            <span>Sophia Blithikiotis</span><br>
-                                            <span>Sophia Blithikiotis</span><br>
-                                            <span>Sophia Blithikiotis</span><br>
-                                        </div>
-                                    </li>
-                                </ul>
-
-                                <ul class="collapsible" data-collapsible="accordion">
-                                    <li>
-                                        <div class="header-course">
-                                            <p>De 10h à 11h</p>
-                                        </div>
-                                        <div class="no-collapse">Cours individuel : Sophia Blithikiotis</div>
-                                    </li>
-                                </ul>
+                                <div id="loadCourses" data-url="{{ path('load-courses',{'date': 'selectedDate'}) }}"></div>
 
                             </div>
                         </div>
@@ -241,9 +221,22 @@
             });
         }
 
+        // Rechargement des contacts utiles
+        function loadCourses(date) {
+            var url = $('#loadCourses').attr('data-url').replace('selectedDate', date);
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    $('#loadCourses').html(data);
+                    $('.collapsible').collapsible();
+                }
+            })
+        }
+
         $(document).ready(function(){
             $('.modal').modal();
-            $('.collapsible').collapsible();
             $(".flatpickr-courses").flatpickr({
                 locale: 'fr',
                 minDate: "today",
@@ -269,12 +262,14 @@
                             '<div class="divider m-top"></div>'+
                         '</div>'
                     );
-                    $('#add-course-calendar').css('display', 'inherit')
+
+                    $('#add-course-calendar').css('display', 'inherit');
+
+                    loadCourses(selectedDate);
                 }
             });
             loadModalAddCourse();
             addCourse();
-
         });
 
 

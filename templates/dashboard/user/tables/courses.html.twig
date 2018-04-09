@@ -1,0 +1,56 @@
+{% if courses|length == 0 %}
+    <p class="no-courses">Aucun cours n'est prévu à cette date</p>
+{% else %}
+    {% for course in courses %}
+        {% if course.type.name == "Collectif" %}
+            <ul class="collapsible" data-collapsible="accordion">
+                <li>
+                    <div class="header-course">
+                        <p>De {{ course.courseDate|date("H\\hi") }} à {{ course.courseDate|date_modify("+1 hour")|date("H\\hi") }}</p>
+
+                        {% for userCourse in app.user.courses if userCourse.id == course.id %}
+                            <p class="checkin"><a class="hypertext">Se désinscrire</a></p>
+                        {% else %}
+                            <p class="checkin"><a class="hypertext">S'inscrire</a></p>
+                        {% endfor %}
+
+                    </div>
+                    <div class="collapsible-header">{{ course.type.name }} : Voir les cavaliers inscrits</div>
+                    <div class="collapsible-body">
+                        {% for user in course.users  %}
+                            <span>{{ user.completeName }}</span><br>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+        {% endif %}
+
+        {% if course.type.name == "Duo" %}
+            <ul class="collapsible" data-collapsible="accordion">
+                <li>
+                    <div class="header-course">
+                        <p>De {{ course.courseDate|date("H\\hi") }} à {{ course.courseDate|date_modify("+1 hour")|date("H\\hi") }}</p>
+                        <p class="checkin"><a class="hypertext">S'inscrire</a></p>
+                    </div>
+                    <div class="collapsible-header">{{ course.type.name }} : Voir les cavaliers inscrits</div>
+                    <div class="collapsible-body">
+                        {% for user in course.users  %}
+                            <span>{{ user.completeName }}</span>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+        {% endif %}
+
+        {% if course.type.name == "Individuel" %}
+            <ul class="collapsible" data-collapsible="accordion">
+                <li>
+                    <div class="header-course">
+                        <p>De {{ course.courseDate|date("H\\hi") }} à {{ course.courseDate|date_modify("+1 hour")|date("H\\hi") }}</p>
+                    </div>
+                    <div class="no-collapse">{{ course.type.name }} : {% for user in course.users  %}{{ user.completeName }}{% endfor %}</div>
+                </li>
+            </ul>
+        {% endif %}
+    {% endfor %}
+{% endif %}

@@ -384,6 +384,17 @@ class DashboardManager
         return $this->em->getRepository(Alert::class)->find($id);
     }
 
+    /**
+     * Récupération des cours par date
+     *
+     * @param $date
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getCourses($date) {
+        return $this->em->getRepository(Course::class)->getCoursesByDay($date);
+    }
+
     /* ---------- Setters ----------- */
 
     /**
@@ -437,7 +448,6 @@ class DashboardManager
         // Création d'un historique
         $newHistory = new CourseCardHistory();
         $type = $this->em->getRepository(CountType::class)->findOneBy(array('name' => 'Nouvelle carte'));
-
 
         $newHistory->setCountDate(new \DateTime());
         $newHistory->setValue($courseCard->getBalance());
@@ -709,18 +719,24 @@ class DashboardManager
     }
 
     /**
-     * Ajout d'une proposition de cours par un utilisateur
+     * Ajout d'une proposition de cours par un utilisateur + ajout d'une notification de cours
      *
      * @param User $user
      * @param $data
      */
     public function setNewCourse(User $user , $data) {
         $newCourse = new Course();
+        $notification = new Alert();
 
         $newCourse->setCourseDate(new \DateTime($data['courseDate'] . " " . $data['courseHours']));
         $newCourse->setType($data['courseType']);
         $newCourse->setStatus($this->em->getRepository(CourseStatus::class)->findOneBy(array('name' => 'En attente de validation')));
         $user->addCourse($newCourse);
+
+        $notification->setCourse($newCourse);
+        $notification->setType($this->em->getRepository(AlertType::class)->findOneBy(array('name' => 'Cours')));
+        $notification->setAlertDate(new \DateTime($data['courseDate'] . " " . $data['courseHours']));
+        $notification->setAlertDescription('Vous avez un cours le ' .$notification->getAlertDate()->format('d/m/Y à H\\hi'));
 
         $this->em->persist($newCourse);
         $this->em->flush();

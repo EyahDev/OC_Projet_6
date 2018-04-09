@@ -10,4 +10,23 @@ namespace App\Repository;
  */
 class DayOffRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Récupération des périodes d'absences
+     *
+     * @param $dateSelected
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getExistingDayOff($dateSelected) {
+        // Création de l'alias
+        $qb = $this->createQueryBuilder('d');
+
+        $date = new \DateTime($dateSelected);
+
+        // Création de la requête personnalisée
+        $query = $qb->where(':date BETWEEN d.dateOffBegin AND d.dateOffEnd')
+            ->setParameter('date', $date);
+
+        return $query->getQuery()->getResult();
+    }
 }

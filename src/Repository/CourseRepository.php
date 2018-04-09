@@ -34,4 +34,29 @@ class CourseRepository extends \Doctrine\ORM\EntityRepository
         return $query->getQuery()->getResult();
     }
 
+
+    /**
+     * Récupération des cours existant du jour sélectionné
+     *
+     * @param $dateSelected
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getCoursesByDay($dateSelected) {
+        // Création de l'alias
+        $qb = $this->createQueryBuilder('c');
+
+        $dateBegin = new \DateTime($dateSelected);
+        $dateEnd = new \DateTime($dateSelected);
+        $dateEnd->add(new \DateInterval('PT23H59M59S'));
+
+        dump($dateEnd);
+
+        // Création de la requête personnalisée
+        $query = $qb->where('c.courseDate BETWEEN :dayBegin AND :dayEnd')
+            ->setParameter('dayBegin', $dateBegin)
+            ->setParameter('dayEnd', $dateEnd);
+
+        return $query->getQuery()->getResult();
+    }
 }
